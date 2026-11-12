@@ -1,0 +1,436 @@
+{
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
+  },
+  "campaign": {
+    "mode": "Automated browser engine run; no injected damage/ammo/rewards",
+    "waves": [
+      {
+        "wave": 1,
+        "kills": 10,
+        "total": 10,
+        "health": 800,
+        "money": 10,
+        "score": 100,
+        "weapon": "Cannon",
+        "saveRevision": 3,
+        "achievements": [
+          "achivementsDefender"
+        ]
+      },
+      {
+        "wave": 2,
+        "kills": 15,
+        "total": 15,
+        "health": 800,
+        "money": 25,
+        "score": 250,
+        "weapon": "Cannon",
+        "saveRevision": 5,
+        "achievements": [
+          "achivementsDefender"
+        ]
+      },
+      {
+        "wave": 3,
+        "kills": 25,
+        "total": 25,
+        "health": 800,
+        "money": 25,
+        "score": 675,
+        "weapon": "MashineGun",
+        "saveRevision": 7,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2"
+        ]
+      },
+      {
+        "wave": 4,
+        "kills": 25,
+        "total": 25,
+        "health": 800,
+        "money": 50,
+        "score": 1100,
+        "weapon": "MashineGun",
+        "saveRevision": 9,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2"
+        ]
+      },
+      {
+        "wave": 5,
+        "kills": 30,
+        "total": 30,
+        "health": 800,
+        "money": 80,
+        "score": 1750,
+        "weapon": "MashineGun",
+        "saveRevision": 11,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze"
+        ]
+      },
+      {
+        "wave": 6,
+        "kills": 35,
+        "total": 35,
+        "health": 800,
+        "money": 60,
+        "score": 2725,
+        "weapon": "Bazooka",
+        "saveRevision": 13,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze"
+        ]
+      },
+      {
+        "wave": 7,
+        "kills": 30,
+        "total": 30,
+        "health": 800,
+        "money": 95,
+        "score": 3475,
+        "weapon": "Bazooka",
+        "saveRevision": 15,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze"
+        ]
+      },
+      {
+        "wave": 8,
+        "kills": 35,
+        "total": 35,
+        "health": 800,
+        "money": 145,
+        "score": 4650,
+        "weapon": "Bazooka",
+        "saveRevision": 17,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze"
+        ]
+      },
+      {
+        "wave": 9,
+        "kills": 40,
+        "total": 40,
+        "health": 800,
+        "money": 205,
+        "score": 6150,
+        "weapon": "Bazooka",
+        "saveRevision": 19,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze"
+        ]
+      },
+      {
+        "wave": 10,
+        "kills": 30,
+        "total": 30,
+        "health": 800,
+        "money": 50,
+        "score": 7500,
+        "weapon": "Rocket",
+        "saveRevision": 21,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver"
+        ]
+      },
+      {
+        "wave": 11,
+        "kills": 35,
+        "total": 35,
+        "health": 800,
+        "money": 50,
+        "score": 9125,
+        "weapon": "Rocket",
+        "saveRevision": 23,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver"
+        ]
+      },
+      {
+        "wave": 12,
+        "kills": 35,
+        "total": 35,
+        "health": 800,
+        "money": 60,
+        "score": 10900,
+        "weapon": "Rocket",
+        "saveRevision": 25,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver"
+        ]
+      },
+      {
+        "wave": 13,
+        "kills": 40,
+        "total": 40,
+        "health": 800,
+        "money": 85,
+        "score": 13100,
+        "weapon": "Rocket",
+        "saveRevision": 27,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver"
+        ]
+      },
+      {
+        "wave": 14,
+        "kills": 40,
+        "total": 40,
+        "health": 800,
+        "money": 115,
+        "score": 15400,
+        "weapon": "Rocket",
+        "saveRevision": 29,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver"
+        ]
+      },
+      {
+        "wave": 15,
+        "kills": 40,
+        "total": 40,
+        "health": 800,
+        "money": 195,
+        "score": 17700,
+        "weapon": "Rocket",
+        "saveRevision": 31,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver"
+        ]
+      },
+      {
+        "wave": 16,
+        "kills": 40,
+        "total": 40,
+        "health": 800,
+        "money": 275,
+        "score": 20400,
+        "weapon": "Rocket",
+        "saveRevision": 33,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver"
+        ]
+      },
+      {
+        "wave": 17,
+        "kills": 40,
+        "total": 40,
+        "health": 800,
+        "money": 355,
+        "score": 23350,
+        "weapon": "Rocket",
+        "saveRevision": 35,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver"
+        ]
+      },
+      {
+        "wave": 18,
+        "kills": 40,
+        "total": 40,
+        "health": 800,
+        "money": 415,
+        "score": 26500,
+        "weapon": "Rocket",
+        "saveRevision": 37,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver"
+        ]
+      },
+      {
+        "wave": 19,
+        "kills": 40,
+        "total": 40,
+        "health": 800,
+        "money": 420,
+        "score": 28800,
+        "weapon": "Rocket",
+        "saveRevision": 39,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver"
+        ]
+      },
+      {
+        "wave": 20,
+        "kills": 40,
+        "total": 40,
+        "health": 800,
+        "money": 510,
+        "score": 31950,
+        "weapon": "Rocket",
+        "saveRevision": 41,
+        "achievements": [
+          "achivementsDefender",
+          "achivementsCombo2",
+          "achivementsBronze",
+          "achivementsSilver",
+          "achivementsGold"
+        ]
+      }
+    ],
+    "complete": true,
+    "totalKills": 665,
+    "finalTotal": 32460
+  },
+  "benchmarks": [
+    {
+      "label": "10 enemies",
+      "frames": 180,
+      "viewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 1
+      },
+      "cpuMeanMs": 1.3800000000331136,
+      "cpuP95Ms": 3.0999999940395355,
+      "cpuMaxMs": 4.200000002980232,
+      "rafMedianMs": 16.69999999999891,
+      "rafP95Ms": 17.200000000000728,
+      "framesOver33ms": 0
+    },
+    {
+      "label": "40 enemies + effects",
+      "frames": 180,
+      "viewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 1
+      },
+      "cpuMeanMs": 1.7683333330684239,
+      "cpuP95Ms": 3.7999999970197678,
+      "cpuMaxMs": 5.9000000059604645,
+      "rafMedianMs": 16.69999999999891,
+      "rafP95Ms": 16.899999999999636,
+      "framesOver33ms": 0
+    },
+    {
+      "label": "40 enemies + reduced motion",
+      "frames": 180,
+      "viewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 1
+      },
+      "cpuMeanMs": 1.5122222226527002,
+      "cpuP95Ms": 2.5,
+      "cpuMaxMs": 4.600000008940697,
+      "rafMedianMs": 16.69999999999891,
+      "rafP95Ms": 16.900000000001455,
+      "framesOver33ms": 0
+    }
+  ],
+  "beforeOptimization": [
+    {
+      "label": "10 enemies",
+      "frames": 180,
+      "viewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 1
+      },
+      "cpuMeanMs": 1.4938888892531395,
+      "cpuP95Ms": 3.1000000089406967,
+      "cpuMaxMs": 5.5999999940395355,
+      "rafMedianMs": 16.69999999999891,
+      "rafP95Ms": 17.100000000000364,
+      "framesOver33ms": 0
+    },
+    {
+      "label": "40 enemies + effects",
+      "frames": 180,
+      "viewport": {
+        "width": 789,
+        "height": 443.8125,
+        "dpr": 1
+      },
+      "cpuMeanMs": 2.961666666633553,
+      "cpuP95Ms": 7.4000000059604645,
+      "cpuMaxMs": 16.100000008940697,
+      "rafMedianMs": 33.39999999999782,
+      "rafP95Ms": 66.80000000000291,
+      "framesOver33ms": 86
+    },
+    {
+      "label": "40 enemies + reduced motion",
+      "frames": 180,
+      "viewport": {
+        "width": 789,
+        "height": 443.8125,
+        "dpr": 1
+      },
+      "cpuMeanMs": 3.032222222867939,
+      "cpuP95Ms": 7.600000008940697,
+      "cpuMaxMs": 25.899999991059303,
+      "rafMedianMs": 33.29999999999927,
+      "rafP95Ms": 50.79999999999927,
+      "framesOver33ms": 68
+    }
+  ],
+  "audio": {
+    "measurement": "Master bus before compressor; objective signal check, not a listening review",
+    "settings": {
+      "master": 75,
+      "music": 45,
+      "effects": 70,
+      "reducedMotion": false,
+      "shake": "low",
+      "muted": false
+    },
+    "active": {
+      "peak": 0.18838387727737427,
+      "rms": 0.013820373739998311
+    },
+    "muted": {
+      "peak": 0,
+      "rms": 0
+    },
+    "restored": {
+      "peak": 0.004560027737170458,
+      "rms": 0.0012581772502088897
+    }
+  }
+}

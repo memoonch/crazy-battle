@@ -1,0 +1,20 @@
+<omps>
+	<omp>
+		<cost>50</cost>
+		<damage>100</damage>
+		<name>Atom</name>
+		<sound>soundCracker</sound>
+	</omp>
+	<omp>
+		<cost>20</cost>
+		<damage>100</damage>
+		<name>Avia</name>
+		<sound>soundCracker</sound>
+	</omp>
+	<omp>
+		<cost>10</cost>
+		<damage>100</damage>
+		<name>Mine</name>
+		<sound>soundCracker</sound>
+	</omp>
+</omps>

@@ -1,0 +1,9 @@
+{
+  "name": "crazy-battle-remaster",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "node --test --test-isolation=none remaster/tests/*.test.js"
+  }
+}

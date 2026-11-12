@@ -1,0 +1,16 @@
+[
+  {
+    "name": "vehicles-painted",
+    "prompt": "Use case: stylized-concept. Production game sprite atlas for Crazy Battle remaster. A genuinely transparent background PNG, six isolated military vehicles in a precise 2-column by 3-row equal-cell grid, landscape sprites within each cell, generous transparent margins, nothing crossing cells. All vehicles face LEFT, slightly elevated SIDE VIEW, visible front left nose and near side, same camera and light, hand-painted premium 2D strategy game illustration with olive green steel, warm beige weathering, carefully shaded dimensional armor, dark defined edges readable at 90 pixels wide. Top row: left light wheeled armored personnel carrier with small machine-gun turret, right heavier wheeled armored personnel carrier with larger armored turret. Middle row: left light tracked tank long leftward barrel, right heavy tracked tank wider reinforced turret and long leftward barrel. Bottom row: left light tracked rocket artillery vehicle with compact elevated missile rack pointing upper left, right heavy tracked rocket artillery vehicle with larger missile rack. No ground, no scene, no labels, no text, no UI, no shadows baked outside sprites, no logos, no smoke, no firing, no checkerboard. Real alpha outside all six separate sprites. Each unit fully contained, no cropped barrels. Painted military comic realism, not flat vector and not photoreal.",
+    "transparent": true,
+    "source": "C:/Users/Alpha/.codex/generated_images/01a1c9c9-e6f2-7fe0-880b-228ca7548dcd/exec-d6ae0274-97aa-4116-ad12-2d882b69e338.png",
+    "tool": "built-in image generation"
+  },
+  {
+    "name": "defenses-painted",
+    "prompt": "Use case: stylized-concept. Production 2D game sprite atlas for Crazy Battle remaster. Genuinely transparent alpha outside subjects. FOUR isolated defensive emplacements in exact TWO columns by TWO rows equal-cell grid, each fully contained with generous margin. All face RIGHT, slightly elevated side view, same camera, warm upper-left daylight. Premium hand-painted military strategy game illustration, olive painted steel, sand colored wear, dimensional hand-painted shading and dark readable outlines matching painted pine forest battlefield. Top-left: compact mortar on tripod, angled tube pointing upper-right, no operator. Top-right: light field cannon on small two-wheeled carriage, barrel horizontal right, armored shield. Bottom-left: medium field gun, longer barrel pointing right, medium rectangular armored shield, two wheels and split trails. Bottom-right: heavy artillery cannon, thick long barrel pointing right, large reinforced shield, robust two wheeled carriage. No sandbags or base (already separate sprites), no people, no scenery, no smoke or firing, no labels, no text, no UI, no logos, no checkerboard. Transparent sprite sheet, not a presentation page. Carefully separate all four sprites with empty alpha margins, no cut-off barrels.",
+    "transparent": true,
+    "source": "C:/Users/Alpha/.codex/generated_images/01a1c9c9-e6f2-7fe0-880b-228ca7548dcd/exec-b4b4d935-a272-4987-b2d8-0625d84ba848.png",
+    "tool": "built-in image generation"
+  }
+]

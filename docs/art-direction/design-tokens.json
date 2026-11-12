@@ -1,0 +1,40 @@
+{
+  "status": "proposed-step-2",
+  "viewport": { "width": 960, "height": 540, "topHud": 40, "bottomHud": 72, "safeInset": 12 },
+  "colors": {
+    "canvas": "#13191D",
+    "surface": "#20282D",
+    "surfaceRaised": "#303B40",
+    "stroke": "#566168",
+    "text": "#F4F0E7",
+    "mutedText": "#B4BABD",
+    "accent": "#F3B544",
+    "accentInk": "#171C20",
+    "health": "#8BCB59",
+    "danger": "#ED665E",
+    "forestDeep": "#324A3A",
+    "forestMid": "#667B4B",
+    "terrain": "#A87848",
+    "distance": "#819CA4"
+  },
+  "type": {
+    "displayFamily": "Bahnschrift, Arial Narrow, sans-serif",
+    "bodyFamily": "Segoe UI, Arial, sans-serif",
+    "title": 36,
+    "screenHeading": 28,
+    "hudValue": 20,
+    "button": 16,
+    "body": 16,
+    "secondary": 14,
+    "numberStyle": "tabular-nums"
+  },
+  "spacing": [4, 8, 12, 16, 24, 32],
+  "ui": { "radius": 6, "border": 1, "focusRing": 2, "minimumTarget": 40, "icon": 24, "abilityTile": 44 },
+  "motionMs": { "hover": 100, "press": 70, "panel": 180, "result": 260, "muzzleFlash": 60, "hitFlash": 80 },
+  "notes": [
+    "Illustrative raster is an art reference; numeric tokens are the implementation starting point.",
+    "World coordinates, hitboxes, rates and damage remain governed by the gameplay specification.",
+    "Native 16:9 layout must not stretch character art or inherit the old CSS stretch.",
+    "Animation timing suggestions affect cosmetics only."
+  ]
+}

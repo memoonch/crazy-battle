@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crazy Battle</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#111827;color:#e5e7eb;font:16px system-ui;text-align:center}
+header{padding:16px}h1{font-size:24px;margin:0 0 8px}#status{font-size:14px}
+button{border:1px solid #64748b;border-radius:6px;padding:8px 16px;background:#334155;color:white;font:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid #93c5fd;outline-offset:3px}
+#game{position:relative;width:min(960px,100%);aspect-ratio:16/9;margin:auto;overflow:hidden}
+ruffle-player{position:absolute;left:0;top:0;width:640px;height:480px;transform-origin:0 0;display:block}
+#game:fullscreen{width:100vw;height:100vh;max-width:none;aspect-ratio:auto;margin:0;padding:0;border:0}
+</style>
+<header><h1>Crazy Battle</h1><button id="fullscreen" type="button">Fullscreen</button><p id="status" role="status">Loading…</p></header>
+<div id="game" aria-label="Crazy Battle game"></div>
+<script src="/web/vendor/ruffle/ruffle.js"></script>
+<script>
+window.RufflePlayer=window.RufflePlayer||{};
+window.RufflePlayer.config={autoplay:'on',unmuteOverlay:'visible',quality:'high',allowNetworking:'none',openUrlMode:'deny',contextMenu:'off'};
+const game=document.querySelector('#game');
+const fullscreen=document.querySelector('#fullscreen');
+const player=window.RufflePlayer.newest().createPlayer();
+game.append(player);
+// Keep the native Flash stage fixed: gameplay uses its 640 x 480 coordinates.
+// Scaling the host also maps mouse input back into that original coordinate space.
+function resizeGame(){
+  player.style.transform=`scale(${game.clientWidth/640},${game.clientHeight/480})`;
+}
+new ResizeObserver(resizeGame).observe(game);
+resizeGame();
+async function toggleFullscreen(){
+  try{
+    if(document.fullscreenElement)await document.exitFullscreen();
+    else await game.requestFullscreen();
+  }catch(error){document.querySelector('#status').textContent='Fullscreen unavailable: '+error.message;}
+}
+fullscreen.addEventListener('click',toggleFullscreen);
+document.addEventListener('keydown',event=>{
+  if(event.code==='KeyF'&&!event.repeat&&!event.ctrlKey&&!event.altKey&&!event.metaKey){
+    event.preventDefault();toggleFullscreen();
+  }
+});
+document.addEventListener('fullscreenchange',()=>{
+  fullscreen.textContent=document.fullscreenElement?'Exit fullscreen':'Fullscreen';
+  resizeGame();
+});
+player.ruffle().load({url:'/standalone/build/crazy-battle.swf'}).then(()=>document.querySelector('#status').textContent='Click the game to play · progress saves on this browser').catch(e=>document.querySelector('#status').textContent='Load failed: '+e.message);
+</script>
+</html>

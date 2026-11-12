@@ -1,0 +1,15 @@
+package
+{
+   import flash.display.MovieClip;
+   
+   [Embed(source="/_assets/assets.swf", symbol="symbol897")]
+   public dynamic class ButtonSkinOMPAvia extends MovieClip
+   {
+      
+      public function ButtonSkinOMPAvia()
+      {
+         super();
+      }
+   }
+}
+

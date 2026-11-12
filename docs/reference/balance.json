@@ -1,0 +1,418 @@
+{
+  "weapons": [
+    {
+      "name": "Cannon",
+      "cost": 3,
+      "damage": 10,
+      "magazine": 6,
+      "radius": 0,
+      "rate": 10,
+      "sound": "soundCracker",
+      "timeReload": 1000
+    },
+    {
+      "name": "MashineGun",
+      "cost": 25,
+      "damage": 10,
+      "magazine": 10,
+      "radius": 0,
+      "rate": 4,
+      "sound": "soundCracker",
+      "timeReload": 1200
+    },
+    {
+      "name": "Bazooka",
+      "cost": 60,
+      "damage": 40,
+      "magazine": 5,
+      "radius": 60,
+      "rate": 30,
+      "sound": "soundCracker",
+      "timeReload": 1400
+    },
+    {
+      "name": "Rocket",
+      "cost": 150,
+      "damage": 60,
+      "magazine": 8,
+      "radius": 60,
+      "rate": 20,
+      "sound": "soundCracker",
+      "timeReload": 1600
+    }
+  ],
+  "inventory": [
+    {
+      "name": "Maxim",
+      "cost": 5,
+      "costSale": 1,
+      "damage": 10,
+      "health": 35,
+      "radius": 0,
+      "range": 320,
+      "rate": 200,
+      "sound": "soundMaxim",
+      "sourceClass": "UnitMaxim"
+    },
+    {
+      "name": "Mortar",
+      "cost": 10,
+      "costSale": 3,
+      "damage": 20,
+      "health": 45,
+      "radius": 30,
+      "range": 350,
+      "rate": 240,
+      "sound": "soundMortar",
+      "sourceClass": "UnitMortar"
+    },
+    {
+      "name": "CannonSmall",
+      "cost": 20,
+      "costSale": 4,
+      "damage": 30,
+      "health": 65,
+      "radius": 0,
+      "range": 420,
+      "rate": 300,
+      "sound": "soundCannonSmall",
+      "sourceClass": "UnitCannonSmall"
+    },
+    {
+      "name": "CannonNormal",
+      "cost": 30,
+      "costSale": 5,
+      "damage": 40,
+      "health": 120,
+      "radius": 0,
+      "range": 450,
+      "rate": 340,
+      "sound": "soundCannonNormal",
+      "sourceClass": "UnitCannonNormal"
+    },
+    {
+      "name": "CannonBig",
+      "cost": 50,
+      "costSale": 10,
+      "damage": 50,
+      "health": 150,
+      "radius": 50,
+      "range": 480,
+      "rate": 400,
+      "sound": "soundCannonBig",
+      "sourceClass": "UnitCannonBig"
+    }
+  ],
+  "levels": [
+    {
+      "BTR": 0,
+      "BTRLite": 0,
+      "Tank": 0,
+      "TankLite": 0,
+      "Rocket": 0,
+      "RocketLite": 0,
+      "SoldatAK": 10,
+      "SoldatBazooka": 0
+    },
+    {
+      "BTR": 0,
+      "BTRLite": 0,
+      "Tank": 0,
+      "TankLite": 0,
+      "Rocket": 0,
+      "RocketLite": 0,
+      "SoldatAK": 10,
+      "SoldatBazooka": 5
+    },
+    {
+      "BTR": 0,
+      "BTRLite": 5,
+      "Tank": 0,
+      "TankLite": 0,
+      "Rocket": 0,
+      "RocketLite": 0,
+      "SoldatAK": 10,
+      "SoldatBazooka": 10
+    },
+    {
+      "BTR": 0,
+      "BTRLite": 5,
+      "Tank": 0,
+      "TankLite": 0,
+      "Rocket": 0,
+      "RocketLite": 0,
+      "SoldatAK": 10,
+      "SoldatBazooka": 10
+    },
+    {
+      "BTR": 0,
+      "BTRLite": 10,
+      "Tank": 0,
+      "TankLite": 0,
+      "Rocket": 0,
+      "RocketLite": 0,
+      "SoldatAK": 10,
+      "SoldatBazooka": 10
+    },
+    {
+      "BTR": 0,
+      "BTRLite": 10,
+      "Tank": 0,
+      "TankLite": 5,
+      "Rocket": 0,
+      "RocketLite": 0,
+      "SoldatAK": 10,
+      "SoldatBazooka": 10
+    },
+    {
+      "BTR": 0,
+      "BTRLite": 5,
+      "Tank": 0,
+      "TankLite": 5,
+      "Rocket": 0,
+      "RocketLite": 0,
+      "SoldatAK": 10,
+      "SoldatBazooka": 10
+    },
+    {
+      "BTR": 0,
+      "BTRLite": 5,
+      "Tank": 0,
+      "TankLite": 5,
+      "Rocket": 0,
+      "RocketLite": 5,
+      "SoldatAK": 10,
+      "SoldatBazooka": 10
+    },
+    {
+      "BTR": 0,
+      "BTRLite": 5,
+      "Tank": 0,
+      "TankLite": 10,
+      "Rocket": 0,
+      "RocketLite": 5,
+      "SoldatAK": 10,
+      "SoldatBazooka": 10
+    },
+    {
+      "BTR": 5,
+      "BTRLite": 5,
+      "Tank": 0,
+      "TankLite": 5,
+      "Rocket": 0,
+      "RocketLite": 5,
+      "SoldatAK": 5,
+      "SoldatBazooka": 5
+    },
+    {
+      "BTR": 10,
+      "BTRLite": 5,
+      "Tank": 0,
+      "TankLite": 5,
+      "Rocket": 0,
+      "RocketLite": 5,
+      "SoldatAK": 5,
+      "SoldatBazooka": 5
+    },
+    {
+      "BTR": 5,
+      "BTRLite": 5,
+      "Tank": 5,
+      "TankLite": 5,
+      "Rocket": 0,
+      "RocketLite": 5,
+      "SoldatAK": 5,
+      "SoldatBazooka": 5
+    },
+    {
+      "BTR": 5,
+      "BTRLite": 5,
+      "Tank": 5,
+      "TankLite": 5,
+      "Rocket": 0,
+      "RocketLite": 10,
+      "SoldatAK": 5,
+      "SoldatBazooka": 5
+    },
+    {
+      "BTR": 5,
+      "BTRLite": 5,
+      "Tank": 5,
+      "TankLite": 5,
+      "Rocket": 5,
+      "RocketLite": 5,
+      "SoldatAK": 5,
+      "SoldatBazooka": 5
+    },
+    {
+      "BTR": 5,
+      "BTRLite": 5,
+      "Tank": 5,
+      "TankLite": 5,
+      "Rocket": 5,
+      "RocketLite": 5,
+      "SoldatAK": 5,
+      "SoldatBazooka": 5
+    },
+    {
+      "BTR": 10,
+      "BTRLite": 10,
+      "Tank": 5,
+      "TankLite": 5,
+      "Rocket": 5,
+      "RocketLite": 5,
+      "SoldatAK": 0,
+      "SoldatBazooka": 0
+    },
+    {
+      "BTR": 5,
+      "BTRLite": 5,
+      "Tank": 10,
+      "TankLite": 10,
+      "Rocket": 5,
+      "RocketLite": 5,
+      "SoldatAK": 0,
+      "SoldatBazooka": 0
+    },
+    {
+      "BTR": 5,
+      "BTRLite": 5,
+      "Tank": 5,
+      "TankLite": 5,
+      "Rocket": 10,
+      "RocketLite": 10,
+      "SoldatAK": 0,
+      "SoldatBazooka": 0
+    },
+    {
+      "BTR": 5,
+      "BTRLite": 5,
+      "Tank": 5,
+      "TankLite": 5,
+      "Rocket": 5,
+      "RocketLite": 5,
+      "SoldatAK": 5,
+      "SoldatBazooka": 5
+    },
+    {
+      "BTR": 5,
+      "BTRLite": 5,
+      "Tank": 5,
+      "TankLite": 5,
+      "Rocket": 10,
+      "RocketLite": 10,
+      "SoldatAK": 0,
+      "SoldatBazooka": 0
+    }
+  ],
+  "omps": [
+    {
+      "cost": 50,
+      "damage": 100,
+      "name": "Atom",
+      "sound": "soundCracker"
+    },
+    {
+      "cost": 20,
+      "damage": 100,
+      "name": "Avia",
+      "sound": "soundCracker"
+    },
+    {
+      "cost": 10,
+      "damage": 100,
+      "name": "Mine",
+      "sound": "soundCracker"
+    }
+  ],
+  "enemys": [
+    {
+      "cost": 1,
+      "damage": 20,
+      "distance": 300,
+      "health": 55,
+      "name": "BTR",
+      "rate": 100,
+      "sound": "soundBTRLite",
+      "sourceClass": "UnitBTR",
+      "speed": 3
+    },
+    {
+      "cost": 1,
+      "damage": 10,
+      "distance": 300,
+      "health": 45,
+      "name": "BTRLite",
+      "rate": 100,
+      "sound": "soundBTRLite",
+      "sourceClass": "UnitBTRLite",
+      "speed": 3
+    },
+    {
+      "cost": 3,
+      "damage": 30,
+      "distance": 380,
+      "health": 85,
+      "name": "Tank",
+      "rate": 100,
+      "sound": "soundTank",
+      "sourceClass": "UnitTank",
+      "speed": 1
+    },
+    {
+      "cost": 2,
+      "damage": 25,
+      "distance": 320,
+      "health": 65,
+      "name": "TankLite",
+      "rate": 100,
+      "sound": "soundTankLite",
+      "sourceClass": "UnitTankLite",
+      "speed": 1
+    },
+    {
+      "cost": 4,
+      "damage": 40,
+      "distance": 500,
+      "health": 105,
+      "name": "RocketBig",
+      "rate": 100,
+      "sound": "soundRocket",
+      "sourceClass": "UnitRocket",
+      "speed": 1
+    },
+    {
+      "cost": 3,
+      "damage": 20,
+      "distance": 400,
+      "health": 85,
+      "name": "RocketLite",
+      "rate": 100,
+      "sound": "soundRocketLite",
+      "sourceClass": "UnitRocketLite",
+      "speed": 1
+    },
+    {
+      "cost": 1,
+      "damage": 5,
+      "distance": 200,
+      "health": 10,
+      "name": "SoldatAK",
+      "rate": 100,
+      "sound": "soundSoldatAK",
+      "sourceClass": "UnitSoldatAK",
+      "speed": 2
+    },
+    {
+      "cost": 1,
+      "damage": 20,
+      "distance": 230,
+      "health": 10,
+      "name": "SoldatBazooka",
+      "rate": 100,
+      "sound": "soundSoldatBazooka",
+      "sourceClass": "UnitSoldatBazooka",
+      "speed": 2
+    }
+  ]
+}

@@ -1,0 +1,3183 @@
+{
+  "frameRate": 30,
+  "mainFrameCount": 1,
+  "mainLabels": [
+    {
+      "frame": 1,
+      "label": "Main"
+    }
+  ],
+  "timelines": [
+    {
+      "id": 10,
+      "class": "ButtonWeek",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 12,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 41,
+      "class": "assetsGame_fla.soldierDie5_89",
+      "frames": 90,
+      "labels": []
+    },
+    {
+      "id": 47,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 48,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 49,
+      "class": "assetsUI_fla.Page1_61",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 50,
+      "class": "BackgroundButton",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 52,
+      "class": "ButtonSubmitScore",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 59,
+      "class": "assetsUI_fla.shina1push_25",
+      "frames": 3,
+      "labels": []
+    },
+    {
+      "id": 62,
+      "class": "ButtonSkinCannonBig",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 64,
+      "class": "ButtonSale",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 70,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 72,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 74,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 76,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 78,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 80,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 82,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 84,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 86,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 88,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 90,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 92,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 94,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 101,
+      "class": "assetsGame_fla.shootTank_111",
+      "frames": 7,
+      "labels": []
+    },
+    {
+      "id": 103,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 105,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 107,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 108,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 110,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 111,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 112,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 113,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 114,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 115,
+      "class": "assetsGame_fla.explCloudsFlame_105",
+      "frames": 14,
+      "labels": []
+    },
+    {
+      "id": 116,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 120,
+      "class": "assetsGame_fla.t1dulo_103",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 125,
+      "class": "assetsGame_fla.shina1push_230",
+      "frames": 3,
+      "labels": []
+    },
+    {
+      "id": 138,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 139,
+      "class": "",
+      "frames": 33,
+      "labels": []
+    },
+    {
+      "id": 161,
+      "class": "",
+      "frames": 21,
+      "labels": []
+    },
+    {
+      "id": 162,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 182,
+      "class": "assetsGame_fla.zenit_236",
+      "frames": 36,
+      "labels": []
+    },
+    {
+      "id": 208,
+      "class": "assetsGame_fla.pushka2FrS_249",
+      "frames": 40,
+      "labels": []
+    },
+    {
+      "id": 210,
+      "class": "ButtonBack",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 215,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 221,
+      "class": "assetsGame_fla.t2pushka_147",
+      "frames": 40,
+      "labels": []
+    },
+    {
+      "id": 223,
+      "class": "assetsGame_fla.zenitFull_229",
+      "frames": 170,
+      "labels": []
+    },
+    {
+      "id": 227,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 228,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 231,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 232,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 234,
+      "class": "assetsGame_fla.btr1pulemetBr_194",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 237,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 239,
+      "class": "ButtonNewGame",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 241,
+      "class": "ButtonHighScores",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 243,
+      "class": "ButtonLoad",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 245,
+      "class": "ButtonCredits",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 249,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 251,
+      "class": "ButtonAddGame",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 254,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 257,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 258,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 262,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 264,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 265,
+      "class": "ContentScreenMainMenu",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 269,
+      "class": "ContentScreenCredits",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 271,
+      "class": "ButtonSkinCannonNormal",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 276,
+      "class": "assetsUI_fla.Symbol1asdf_12",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 277,
+      "class": "ButtonPause",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 281,
+      "class": "",
+      "frames": 16,
+      "labels": []
+    },
+    {
+      "id": 282,
+      "class": "assetsGame_fla.soldier_84",
+      "frames": 80,
+      "labels": []
+    },
+    {
+      "id": 305,
+      "class": "assetsGame_fla.soldierDie1_85",
+      "frames": 86,
+      "labels": []
+    },
+    {
+      "id": 333,
+      "class": "assetsGame_fla.soldierDie2_86",
+      "frames": 88,
+      "labels": []
+    },
+    {
+      "id": 353,
+      "class": "assetsGame_fla.soldierDie3_87",
+      "frames": 69,
+      "labels": []
+    },
+    {
+      "id": 388,
+      "class": "assetsGame_fla.soldierDie4_88",
+      "frames": 85,
+      "labels": []
+    },
+    {
+      "id": 416,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 417,
+      "class": "assetsGame_fla.soldierDie6_90",
+      "frames": 104,
+      "labels": []
+    },
+    {
+      "id": 438,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 439,
+      "class": "assetsGame_fla.soldierDie7_92",
+      "frames": 70,
+      "labels": []
+    },
+    {
+      "id": 440,
+      "class": "UnitSoldatAK",
+      "frames": 90,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "Run"
+        },
+        {
+          "frame": 10,
+          "label": "Shoot"
+        },
+        {
+          "frame": 20,
+          "label": "d1"
+        },
+        {
+          "frame": 30,
+          "label": "d2"
+        },
+        {
+          "frame": 40,
+          "label": "d3"
+        },
+        {
+          "frame": 50,
+          "label": "d4"
+        },
+        {
+          "frame": 60,
+          "label": "d5"
+        },
+        {
+          "frame": 70,
+          "label": "d6"
+        },
+        {
+          "frame": 80,
+          "label": "d7"
+        }
+      ]
+    },
+    {
+      "id": 454,
+      "class": "assetsGame_fla.pushkaS_254",
+      "frames": 24,
+      "labels": []
+    },
+    {
+      "id": 457,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 458,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 459,
+      "class": "ButtonSkinWeaponBazooka",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 463,
+      "class": "ButtonCloseHelp",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 465,
+      "class": "ContentScreenHelp",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 468,
+      "class": "ContentWeaponBullet",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 470,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 471,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 472,
+      "class": "ButtonSkinWeaponMashineGun",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 475,
+      "class": "ButtonSkinOMPMine",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 482,
+      "class": "assetsUI_fla.Symbol12312_10",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 483,
+      "class": "ButtonAchivements",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 486,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 487,
+      "class": "ContentViewInventory",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 490,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 491,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 492,
+      "class": "ButtonSkinWeaponRocket",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 495,
+      "class": "assetsGame_fla.zenitBrr_231",
+      "frames": 170,
+      "labels": []
+    },
+    {
+      "id": 497,
+      "class": "assetsUI_fla.Symbol1_94",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 498,
+      "class": "ButtonCloseAchivements",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 501,
+      "class": "ButtonSkinCannonSmall",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 503,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 505,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 506,
+      "class": "ContentAchivementBronze",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 508,
+      "class": "ContentMediumBullet",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 511,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 513,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 516,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 520,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 523,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 527,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 530,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 531,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 534,
+      "class": "",
+      "frames": 5,
+      "labels": []
+    },
+    {
+      "id": 536,
+      "class": "",
+      "frames": 50,
+      "labels": []
+    },
+    {
+      "id": 537,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 541,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 543,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 548,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 549,
+      "class": "",
+      "frames": 48,
+      "labels": []
+    },
+    {
+      "id": 551,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 552,
+      "class": "assetsGame_fla.t3bashSoot_225",
+      "frames": 26,
+      "labels": []
+    },
+    {
+      "id": 553,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 555,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 556,
+      "class": "UnitRocket",
+      "frames": 99,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "stay"
+        },
+        {
+          "frame": 10,
+          "label": "move"
+        },
+        {
+          "frame": 20,
+          "label": "stayBr"
+        },
+        {
+          "frame": 30,
+          "label": "moveBr"
+        },
+        {
+          "frame": 40,
+          "label": "stayFire"
+        },
+        {
+          "frame": 50,
+          "label": "moveFire"
+        },
+        {
+          "frame": 60,
+          "label": "die"
+        },
+        {
+          "frame": 70,
+          "label": "shoot"
+        },
+        {
+          "frame": 80,
+          "label": "shootBr"
+        },
+        {
+          "frame": 90,
+          "label": "shootFire"
+        }
+      ]
+    },
+    {
+      "id": 568,
+      "class": "",
+      "frames": 16,
+      "labels": []
+    },
+    {
+      "id": 590,
+      "class": "assetsUI_fla.soldierDie1_127",
+      "frames": 45,
+      "labels": []
+    },
+    {
+      "id": 591,
+      "class": "PreloaderProgressBar",
+      "frames": 100,
+      "labels": []
+    },
+    {
+      "id": 595,
+      "class": "ContentWeaponReload",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 597,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 599,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 600,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 602,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 603,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 604,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 605,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 606,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 608,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 611,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 618,
+      "class": "assetsGame_fla.t2pushkaBroken_159",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 619,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 621,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 623,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 624,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 625,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 626,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 627,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 628,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 629,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 631,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 632,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 633,
+      "class": "",
+      "frames": 48,
+      "labels": []
+    },
+    {
+      "id": 634,
+      "class": "UnitTank",
+      "frames": 99,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "stay"
+        },
+        {
+          "frame": 10,
+          "label": "move"
+        },
+        {
+          "frame": 20,
+          "label": "stayBr"
+        },
+        {
+          "frame": 30,
+          "label": "moveBr"
+        },
+        {
+          "frame": 40,
+          "label": "stayFire"
+        },
+        {
+          "frame": 50,
+          "label": "moveFire"
+        },
+        {
+          "frame": 60,
+          "label": "die"
+        },
+        {
+          "frame": 70,
+          "label": "shoot"
+        },
+        {
+          "frame": 80,
+          "label": "shootBr"
+        },
+        {
+          "frame": 90,
+          "label": "shootFire"
+        }
+      ]
+    },
+    {
+      "id": 639,
+      "class": "UnitOMPAvia",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 641,
+      "class": "assetsGame_fla.soldier2_273",
+      "frames": 85,
+      "labels": []
+    },
+    {
+      "id": 645,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 647,
+      "class": "ContentScreenUIGame",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 651,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 652,
+      "class": "assetsUI_fla.Symbol2_20",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 656,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 657,
+      "class": "assetsUI_fla.Symbol3_23",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 665,
+      "class": "assetsGame_fla.t1dulob_122",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 668,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 682,
+      "class": "assetsGame_fla.minom_238",
+      "frames": 50,
+      "labels": []
+    },
+    {
+      "id": 685,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 688,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 689,
+      "class": "ContentLargeSFX",
+      "frames": 20,
+      "labels": []
+    },
+    {
+      "id": 691,
+      "class": "ButtonRestart",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 693,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 696,
+      "class": "ButtonResume",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 698,
+      "class": "ButtonQuit",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 699,
+      "class": "ContentScreenPause",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 724,
+      "class": "assetsGame_fla.pushka2BrS_248",
+      "frames": 40,
+      "labels": []
+    },
+    {
+      "id": 741,
+      "class": "assetsGame_fla.zenitBrS_235",
+      "frames": 36,
+      "labels": []
+    },
+    {
+      "id": 747,
+      "class": "ButtonSkinOMPAtom",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 763,
+      "class": "assetsGame_fla.minomBr_240",
+      "frames": 50,
+      "labels": []
+    },
+    {
+      "id": 768,
+      "class": "ButtonSubmit",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 772,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 775,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 777,
+      "class": "",
+      "frames": 50,
+      "labels": []
+    },
+    {
+      "id": 778,
+      "class": "",
+      "frames": 48,
+      "labels": []
+    },
+    {
+      "id": 798,
+      "class": "assetsGame_fla.maxShoot_261",
+      "frames": 21,
+      "labels": []
+    },
+    {
+      "id": 818,
+      "class": "assetsGame_fla.maxShootBr_262",
+      "frames": 21,
+      "labels": []
+    },
+    {
+      "id": 819,
+      "class": "UnitMaxim",
+      "frames": 70,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "full"
+        },
+        {
+          "frame": 10,
+          "label": "break"
+        },
+        {
+          "frame": 20,
+          "label": "fire"
+        },
+        {
+          "frame": 30,
+          "label": "die"
+        },
+        {
+          "frame": 40,
+          "label": "shootFull"
+        },
+        {
+          "frame": 51,
+          "label": "shootBr"
+        },
+        {
+          "frame": 60,
+          "label": "shootFr"
+        }
+      ]
+    },
+    {
+      "id": 824,
+      "class": "assetsUI_fla.Symbol1_50",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 826,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 828,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 832,
+      "class": "ButtonTreat",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 833,
+      "class": "assetsUI_fla.weapon_btn_52",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 841,
+      "class": "TutorialScreen",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 842,
+      "class": "ButtonStartLevel",
+      "frames": 3,
+      "labels": []
+    },
+    {
+      "id": 845,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 846,
+      "class": "ContentScreenLevelFailed",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 848,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 851,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 852,
+      "class": "ContentAchivementGold",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 855,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 857,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 865,
+      "class": "",
+      "frames": 5,
+      "labels": []
+    },
+    {
+      "id": 868,
+      "class": "assetsGame_fla.helPulemetEm_65",
+      "frames": 7,
+      "labels": []
+    },
+    {
+      "id": 870,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 872,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 874,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 875,
+      "class": "assetsGame_fla.helPulemet_73",
+      "frames": 11,
+      "labels": []
+    },
+    {
+      "id": 878,
+      "class": "assetsGame_fla.pulem_74",
+      "frames": 15,
+      "labels": []
+    },
+    {
+      "id": 881,
+      "class": "assetsGame_fla.helBz_75",
+      "frames": 10,
+      "labels": []
+    },
+    {
+      "id": 882,
+      "class": "assetsGame_fla.raketMet_76",
+      "frames": 10,
+      "labels": []
+    },
+    {
+      "id": 883,
+      "class": "assetsGame_fla.vertuVing_64",
+      "frames": 80,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "smalPul"
+        },
+        {
+          "frame": 10,
+          "label": "bigPul"
+        },
+        {
+          "frame": 20,
+          "label": "bazoo"
+        },
+        {
+          "frame": 30,
+          "label": "raketomet"
+        },
+        {
+          "frame": 41,
+          "label": "smalPulF"
+        },
+        {
+          "frame": 50,
+          "label": "bigPulF"
+        },
+        {
+          "frame": 60,
+          "label": "bazooF"
+        },
+        {
+          "frame": 70,
+          "label": "raketometF"
+        }
+      ]
+    },
+    {
+      "id": 884,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 887,
+      "class": "assetsGame_fla.vertuVingA_78",
+      "frames": 40,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "Cannon"
+        },
+        {
+          "frame": 10,
+          "label": "MashineGun"
+        },
+        {
+          "frame": 20,
+          "label": "Bazooka"
+        },
+        {
+          "frame": 30,
+          "label": "Rocket"
+        }
+      ]
+    },
+    {
+      "id": 888,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 889,
+      "class": "UnitHeli",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 892,
+      "class": "ContentBarrage",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 893,
+      "class": "ButtonOpenViewInventory",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 894,
+      "class": "ButtonOpenViewOMP",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 897,
+      "class": "ButtonSkinOMPAvia",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 901,
+      "class": "ContentScreenGame",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 905,
+      "class": "",
+      "frames": 3,
+      "labels": []
+    },
+    {
+      "id": 909,
+      "class": "assetsGame_fla.btr1pulemet_182",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 910,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 914,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 915,
+      "class": "",
+      "frames": 31,
+      "labels": []
+    },
+    {
+      "id": 919,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 922,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 925,
+      "class": "",
+      "frames": 43,
+      "labels": []
+    },
+    {
+      "id": 926,
+      "class": "UnitBTR",
+      "frames": 99,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "stay"
+        },
+        {
+          "frame": 10,
+          "label": "move"
+        },
+        {
+          "frame": 20,
+          "label": "stayBr"
+        },
+        {
+          "frame": 30,
+          "label": "moveBr"
+        },
+        {
+          "frame": 40,
+          "label": "stayFire"
+        },
+        {
+          "frame": 50,
+          "label": "moveFire"
+        },
+        {
+          "frame": 60,
+          "label": "die"
+        },
+        {
+          "frame": 70,
+          "label": "shoot"
+        },
+        {
+          "frame": 80,
+          "label": "shootBr"
+        },
+        {
+          "frame": 90,
+          "label": "shootFire"
+        }
+      ]
+    },
+    {
+      "id": 929,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 932,
+      "class": "ButtonSoundOffOn",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 934,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 935,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 936,
+      "class": "ButtonSkinWeaponCannon",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 939,
+      "class": "ButtonNext",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 943,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 944,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 945,
+      "class": "ContentScreenLevelVictory",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 948,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 949,
+      "class": "ContentSmallBullet",
+      "frames": 4,
+      "labels": []
+    },
+    {
+      "id": 953,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 955,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 957,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 961,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 964,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 966,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 968,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 970,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 972,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 974,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 976,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 977,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 979,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 980,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 981,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 982,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 984,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 986,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 987,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 988,
+      "class": "Background",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 991,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 992,
+      "class": "ContentSmokeSFX",
+      "frames": 59,
+      "labels": []
+    },
+    {
+      "id": 995,
+      "class": "ButtonDay",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 1000,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1002,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1003,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1005,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1008,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1009,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1011,
+      "class": "",
+      "frames": 50,
+      "labels": []
+    },
+    {
+      "id": 1015,
+      "class": "",
+      "frames": 6,
+      "labels": []
+    },
+    {
+      "id": 1016,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1017,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1018,
+      "class": "",
+      "frames": 31,
+      "labels": []
+    },
+    {
+      "id": 1019,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1021,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1023,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1024,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1026,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1028,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1029,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1030,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1032,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1034,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1035,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1037,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1038,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1039,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1041,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1042,
+      "class": "",
+      "frames": 48,
+      "labels": []
+    },
+    {
+      "id": 1043,
+      "class": "UnitTankLite",
+      "frames": 99,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "stay"
+        },
+        {
+          "frame": 10,
+          "label": "move"
+        },
+        {
+          "frame": 20,
+          "label": "stayBr"
+        },
+        {
+          "frame": 30,
+          "label": "moveBr"
+        },
+        {
+          "frame": 40,
+          "label": "stayFire"
+        },
+        {
+          "frame": 50,
+          "label": "moveFire"
+        },
+        {
+          "frame": 60,
+          "label": "die"
+        },
+        {
+          "frame": 70,
+          "label": "shoot"
+        },
+        {
+          "frame": 80,
+          "label": "shootBr"
+        },
+        {
+          "frame": 90,
+          "label": "shootFire"
+        }
+      ]
+    },
+    {
+      "id": 1047,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1051,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1055,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1059,
+      "class": "",
+      "frames": 48,
+      "labels": []
+    },
+    {
+      "id": 1086,
+      "class": "assetsGame_fla.pushka2FS_247",
+      "frames": 40,
+      "labels": []
+    },
+    {
+      "id": 1087,
+      "class": "UnitCannonNormal",
+      "frames": 70,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "full"
+        },
+        {
+          "frame": 10,
+          "label": "break"
+        },
+        {
+          "frame": 20,
+          "label": "fire"
+        },
+        {
+          "frame": 30,
+          "label": "die"
+        },
+        {
+          "frame": 40,
+          "label": "shootFull"
+        },
+        {
+          "frame": 51,
+          "label": "shootBr"
+        },
+        {
+          "frame": 60,
+          "label": "shootFr"
+        }
+      ]
+    },
+    {
+      "id": 1091,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1093,
+      "class": "ButtonSkinMortar",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1109,
+      "class": "assetsGame_fla.zenitF_234",
+      "frames": 36,
+      "labels": []
+    },
+    {
+      "id": 1112,
+      "class": "ButtonSkinMaxim",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1115,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1121,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1124,
+      "class": "ButtonMonth",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 1127,
+      "class": "ButtonAll",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 1130,
+      "class": "ButtonCloseHighScore",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 1132,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1135,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1137,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1139,
+      "class": "ContentScreenHighScores",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1141,
+      "class": "",
+      "frames": 48,
+      "labels": []
+    },
+    {
+      "id": 1142,
+      "class": "UnitMortar",
+      "frames": 70,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "full"
+        },
+        {
+          "frame": 10,
+          "label": "break"
+        },
+        {
+          "frame": 20,
+          "label": "fire"
+        },
+        {
+          "frame": 30,
+          "label": "die"
+        },
+        {
+          "frame": 40,
+          "label": "shootFull"
+        },
+        {
+          "frame": 51,
+          "label": "shootBr"
+        },
+        {
+          "frame": 60,
+          "label": "shootFr"
+        }
+      ]
+    },
+    {
+      "id": 1145,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1146,
+      "class": "ContentViewWeapon",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1148,
+      "class": "ContentWeaponCross",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1151,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1153,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1154,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1155,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1156,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1157,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1161,
+      "class": "",
+      "frames": 9,
+      "labels": []
+    },
+    {
+      "id": 1162,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1163,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1164,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1165,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1167,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1168,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1169,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1170,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1171,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1172,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1173,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1174,
+      "class": "",
+      "frames": 48,
+      "labels": []
+    },
+    {
+      "id": 1175,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1176,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1177,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1178,
+      "class": "UnitRocketLite",
+      "frames": 99,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "stay"
+        },
+        {
+          "frame": 10,
+          "label": "move"
+        },
+        {
+          "frame": 20,
+          "label": "stayBr"
+        },
+        {
+          "frame": 30,
+          "label": "moveBr"
+        },
+        {
+          "frame": 40,
+          "label": "stayFire"
+        },
+        {
+          "frame": 50,
+          "label": "moveFire"
+        },
+        {
+          "frame": 60,
+          "label": "die"
+        },
+        {
+          "frame": 70,
+          "label": "shoot"
+        },
+        {
+          "frame": 80,
+          "label": "shootBr"
+        },
+        {
+          "frame": 90,
+          "label": "shootFire"
+        }
+      ]
+    },
+    {
+      "id": 1180,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1182,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1184,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1186,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1188,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1189,
+      "class": "ContentSmallSFX",
+      "frames": 13,
+      "labels": []
+    },
+    {
+      "id": 1190,
+      "class": "ContentBulletSFX",
+      "frames": 20,
+      "labels": []
+    },
+    {
+      "id": 1210,
+      "class": "",
+      "frames": 85,
+      "labels": []
+    },
+    {
+      "id": 1225,
+      "class": "",
+      "frames": 85,
+      "labels": []
+    },
+    {
+      "id": 1228,
+      "class": "",
+      "frames": 48,
+      "labels": []
+    },
+    {
+      "id": 1242,
+      "class": "assetsGame_fla.pushkaBrS_255",
+      "frames": 24,
+      "labels": []
+    },
+    {
+      "id": 1243,
+      "class": "UnitCannonSmall",
+      "frames": 70,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "full"
+        },
+        {
+          "frame": 10,
+          "label": "break"
+        },
+        {
+          "frame": 20,
+          "label": "fire"
+        },
+        {
+          "frame": 30,
+          "label": "die"
+        },
+        {
+          "frame": 40,
+          "label": "shootFull"
+        },
+        {
+          "frame": 51,
+          "label": "shootBr"
+        },
+        {
+          "frame": 60,
+          "label": "shootFr"
+        }
+      ]
+    },
+    {
+      "id": 1250,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1252,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1253,
+      "class": "PreloaderBackground",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1258,
+      "class": "assetsGame_fla.zenitBr_232",
+      "frames": 170,
+      "labels": []
+    },
+    {
+      "id": 1261,
+      "class": "",
+      "frames": 43,
+      "labels": []
+    },
+    {
+      "id": 1262,
+      "class": "UnitCannonBig",
+      "frames": 70,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "full"
+        },
+        {
+          "frame": 10,
+          "label": "break"
+        },
+        {
+          "frame": 20,
+          "label": "fire"
+        },
+        {
+          "frame": 30,
+          "label": "die"
+        },
+        {
+          "frame": 40,
+          "label": "shootFull"
+        },
+        {
+          "frame": 51,
+          "label": "shootBr"
+        },
+        {
+          "frame": 60,
+          "label": "shootFr"
+        }
+      ]
+    },
+    {
+      "id": 1289,
+      "class": "UnitOMPAtom",
+      "frames": 64,
+      "labels": []
+    },
+    {
+      "id": 1292,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1296,
+      "class": "ContentAchivementCombo2",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1299,
+      "class": "PreloaderSponsorClip",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1302,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1303,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1304,
+      "class": "ContentAchivementSilver",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1307,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1311,
+      "class": "ContentAchivementCombo5",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1313,
+      "class": "ContentLargeBullet",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1316,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1317,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1319,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1320,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1321,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1323,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1324,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1326,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1327,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1329,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1330,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1332,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1334,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1335,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1337,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1338,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1339,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1342,
+      "class": "",
+      "frames": 30,
+      "labels": []
+    },
+    {
+      "id": 1343,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1344,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1345,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1346,
+      "class": "",
+      "frames": 48,
+      "labels": []
+    },
+    {
+      "id": 1347,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1348,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1349,
+      "class": "UnitBTRLite",
+      "frames": 99,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "stay"
+        },
+        {
+          "frame": 10,
+          "label": "move"
+        },
+        {
+          "frame": 20,
+          "label": "stayBr"
+        },
+        {
+          "frame": 30,
+          "label": "moveBr"
+        },
+        {
+          "frame": 40,
+          "label": "stayFire"
+        },
+        {
+          "frame": 50,
+          "label": "moveFire"
+        },
+        {
+          "frame": 60,
+          "label": "die"
+        },
+        {
+          "frame": 70,
+          "label": "shoot"
+        },
+        {
+          "frame": 80,
+          "label": "shootBr"
+        },
+        {
+          "frame": 90,
+          "label": "shootFire"
+        }
+      ]
+    },
+    {
+      "id": 1351,
+      "class": "PreloaderButtonPlay",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1353,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1355,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1356,
+      "class": "ContentScreenAchivements",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1363,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1365,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1367,
+      "class": "assetsUI_fla.Symbol1_16",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1372,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1373,
+      "class": "ContentViewOMP",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1376,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1377,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1378,
+      "class": "ContentAchivementDefender",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1379,
+      "class": "ButtonOpenViewWeapon",
+      "frames": 2,
+      "labels": []
+    },
+    {
+      "id": 1381,
+      "class": "UnitOMPMine",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1384,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1385,
+      "class": "ButtonBuyCoins",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1386,
+      "class": "",
+      "frames": 16,
+      "labels": []
+    },
+    {
+      "id": 1387,
+      "class": "UnitSoldatBazooka",
+      "frames": 91,
+      "labels": [
+        {
+          "frame": 1,
+          "label": "Run"
+        },
+        {
+          "frame": 11,
+          "label": "Shoot"
+        },
+        {
+          "frame": 21,
+          "label": "d1"
+        },
+        {
+          "frame": 31,
+          "label": "d2"
+        },
+        {
+          "frame": 41,
+          "label": "d3"
+        },
+        {
+          "frame": 51,
+          "label": "d4"
+        },
+        {
+          "frame": 61,
+          "label": "d5"
+        },
+        {
+          "frame": 71,
+          "label": "d6"
+        },
+        {
+          "frame": 81,
+          "label": "d7"
+        }
+      ]
+    },
+    {
+      "id": 1389,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1393,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1397,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1400,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1401,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1402,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1404,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1405,
+      "class": "",
+      "frames": 220,
+      "labels": []
+    },
+    {
+      "id": 1411,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1418,
+      "class": "",
+      "frames": 12,
+      "labels": []
+    },
+    {
+      "id": 1419,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1421,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1423,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1426,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1427,
+      "class": "",
+      "frames": 20,
+      "labels": []
+    },
+    {
+      "id": 1428,
+      "class": "",
+      "frames": 54,
+      "labels": []
+    },
+    {
+      "id": 1429,
+      "class": "Fog_EN3_fla.preloaderBar_56",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1430,
+      "class": "preLoaderVisual",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1432,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1433,
+      "class": "SitelockWindow",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1443,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1444,
+      "class": "Fog_EN3_fla.FOG_17",
+      "frames": 3,
+      "labels": []
+    },
+    {
+      "id": 1445,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1447,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1449,
+      "class": "",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1451,
+      "class": "",
+      "frames": 300,
+      "labels": []
+    },
+    {
+      "id": 1452,
+      "class": "newMini",
+      "frames": 1,
+      "labels": []
+    },
+    {
+      "id": 1454,
+      "class": "Blank",
+      "frames": 1,
+      "labels": []
+    }
+  ],
+  "tagHistogram": {
+    "0": 437,
+    "1": 6311,
+    "2": 448,
+    "6": 1,
+    "8": 1,
+    "9": 1,
+    "11": 39,
+    "14": 39,
+    "20": 1,
+    "21": 1,
+    "22": 26,
+    "26": 16991,
+    "28": 631,
+    "32": 20,
+    "34": 2,
+    "35": 11,
+    "36": 3,
+    "37": 37,
+    "39": 436,
+    "41": 1,
+    "43": 126,
+    "45": 408,
+    "56": 1,
+    "63": 1,
+    "64": 1,
+    "65": 1,
+    "69": 1,
+    "70": 3528,
+    "73": 8,
+    "74": 64,
+    "75": 8,
+    "76": 1,
+    "77": 1,
+    "82": 267,
+    "83": 380,
+    "87": 5,
+    "88": 7,
+    "91": 1
+  }
+}

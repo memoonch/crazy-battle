@@ -1,0 +1,23 @@
+{
+  "files": {
+    "images": 17,
+    "shapes": 874,
+    "sounds": 39,
+    "fonts": 7,
+    "texts": 76,
+    "binaryData": 5
+  },
+  "scriptFiles": 267,
+  "symbols": 202,
+  "timelines": 436,
+  "swf": {
+    "version": 12,
+    "frameRate": 30,
+    "mainFrames": 1
+  },
+  "hashes": {
+    "original/crazy-battle.swf": "644c8c8309f418e87a44de4f9686876578296ac4528f8cade09915982986a457",
+    "original/game.swf": "6f1fc2487f468664cb40d96e93f7272a40b52a7ea3e3cf15ac85c676afe52bdd",
+    "standalone/build/crazy-battle.swf": "d468ec489309bf7f8164a18e4e26697dd1b24f1e18a60a87e6d2c3ca3a5ada6b"
+  }
+}
