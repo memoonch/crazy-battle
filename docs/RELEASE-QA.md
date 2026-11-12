@@ -1,6 +1,6 @@
 # Release QA — 12 November 2026
 
-Status: campaign and sampled controls pass; fullscreen visual coverage remains unresolved in the embedded browser capture. This is not a blanket release approval.
+Status: campaign and sampled controls pass. Follow-up fullscreen checks without a viewport override filled the 1680 × 1050 display without black borders; browser-view fallback also filled the available window. This is not a blanket release approval.
 
 ## Verified
 
@@ -32,7 +32,7 @@ These synthetic renderer samples are approximately 60 fps on this machine, not a
 
 ## Remaining visual check
 
-Fullscreen entered and exited with F, and the canvas DOM bounds/backing size reported 1280 × 900. The embedded browser screenshot nevertheless displayed black space beyond a smaller rendered region. Its cause was not established. Native fullscreen coverage and Escape handling need a normal-browser check before release. Subjective audio listening and physical-device testing also remain outside this pass.
+The initial fullscreen capture used a viewport override and showed black space. Follow-up testing without an override visually confirmed full coverage at 1680 × 1050, matching the canvas bounds and backing size. F exited native fullscreen. When the embedded browser denied a subsequent native request, browser-view fallback filled its entire available window; Escape restored the normal view. The keyboard handler now explicitly exits either fullscreen mode on Escape when the key reaches the page. Native browser-level Escape interception varies by host; native Escape after this change was not separately exercised. All 80 tests still pass. See `fullscreen-verified.png` for the borderless fallback capture. Subjective audio listening, other browser engines and physical-device testing remain outside this pass.
 
 ## Reproduce
 

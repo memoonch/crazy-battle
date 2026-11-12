@@ -36,7 +36,7 @@ function updateFullscreen() {
 }
 document.addEventListener('fullscreenchange', updateFullscreen);
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && viewport.expanded) {
+  if (event.key === 'Escape' && viewport.fullscreen) {
     event.preventDefault(); event.stopPropagation(); fullscreen(); return;
   }
   if (event.code === 'KeyF' && !event.repeat && !event.ctrlKey && !event.metaKey && !event.altKey && !/INPUT|SELECT|TEXTAREA/.test(event.target.tagName)) {

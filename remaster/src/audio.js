@@ -50,14 +50,31 @@ export class AudioManager {
     source.onended=()=>{this.voices--;source.disconnect();filter.disconnect();gain.disconnect();};
   }
   click() { this.tone(760,420,.035,.025); }
-  combatEvent(type) {
+  combatEvent(type,detail={}) {
     if(type==='achievement'){this.tone(660,660,.18,.04,'sine');this.tone(990,990,.24,.035,'sine',.12);return;}
-    if(type==='explosion'){this.burst(180,.35,.2);this.tone(85,28,.3,.16,'triangle');return;}
-    if(type==='shot'){this.burst(1900,.09,.19);this.tone(150,48,.085,.12,'triangle');this.tone(2600,900,.025,.025);}
+    if(type==='explosion'){this.burst(180,.4,.18);this.tone(85,28,.38,.14,'triangle');this.burst(900,.16,.055);return;}
+    if(type==='shot'){
+      const profile={Cannon:[1700,.10,.17,145,42,.13],MashineGun:[2600,.045,.11,190,80,.055],Bazooka:[520,.22,.13,105,35,.10],Rocket:[850,.30,.12,135,45,.09]}[detail.weapon]||[1700,.10,.17,145,42,.13];
+      const [hz,duration,level,start,end,body]=profile;
+      this.burst(hz,duration,level);this.tone(start,end,duration,body,'triangle');
+      if(detail.weapon==='MashineGun')this.tone(1800,650,.018,.022);
+      else if(['Bazooka','Rocket'].includes(detail.weapon))this.burst(2400,.15,.045);
+      else this.tone(2400,800,.025,.025);
+      return;
+    }
+    if(type==='enemy-hit'){
+      // Limit mass-hit voices without changing the combat event stream.
+      if(!this.context||this.context.currentTime-(this.lastImpact??-1)<.035)return;
+      this.lastImpact=this.context.currentTime;
+      if(detail.vehicle){this.burst(3100,.045,.05);this.tone(680,230,.075,.035,'triangle');}
+      else {this.burst(800,.055,.045);this.tone(130,65,.045,.025,'triangle');}
+      if(detail.destroyed&&detail.vehicle){this.burst(220,.22,.10);this.tone(75,30,.22,.07,'triangle');}
+      return;
+    }
     if(type==='defense-shot'){this.burst(2200,.065,.10);this.tone(125,62,.065,.055,'triangle');}
     if(type==='base-hit'||type==='defense-hit'){this.burst(700,.13,.07);this.tone(95,38,.13,.055,'triangle');}
-    if(type==='reload-start'){this.burst(2600,.07,.035);this.tone(850,360,.06,.025);}
-    if(type==='reload-complete'){this.burst(3200,.035,.035);this.tone(1300,700,.035,.035);}
+    if(type==='reload-start'){this.burst(2600,.07,.035);this.tone(850,360,.06,.025);this.tone(420,180,.08,.022,'triangle',.07);}
+    if(type==='reload-complete'){this.burst(3200,.035,.035);this.tone(1300,700,.035,.035);this.tone(950,950,.065,.025,'sine',.045);}
     if(type==='victory')for(const [i,hz]of[523.25,659.25,783.99].entries())this.tone(hz,hz,.24,.055,'sine',i*.10);
     if(type==='defeat')for(const [i,hz]of[220,174.61,130.81].entries())this.tone(hz,hz*.97,.3,.045,'triangle',i*.12);
   }

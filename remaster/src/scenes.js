@@ -80,7 +80,11 @@ export class Scenes {
     else if (action === 'apply-settings') { this.store.saveSettings(this.settingsDraft); this.audio.apply(this.store.settings); this.settingsDraft = null; this.notify(this.store.status); this.go(this.returnScene); }
     else if (action === 'cancel-settings') { this.audio.apply(this.store.settings); this.settingsDraft = null; this.go(this.returnScene); }
     else if (action === 'reset-settings') { this.settingsDraft = { ...DEFAULT_SETTINGS }; this.audio.apply(this.settingsDraft); this.render(); }
-    else if (action === 'test-audio') this.audio.click();
+    else if (action === 'test-audio') {
+      if (this.settingsDraft?.muted) this.notify('All sounds muted · return to the battlefield and use the speaker to unmute');
+      else if (!this.settingsDraft?.master || !this.settingsDraft?.effects) this.notify('Raise Master volume and Effects above 0% to hear the preview');
+      else this.audio.combatEvent('shot',{weapon:this.campaign?.activeWeapon||'Cannon'});
+    }
     else if (action === 'save') { this.store.saveCheckpoint(this.campaign); this.notify(this.store.status); this.updateDiagnostics(); }
   }
   startNew() { this.combat = null; this.campaign = this.store.startNew(); this.notify(this.store.status); this.prepare(); }
@@ -106,7 +110,7 @@ export class Scenes {
     if (this.name !== 'combat') { this.clock.reset(); return; }
     this.clock.advance(seconds, () => {
       this.combat.tick({ aim: designToSim(this.input.state), shots: this.input.drainShots().map(designToSim), held: this.input.state.pressed });
-      for (const event of this.combat.drainEvents()) {this.audio.combatEvent(event.type);if(event.type==='reload-start')this.input.release();if(event.type==='achievement')this.notify('Award earned · '+ACHIEVEMENTS.find(a=>a.id===event.id).name);}
+      for (const event of this.combat.drainEvents()) {this.audio.combatEvent(event.type,event);if(event.type==='reload-start')this.input.release();if(event.type==='achievement')this.notify('Award earned · '+ACHIEVEMENTS.find(a=>a.id===event.id).name);}
       if (this.combat.status === 'victory') {
         this.campaign = this.combat.victoryCheckpoint();
         this.store.saveCheckpoint(this.campaign);this.notify(this.store.status); this.go('victory'); return false;

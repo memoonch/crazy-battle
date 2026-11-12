@@ -54,6 +54,31 @@ export function installReleaseQA(ctx){
   store.startNew();store.saveCheckpoint(checkpoint);scenes.campaign=store.campaign;scenes.prepare();
  }
  document.querySelector('#qa-shop').onclick=()=>{fixture();status('Shop fixture · 300 supplies, damaged base, support stock 1 each.');};
+ const shootingPreview=document.createElement('button');shootingPreview.textContent='Freeze shooting preview';document.querySelector('#qa-controls').append(shootingPreview);
+ const blastPreview=document.createElement('button');blastPreview.textContent='Freeze explosion preview';document.querySelector('#qa-controls').append(blastPreview);
+ blastPreview.onclick=()=>{
+  fixture();scenes.startCombat();const s=scenes.combat;
+  for(let i=0;i<350;i++)s.tick();s.arm('Atom');s.deploy({x:440,y:260});
+  for(let i=0;i<4;i++)s.tick();s.pause();scenes.updateCombatHUD();render();
+  status('Frozen support explosion · QA presentation fixture only.');
+ };
+ const destructionPreview=document.createElement('button');destructionPreview.textContent='Freeze destruction preview';document.querySelector('#qa-controls').append(destructionPreview);
+ destructionPreview.onclick=()=>{
+  fixture();scenes.startCombat();const s=scenes.combat;
+  for(let i=0;i<1200&&!s.enemies.some(e=>!e.name.startsWith('Soldat')&&e.x<570);i++)s.tick();
+  const target=s.enemies.find(e=>!e.name.startsWith('Soldat')&&e.x<570);
+  if(!target){status('No vehicle target');return;}
+  for(let i=0;i<1600&&s.enemies.includes(target)&&s.status==='running';i++)s.tick({shots:[{x:target.x,y:target.y-20}]});
+  for(let i=0;i<3;i++)s.tick();s.pause();scenes.updateCombatHUD();render();
+  status('Frozen vehicle destruction · normal cannon damage; QA presentation fixture only.');
+ };
+ shootingPreview.onclick=()=>{
+  fixture();scenes.startCombat();const s=scenes.combat;
+  for(let i=0;i<600&&!s.enemies.some(e=>e.x<570);i++)s.tick();
+  const enemy=s.enemies.find(e=>e.x<570);if(!enemy){status('No preview target');return;}
+  s.fire({x:enemy.x,y:enemy.y-20});s.pause();scenes.updateCombatHUD();render();
+  status('Frozen actual cannon shot · presentation fixture only. Load shop fixture to resume normal testing.');
+ };
  document.querySelector('#qa-loss').onclick=()=>{fixture({health:5,money:0});scenes.startCombat();status('Loss fixture · let the base fall, then verify Retry.');};
  document.querySelector('#qa-menu').onclick=()=>{scenes.combat=null;scenes.campaign=store.campaign;scenes.go('menu');status('QA save retained. Reload this page to verify persistence.');};
  document.querySelector('#qa-audio').onclick=()=>run(async()=>{
@@ -65,7 +90,7 @@ export function installReleaseQA(ctx){
    let peak=0,squared=0,total=0;
    for(let i=0;i<frames;i++){
     await raf();if(stop)throw Error('Stopped by user');
-    if(effects){if(i%8===0)audio.combatEvent('shot');if(i%30===0)audio.combatEvent('explosion');if(i%12===0)audio.combatEvent('defense-shot');}
+     if(effects){if(i%8===0)audio.combatEvent('shot',{weapon:['Cannon','MashineGun','Bazooka','Rocket'][Math.floor(i/8)%4]});if(i%30===0)audio.combatEvent('explosion');if(i%12===0){audio.combatEvent('defense-shot');audio.combatEvent('enemy-hit',{vehicle:true,destroyed:i%24===0});}if(i%45===0)audio.combatEvent('reload-complete');}
     analyser.getFloatTimeDomainData(buffer);
     if(i>6)for(const value of buffer){peak=Math.max(peak,Math.abs(value));squared+=value*value;total++;}
    }

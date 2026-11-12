@@ -1,5 +1,7 @@
 import { soldierLayout, vehicleLayout, SOLDIER_HEIGHT } from './sprite-layout.js';
 import { simToDesign, DEATH_MS } from './combat.js';
+import { enemyFeedback } from './enemy-feedback.js';
+import { blastFeedback, battleShake } from './battle-feedback.js';
 
 export class Renderer {
   constructor(canvas, viewport) { this.ctx=canvas.getContext('2d');this.viewport=viewport;this.assets=null;this.lastCombat=null; }
@@ -16,18 +18,20 @@ export class Renderer {
     c.save();c.beginPath();c.rect(0,40,960,428);c.clip();
     const encounter=combat&&!['menu','confirm','preparation'].includes(scene);
     if(this.lastCombat!==combat){this.lastCombat=combat;this.particles=[];this.seenEffects=new WeakSet();this.lastHealth=combat?.health??800;this.damageAt=null;}
+    const shake=battleShake(encounter?combat:null,settings);c.translate(shake.x,shake.y);
     this.base(c,combat&&scene!=='menu'?combat:null);
     const motion=settings.reducedMotion?0:encounter?combat.elapsedMs/1000:time;
     if(encounter){
       for(const corpse of combat.corpses)this.soldier(c,corpse,motion,true,combat.elapsedMs);
       for(const enemy of [...combat.enemies].sort((a,b)=>a.y-b.y))this.soldier(c,enemy,motion,false,combat.elapsedMs);
       const heli=simToDesign({x:combat.helicopter.x+40,y:combat.helicopter.y+100});
-      c.save();c.translate(heli.x,heli.y-95);c.rotate(settings.reducedMotion?0:combat.helicopter.tilt*Math.PI/180*.4);this.helicopter(c,0,0,motion);c.restore();
+      const firing=combat.traces.findLast(t=>t.player),kick=firing&&!settings.reducedMotion?Math.max(0,firing.ttl/65)*(firing.weapon==='MashineGun'?1:2.4):0;
+      c.save();c.translate(heli.x-kick,heli.y-95+kick*.25);c.rotate(settings.reducedMotion?0:combat.helicopter.tilt*Math.PI/180*.4-kick*.003);this.helicopter(c,0,0,motion);c.restore();
       this.effects(c,combat,settings);
     }else this.helicopter(c,265,153+Math.sin(motion*1.4)*2,motion);
     c.restore();
     if(scene==='combat'&&pointer.inside&&pointer.battlefield){
-      const hit=combat.effects.some(e=>e.hit&&e.ttl>25);c.save();c.translate(pointer.x,pointer.y);
+      const hit=combat.effects.some(e=>e.hit&&e.ttl>25&&Math.hypot(simToDesign(e).x-pointer.x,simToDesign(e).y-pointer.y)<24);c.save();c.translate(pointer.x,pointer.y);
       c.strokeStyle='#17231b';c.lineWidth=3;c.beginPath();c.arc(0,0,13,0,Math.PI*2);c.stroke();
       c.strokeStyle=hit?'#fff6d4':'#f3b544';c.lineWidth=1.5;
       for(const a of [0,Math.PI/2,Math.PI,Math.PI*1.5]){c.beginPath();c.moveTo(Math.cos(a)*5,Math.sin(a)*5);c.lineTo(Math.cos(a)*15,Math.sin(a)*15);c.stroke();}
@@ -83,6 +87,9 @@ export class Renderer {
     const index=dead?(enemy.ttl>DEATH_MS*.5?6:7):enemy.state==='move'?Math.floor(time*9+enemy.id)%4:enemy.attackFlash>0?5:4;
     const layout=soldierLayout(this.assets.art,enemy,index),{h}=layout;
     c.save();c.translate(p.x,p.y);this.contactShadow(c,15,4);
+    const reaction=enemyFeedback(enemy,elapsedMs,dead,this.reducedMotion);
+    if(dead)this.destruction(c,enemy,reaction,17);
+    c.translate(0,reaction.sink);c.rotate(reaction.lean);
     if(dead)c.globalAlpha=Math.min(1,enemy.ttl/110);
     this.enemySprite(c,layout,enemy,elapsedMs,dead);
     if(enemy.attackFlash>0&&!dead){const scale=SOLDIER_HEIGHT/37;this.flash(c,-21*scale,-21*scale,5);}
@@ -93,6 +100,9 @@ export class Renderer {
     const p=simToDesign(e),layout=vehicleLayout(this.assets.art,e),{w,h}=layout;
     c.save();c.translate(p.x,p.y);if(dead)c.globalAlpha=Math.min(1,e.ttl/150);
     this.contactShadow(c,w*.43,6);
+    const reaction=enemyFeedback(e,elapsedMs,dead,this.reducedMotion);
+    if(dead)this.destruction(c,e,reaction,w*.45);
+    c.translate(0,reaction.sink);c.rotate(reaction.lean);
     const bob=e.state==='move'&&!dead?Math.sin(time*19+e.id)*.45:0;
     this.enemySprite(c,layout,e,elapsedMs,dead,bob);
     if(e.health<e.healthMax&&!dead){c.fillStyle='#10251fe8';c.fillRect(-25,-h-9,50,5);c.fillStyle=e.health/e.healthMax<.3?'#ef995d':'#e6c879';c.fillRect(-24,-h-8,48*e.health/e.healthMax,3);}
@@ -104,11 +114,28 @@ export class Renderer {
     c.fillStyle='rgba(25,31,21,.17)';c.beginPath();c.ellipse(0,1,width,height,0,0,Math.PI*2);c.fill();
     c.fillStyle='rgba(24,30,20,.30)';c.beginPath();c.ellipse(0,1,width*.65,height*.48,0,0,Math.PI*2);c.fill();
   }
+  destruction(c,enemy,reaction,radius) {
+    const f=reaction.death,m=this.reducedMotion?.25:1;
+    c.save();c.globalAlpha*=Math.max(0,1-f)*.55;
+    c.strokeStyle='#d0aa70';c.lineWidth=2;c.beginPath();c.ellipse(0,1,radius*(.6+f*m),4+f*8*m,0,0,Math.PI*2);c.stroke();
+    const count=reaction.vehicle?9:5;
+    for(let i=0;i<count;i++){
+      const a=i*2.399+enemy.id,travel=(5+f*(reaction.vehicle?34:15))*m;
+      c.fillStyle=reaction.vehicle&&i%3===0?'#ffce78':'#a88b61';
+      c.fillRect(Math.cos(a)*travel,-5-Math.abs(Math.sin(a))*travel+f*f*18,2,2);
+    }
+    if(reaction.vehicle){
+      c.globalAlpha*=.7;c.fillStyle='#30382e';
+      for(let i=0;i<3;i++){c.beginPath();c.ellipse(i*9-8,-18-f*30*m-i*7,7+f*10,9+f*12,0,0,Math.PI*2);c.fill();}
+      if(f<.45&&!this.reducedMotion){c.globalAlpha*=1-f/.45;this.flash(c,0,-18,13);}
+    }
+    c.restore();
+  }
   recentHit(enemy,elapsedMs) {return Number.isFinite(enemy.hitAt)&&elapsedMs>=enemy.hitAt&&elapsedMs-enemy.hitAt<100;}
   enemySprite(c,layout,enemy,elapsedMs,dead,bob=0) {
     const {key,b,x,y,w,h}=layout;
     const hit=this.recentHit(enemy,elapsedMs);
-    const filter=hit?(this.reducedMotion?'brightness(1.12)':'brightness(1.48) saturate(.7)')
+    const filter=dead&&!enemy.name.startsWith('Soldat')?'saturate(.4) brightness(.6)':hit?(this.reducedMotion?'brightness(1.12)':'brightness(1.48) saturate(.7)')
       :!enemy.name.startsWith('Soldat')&&enemy.health/enemy.healthMax<.8?'saturate(.7) brightness(.9)':'none';
     const density=Math.min(4,Math.max(2,Math.ceil(this.viewport.view.scale*this.viewport.view.dpr))),pad=4;
     const id=[key,b.x,b.y,w,h,density,filter,dead].join(':');
@@ -151,18 +178,52 @@ export class Renderer {
   }
   effects(c,combat,settings) {
     c.save();c.lineWidth=1.1;
-    for(const trace of combat.traces){const from=simToDesign(trace.from),to=simToDesign(trace.to);c.globalAlpha=Math.min(1,trace.ttl/65)*.5;c.strokeStyle=trace.enemy?'#eeb56e':'#ffe3a0';c.beginPath();c.moveTo(from.x,from.y);c.lineTo(to.x,to.y);c.stroke();if(!trace.enemy)this.flash(c,from.x,from.y,4);}
+    for(const trace of combat.traces){
+      const from=simToDesign(trace.from),to=simToDesign(trace.to),fade=Math.min(1,trace.ttl/65);
+      // Explosive rounds already have moving projectiles; only show their launch flash.
+      const explosive=trace.player&&['Bazooka','Rocket'].includes(trace.weapon);
+      c.globalAlpha=fade*(trace.enemy?.4:.65);c.strokeStyle=trace.enemy?'#eeb56e':'#ffd578';c.lineWidth=trace.player?2:1;
+      if(!explosive){c.beginPath();c.moveTo(from.x,from.y);c.lineTo(to.x,to.y);c.stroke();
+        if(trace.player){c.strokeStyle='#fff6d9';c.lineWidth=.7;c.stroke();}}
+      if(!trace.enemy){
+        this.flash(c,from.x,from.y,settings.reducedMotion?3:explosive?7:5);
+        c.save();c.translate(from.x,from.y);c.rotate(Math.atan2(to.y-from.y,to.x-from.x));
+        c.fillStyle='#fff1bb';c.beginPath();c.moveTo(0,-2);c.lineTo(explosive?17:11,0);c.lineTo(0,2);c.closePath();c.fill();c.restore();
+      }
+    }
     c.globalAlpha=1;
+    // Confirm the impact where it happened, even after the cursor has moved on.
+    for(const impact of combat.effects){if(!impact.hit||impact.blast||impact.ttl>100)continue;
+      const p=simToDesign(impact);c.save();c.translate(p.x,p.y);c.globalAlpha=Math.min(1,impact.ttl/75);c.strokeStyle='#fff2c4';c.lineWidth=1.5;c.beginPath();
+      for(const [x,y]of [[-1,-1],[1,-1],[-1,1],[1,1]]){c.moveTo(x*5,y*5);c.lineTo(x*9,y*9);}c.stroke();c.restore();}
     for(const mine of combat.mines){const p=simToDesign(mine),b=this.assets.art['support-equipment'].frames[0],w=17,h=w*b.height/b.width;this.sprite(c,'support-equipment',b,p.x-w/2,p.y-h,w,h);}
     for(const plane of combat.airstrikes){const p=simToDesign(plane),b=this.assets.art['support-equipment'].frames[1],w=95,h=w*b.height/b.width;this.sprite(c,'support-equipment',b,p.x-w/2,p.y-80-h/2,w,h);}
     for(const shot of combat.projectiles){const p=simToDesign(shot);this.flash(c,p.x,p.y,3);c.fillStyle='#f9dda3';c.fillRect(p.x-4,p.y-1,7,2);}
-    for(const blast of combat.effects.filter(e=>e.blast)){const p=simToDesign(blast);c.globalAlpha=Math.min(1,blast.ttl/250)*.35;this.flash(c,p.x,p.y,blast.ttl>300?85:22);c.globalAlpha=1;}
+    for(const blast of combat.effects.filter(e=>e.blast))this.blast(c,blast,settings);
+    for(const impact of combat.effects){if(impact.hit||impact.blast)continue;
+      const p=simToDesign(impact),f=1-Math.min(1,impact.ttl/100);c.save();c.globalAlpha=(1-f)*.28;c.fillStyle='#c6a276';
+      c.beginPath();c.ellipse(p.x,p.y+3,5+f*9,2+f*3,0,0,Math.PI*2);c.fill();c.restore();}
     for(const effect of combat.effects){if(this.seenEffects.has(effect))continue;this.seenEffects.add(effect);const p=simToDesign(effect);for(let i=0;i<7;i++){const a=i*2.399+effect.x;this.particles.push({x:p.x,y:p.y,dx:Math.cos(a)*(5+i*2),dy:-7-Math.abs(Math.sin(a))*18,born:combat.elapsedMs,life:280+i*35,hit:effect.hit});}}
     this.particles=this.particles.filter(p=>combat.elapsedMs-p.born<p.life).slice(-120);
     for(const p of this.particles){const age=combat.elapsedMs-p.born,f=age/p.life,m=settings.reducedMotion ? 0.35 : 1;c.globalAlpha=(1-f)*.7;c.fillStyle=p.hit&&f<.3?'#fff3bc':'#d7b17c';c.beginPath();c.arc(p.x+p.dx*f*m,p.y+p.dy*f*m+f*f*12,Math.max(.5,2.3-f*1.5),0,Math.PI*2);c.fill();}
     if(combat.health<this.lastHealth&&settings.shake==='low'&&!settings.reducedMotion)this.damageAt=combat.elapsedMs;
     this.lastHealth=combat.health;
     if(this.damageAt!=null&&combat.elapsedMs-this.damageAt<120){c.globalAlpha=.05*(1-(combat.elapsedMs-this.damageAt)/120);c.fillStyle='#db4a32';c.fillRect(0,150,150,318);}
+    c.restore();
+  }
+  blast(c,blast,settings) {
+    const p=simToDesign(blast),{progress:f,fade,radius:r,travel:m}=blastFeedback(blast,settings.reducedMotion);
+    c.save();c.translate(p.x,p.y);
+    // Ground pressure, dust, smoke and fire share the existing effect lifetime.
+    c.globalAlpha=fade*.45;c.strokeStyle='#d8b783';c.lineWidth=2;c.beginPath();c.ellipse(0,5,r*(.5+f*m),r*(.12+f*.2*m),0,0,Math.PI*2);c.stroke();
+    for(let i=0;i<5;i++){
+      const a=i*2.399+blast.x,spread=(5+f*r)*m;
+      c.globalAlpha=fade*.22;c.fillStyle=i%2?'#6a6250':'#b79b73';c.beginPath();
+      c.ellipse(Math.cos(a)*spread,-f*r*.6*m+Math.sin(a)*spread*.3,4+f*r*.32,4+f*r*.38,0,0,Math.PI*2);c.fill();
+    }
+    c.globalAlpha=fade*(settings.reducedMotion?.18:.65);this.flash(c,0,-4,r*(.25+fade*.5));
+    if(!settings.reducedMotion){c.globalAlpha=fade*.8;c.fillStyle='#ffe7a1';
+      for(let i=0;i<8;i++){const a=i*2.399,travel=5+f*r*1.2;c.fillRect(Math.cos(a)*travel,-4+Math.sin(a)*travel*.65+f*f*12,1.5,1.5);}}
     c.restore();
   }
 }

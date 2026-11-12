@@ -1,0 +1,30 @@
+{
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
+  },
+  "campaign": null,
+  "benchmarks": [],
+  "audio": {
+    "measurement": "Master bus before compressor; objective signal check, not a listening review",
+    "settings": {
+      "master": 75,
+      "music": 45,
+      "effects": 70,
+      "reducedMotion": false,
+      "shake": "low",
+      "muted": true
+    },
+    "active": {
+      "peak": 0.21228095889091492,
+      "rms": 0.015373037682860973
+    },
+    "muted": {
+      "peak": 0,
+      "rms": 0
+    },
+    "restored": {
+      "peak": 0.0035683647729456425,
+      "rms": 0.0011982907637348894
+    }
+  }
+}

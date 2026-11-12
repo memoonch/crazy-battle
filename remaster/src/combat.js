@@ -124,9 +124,9 @@ export class Combat {
     if (this.status !== 'running' || this.reloading || !this.ammo || this.rateCounter <= this.weapon.rate) return false;
     this.ammo--; this.shots++; this.rateCounter = 0;
     const target = [...this.enemies].sort((a, b) => b.y - a.y).find(e => this.contains(e,point));
-    this.events.push({ type: 'shot' });
-    this.traces.push({ from: { x: this.helicopter.x + 75, y: this.helicopter.y + 15 }, to: { ...point }, ttl: 65, enemy: false });
-    this.effects.push({ ...point, ttl: 100, hit: !!target });
+    this.events.push({ type: 'shot', weapon: this.activeWeapon });
+    this.traces.push({ from: { x: this.helicopter.x + 75, y: this.helicopter.y + 15 }, to: { ...point }, ttl: 65, enemy: false, player: true, weapon: this.activeWeapon });
+    this.effects.push({ ...point, ttl: 100, hit: !!target && !this.weapon.radius });
     if (this.weapon.radius) {
       // A direct click on tall painted armor must include that vehicle even
       // when its ground anchor lies outside the cursor's splash radius.
@@ -142,6 +142,7 @@ export class Combat {
     if (!target || !this.enemies.includes(target) || target.health <= 0) return;
     target.hitAt=this.elapsedMs; // Presentation marker; no extra damage or simulation timer.
     target.health = Math.max(0, target.health - damage);
+    this.events.push({type:'enemy-hit',vehicle:!target.name.startsWith('Soldat'),destroyed:target.health===0});
     if (!target.health) {
       this.enemies.splice(this.enemies.indexOf(target), 1);
       this.corpses.push({ ...target, ttl: DEATH_MS });
@@ -216,7 +217,7 @@ export class Combat {
       if(Math.hypot(dx,dy)<24 || (p.to.x-p.from.x)*(p.to.x-p.x)<=0) {
         if(p.baseTarget)this.damageBaseOrDefense(p.baseTarget,p.damage);
         else for(const target of p.targets)this.damageEnemy(target,p.damage);
-        this.effects.push({...p.to,ttl:250,hit:true,blast:true});this.events.push({type:'explosion'});
+        this.effects.push({...p.to,ttl:250,duration:250,hit:true,blast:true});this.events.push({type:'explosion'});
         this.projectiles.splice(this.projectiles.indexOf(p),1);continue;
       }
       const step=p.type==='Mortar'?10:16;
@@ -236,7 +237,7 @@ export class Combat {
     const name=this.armed;this.armed=null;
     if(this.status!=='running' || !this.supplies[name])return false;
     this.supplies[name]--;
-    if(name==='Atom') {for(const enemy of [...this.enemies])this.damageEnemy(enemy,100);this.effects.push({...point,ttl:600,hit:true,blast:true});}
+    if(name==='Atom') {for(const enemy of [...this.enemies])this.damageEnemy(enemy,100);this.effects.push({...point,ttl:600,duration:600,hit:true,blast:true});}
     else if(name==='Mine')this.mines.push({...point});
     else this.airstrikes.push({x:-200,y:point.y,targetX:point.x});
     this.events.push({type:'explosion'});return true;
@@ -244,13 +245,13 @@ export class Combat {
   updateSupport() {
     for(const mine of [...this.mines]) {
       const target=this.enemies.find(e=>Math.abs(e.x-mine.x)<(e.name.startsWith('Soldat')?15:32)&&Math.abs(e.y-mine.y)<18);
-      if(target){this.damageEnemy(target,100);this.effects.push({...mine,ttl:250,hit:true,blast:true});this.mines.splice(this.mines.indexOf(mine),1);this.events.push({type:'explosion'});}
+      if(target){this.damageEnemy(target,100);this.effects.push({...mine,ttl:250,duration:250,hit:true,blast:true});this.mines.splice(this.mines.indexOf(mine),1);this.events.push({type:'explosion'});}
     }
     for(const plane of [...this.airstrikes]) {
       plane.x+=20;
       if(plane.x>plane.targetX && plane.x<plane.targetX+150){
         for(const enemy of [...this.enemies])if(Math.hypot(enemy.x-plane.x,enemy.y-plane.y)<80)this.damageEnemy(enemy,100);
-        this.effects.push({...plane,ttl:250,hit:true,blast:true});
+        this.effects.push({...plane,ttl:250,duration:250,hit:true,blast:true});
       }
       if(plane.x>840)this.airstrikes.splice(this.airstrikes.indexOf(plane),1);
     }
