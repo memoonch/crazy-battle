@@ -99,6 +99,7 @@ export class Combat {
         enemy.counter++;
         if (enemy.counter > enemy.rate) {
           enemy.counter = 0; enemy.attackFlash = 100;
+          this.events.push({type:'enemy-shot',vehicle:!enemy.name.startsWith('Soldat'),weapon:enemy.name});
           const slot = Math.min(4, Math.max(0, Math.floor((enemy.y - 120) / 53)));
           const defense = this.defenses[slot];
           if (['SoldatAK','BTR','BTRLite'].includes(enemy.name)) this.damageBaseOrDefense(defense?.health>0?defense:null, enemy.damage);
@@ -240,7 +241,7 @@ export class Combat {
     if(name==='Atom') {for(const enemy of [...this.enemies])this.damageEnemy(enemy,100);this.effects.push({...point,ttl:600,duration:600,hit:true,blast:true});}
     else if(name==='Mine')this.mines.push({...point});
     else this.airstrikes.push({x:-200,y:point.y,targetX:point.x});
-    this.events.push({type:'explosion'});return true;
+    this.events.push({type:'explosion',sound:name});return true;
   }
   updateSupport() {
     for(const mine of [...this.mines]) {
@@ -268,7 +269,7 @@ export class Combat {
       this.traces.push({from:{x:origin.x+12,y:origin.y-14},to:{x:target.x,y:target.y-18},ttl:70,enemy:false});
       if(d.name==='Maxim')this.damageEnemy(target,d.damage);
       else {const targets=d.radius?this.enemies.filter(e=>Math.hypot(e.x-target.x,e.y-target.y)<d.radius):[target];this.launch({x:origin.x+32,y:origin.y-20},target,targets,d.damage,d.name);}
-      this.events.push({type:'defense-shot'});
+      this.events.push({type:'defense-shot',weapon:d.name});
     }
   }
   emitAchievements(ids) {for(const id of ids)this.events.push({type:'achievement',id});}

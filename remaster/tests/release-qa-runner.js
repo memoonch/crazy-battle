@@ -100,7 +100,7 @@ export function installReleaseQA(ctx){
    audio.apply({...settings,muted:false});status('Measuring sound: active mix');const active=await sample(150,true);
    audio.apply({...settings,muted:true});status('Measuring sound: muted mix');const muted=await sample(45,true);
    audio.apply({...settings,muted:false});const restored=await sample(45,false);
-   report.audio={measurement:'Master bus before compressor; objective signal check, not a listening review',settings,active,muted,restored};
+   report.audio={measurement:'Master bus before compressor; objective signal check, not a listening review',originalAudio:{decoded:[...audio.buffers.keys()],errors:audio.loadErrors,music:audio.trackKey},settings,active,muted,restored};
    assert(active.peak>0,'No active sound signal');assert(muted.peak<.00001,'Master mute did not silence signal');assert(restored.peak>0,'Unmute did not restore signal');
    status('PASS: sound signal, master mute and restoration verified');
   }finally{audio.apply(settings);audio.master.disconnect(analyser);analyser.disconnect();}

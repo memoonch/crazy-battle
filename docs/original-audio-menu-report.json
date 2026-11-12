@@ -1,0 +1,74 @@
+{
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
+  },
+  "campaign": null,
+  "benchmarks": [],
+  "audio": {
+    "measurement": "Master bus before compressor; objective signal check, not a listening review",
+    "originalAudio": {
+      "decoded": [
+        "sndCann2",
+        "sndTank2",
+        "sndVistrelPreload",
+        "sndDisel",
+        "sndVopl1",
+        "sndMax",
+        "sndExp1",
+        "sndRik1",
+        "sndMax2",
+        "sndImpMet1",
+        "sndAvt3",
+        "sndSvistBomb1",
+        "sndImpMet3",
+        "sndGun1",
+        "sndNuc",
+        "sndSvistBomb2",
+        "sndRik2",
+        "sndVopl2",
+        "sndGong",
+        "sndTank1",
+        "sndRmet",
+        "sndGun2",
+        "sndRoket",
+        "sndVopl3",
+        "sndDisel2",
+        "sndMinomet",
+        "menuMusic",
+        "sndImpMurd1",
+        "sndCann1",
+        "sndImpMurd2",
+        "sndImpMet2",
+        "sndCann3",
+        "sndExp2",
+        "sndGun3",
+        "sndExp3",
+        "sndAvt1",
+        "sndAvt2",
+        "fonMusic"
+      ],
+      "errors": [],
+      "music": "menuMusic"
+    },
+    "settings": {
+      "master": 75,
+      "music": 45,
+      "effects": 70,
+      "reducedMotion": false,
+      "shake": "low",
+      "muted": true
+    },
+    "active": {
+      "peak": 0.32690325379371643,
+      "rms": 0.08716998341720762
+    },
+    "muted": {
+      "peak": 0,
+      "rms": 0
+    },
+    "restored": {
+      "peak": 0.29229193925857544,
+      "rms": 0.07230884391997204
+    }
+  }
+}
