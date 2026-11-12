@@ -55,11 +55,80 @@ export function installReleaseQA(ctx){
  }
  document.querySelector('#qa-shop').onclick=()=>{fixture();status('Shop fixture · 300 supplies, damaged base, support stock 1 each.');};
  const shootingPreview=document.createElement('button');shootingPreview.textContent='Freeze shooting preview';document.querySelector('#qa-controls').append(shootingPreview);
+ const aftermathPreview=document.createElement('button');aftermathPreview.textContent='Freeze battle aftermath';document.querySelector('#qa-controls').append(aftermathPreview);
+ aftermathPreview.onclick=()=>{
+  fixture({health:800,supplies:{Mine:1,Avia:1,Atom:2}});scenes.startCombat();const s=scenes.combat;
+  for(let i=0;i<520;i++){s.tick();render();}
+  s.arm('Atom');s.deploy({x:380,y:260});render();
+  for(let i=0;i<32;i++){s.tick();render();}
+  s.arm('Atom');s.deploy({x:510,y:310});render();
+  for(let i=0;i<60;i++){s.tick();render();}
+  s.pause();scenes.updateHud();render();
+  status('Scars and wrecks after two support strikes · separate QA fixture; normal damage rules.');
+ };
+ const muzzlePreview=document.createElement('button');muzzlePreview.textContent='Freeze muzzle alignment';document.querySelector('#qa-controls').append(muzzlePreview);
+ muzzlePreview.onclick=()=>{
+  fixture();scenes.startCombat();const s=scenes.combat;s.queue=[];s.total=6;
+  s.helicopter={x:130,y:160,tilt:8};
+  s.enemies=['BTRLite','BTR','TankLite','Tank','RocketLite','RocketBig'].map((name,i)=>{
+    const skin=s.enemyTypes[name];return {...skin,id:i+1,x:410+i*9,y:115+i*49,healthMax:skin.health,state:'attack',counter:skin.rate+1,attackFlash:0};
+  });s.nextId=7;s.tick({shots:[{x:500,y:240}]});s.pause();scenes.updateHud();render();
+  status('Frozen muzzle alignment · synthetic six-vehicle firing fixture.');
+ };
+ const aimPreview=document.createElement('button');aimPreview.textContent='Freeze enemy aim cues';document.querySelector('#qa-controls').append(aimPreview);
+ aimPreview.onclick=()=>{
+  muzzlePreview.onclick();const s=scenes.combat;s.traces=[];s.projectiles=[];
+  for(const e of s.enemies){e.counter=e.rate-5;e.attackFlash=0;delete e.lastAttackAt;}
+  render();status('Heavy enemy aim cues just before the original firing threshold · QA fixture.');
+ };
+ const incomingPreview=document.createElement('button');incomingPreview.textContent='Freeze incoming shells';document.querySelector('#qa-controls').append(incomingPreview);
+ incomingPreview.onclick=()=>{
+  muzzlePreview.onclick();const s=scenes.combat;s.resume();
+  for(let i=0;i<8;i++){s.tick();render();}s.pause();scenes.updateHud();render();
+  status('Actual hostile shell flight and recovery · frozen QA fixture.');
+ };
+ const baseImpactPreview=document.createElement('button');baseImpactPreview.textContent='Freeze base impact';document.querySelector('#qa-controls').append(baseImpactPreview);
+ baseImpactPreview.onclick=()=>{
+  fixture();scenes.startCombat();const s=scenes.combat;s.queue=[];s.total=1;
+  const skin=s.enemyTypes.BTR;s.enemies=[{...skin,id:1,x:300,y:240,healthMax:skin.health,state:'attack',counter:skin.rate+1,attackFlash:0}];
+  render();s.tick();s.pause();scenes.updateHud();render();
+  status('Base struck by a normal enemy attack · frozen QA fixture.');
+ };
+ const trailPreview=document.createElement('button');trailPreview.textContent='Freeze rocket trail';document.querySelector('#qa-controls').append(trailPreview);
+ const defensePreview=document.createElement('button');defensePreview.textContent='Freeze defense muzzles';document.querySelector('#qa-controls').append(defensePreview);
+ defensePreview.onclick=()=>{
+  fixture({defenses:['Maxim','Mortar','CannonSmall','CannonNormal','CannonBig'].map(name=>({name,health:assets.balance.inventory.find(d=>d.name===name).health}))});
+  scenes.startCombat();const s=scenes.combat;s.queue=[];s.total=5;
+  s.enemies=Array.from({length:5},(_,i)=>({...s.enemyTypes.BTRLite,id:i+1,x:290,y:122+i*55,healthMax:s.enemyTypes.BTRLite.health,state:'move',counter:0,attackFlash:0}));
+  for(const d of s.defenses)d.counter=d.rate+1;s.tick();s.pause();scenes.updateHud();render();
+  status('Frozen five-defense barrel-tip preview · QA fixture only.');
+ };
+ trailPreview.onclick=()=>{
+  fixture({weapons:['Cannon','Rocket'],activeWeapon:'Rocket'});scenes.startCombat();const s=scenes.combat;
+  s.helicopter={x:130,y:160,tilt:8};s.fire({x:560,y:260});render();
+  for(let i=0;i<7;i++){s.tick();render();}s.pause();scenes.updateHud();render();
+  status('Frozen actual rocket launch and smoke trail · QA fixture only.');
+ };
+ const convoyPreview=document.createElement('button');convoyPreview.textContent='Preview moving vehicles';document.querySelector('#qa-controls').append(convoyPreview);
+ convoyPreview.onclick=()=>{
+  fixture();scenes.startCombat();const s=scenes.combat;
+  s.queue=[];s.total=6;
+  s.enemies=['BTRLite','BTR','TankLite','Tank','RocketLite','RocketBig'].map((name,i)=>{
+    const skin=s.enemyTypes[name];return {...skin,id:i+1,x:510+i*15,y:115+i*49,healthMax:skin.health,state:'move',counter:0,attackFlash:0};
+  });s.nextId=7;scenes.updateHud();render();status('Six moving vehicle types · synthetic QA convoy, separate test save.');
+ };
  const blastPreview=document.createElement('button');blastPreview.textContent='Freeze explosion preview';document.querySelector('#qa-controls').append(blastPreview);
+ const smokePreview=document.createElement('button');smokePreview.textContent='Freeze lingering smoke';document.querySelector('#qa-controls').append(smokePreview);
+ smokePreview.onclick=()=>{
+  fixture();scenes.startCombat();const s=scenes.combat;
+  for(let i=0;i<350;i++)s.tick();s.arm('Atom');s.deploy({x:440,y:260});render();
+  for(let i=0;i<36;i++)s.tick();s.pause();scenes.updateHud();render();
+  status('900 ms smoke preview · source blast has expired; rendering only, no extra combat delay.');
+ };
  blastPreview.onclick=()=>{
   fixture();scenes.startCombat();const s=scenes.combat;
   for(let i=0;i<350;i++)s.tick();s.arm('Atom');s.deploy({x:440,y:260});
-  for(let i=0;i<4;i++)s.tick();s.pause();scenes.updateCombatHUD();render();
+  for(let i=0;i<4;i++)s.tick();s.pause();scenes.updateHud();render();
   status('Frozen support explosion · QA presentation fixture only.');
  };
  const destructionPreview=document.createElement('button');destructionPreview.textContent='Freeze destruction preview';document.querySelector('#qa-controls').append(destructionPreview);
@@ -69,14 +138,14 @@ export function installReleaseQA(ctx){
   const target=s.enemies.find(e=>!e.name.startsWith('Soldat')&&e.x<570);
   if(!target){status('No vehicle target');return;}
   for(let i=0;i<1600&&s.enemies.includes(target)&&s.status==='running';i++)s.tick({shots:[{x:target.x,y:target.y-20}]});
-  for(let i=0;i<3;i++)s.tick();s.pause();scenes.updateCombatHUD();render();
+  for(let i=0;i<3;i++)s.tick();s.pause();scenes.updateHud();render();
   status('Frozen vehicle destruction · normal cannon damage; QA presentation fixture only.');
  };
  shootingPreview.onclick=()=>{
   fixture();scenes.startCombat();const s=scenes.combat;
   for(let i=0;i<600&&!s.enemies.some(e=>e.x<570);i++)s.tick();
   const enemy=s.enemies.find(e=>e.x<570);if(!enemy){status('No preview target');return;}
-  s.fire({x:enemy.x,y:enemy.y-20});s.pause();scenes.updateCombatHUD();render();
+  s.fire({x:enemy.x,y:enemy.y-20});s.pause();scenes.updateHud();render();
   status('Frozen actual cannon shot · presentation fixture only. Load shop fixture to resume normal testing.');
  };
  document.querySelector('#qa-loss').onclick=()=>{fixture({health:5,money:0});scenes.startCombat();status('Loss fixture · let the base fall, then verify Retry.');};

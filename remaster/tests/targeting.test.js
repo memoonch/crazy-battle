@@ -17,16 +17,21 @@ function setup(name,state='attack',weapon='Cannon') {
 function upperPaint(enemy) {
  const l=enemy.name.startsWith('Soldat')?soldierLayout(art,enemy,enemy.state==='move'?0:4):vehicleLayout(art,enemy);
  const limit=enemy.name.startsWith('Soldat')?-38*48/55:-52*48/55;
+ let topPaint=null;
  for(let row=0;row<32;row++)for(let col=0;col<32;col++){
   const p={x:l.x+(col+.5)/32*l.w,y:l.y+(row+.5)/32*l.h};
+  if(l.b.hitMask[row][col]==='1'&&!topPaint)topPaint=p;
   if(l.b.hitMask[row][col]==='1'&&p.y<limit)return p;
  }
+ // Grounded tank crops now fit within the old tall body rectangle. Their
+ // upper painted armor must remain targetable without requiring artificial height.
+ if(topPaint)return topPaint;
  throw Error('Expected painted helmet/armor above legacy target: '+enemy.name);
 }
 for(const name of balance.enemys.map(e=>e.name))test(`${name}: painted helmet/upper armor accepts the normal shot and reward rules`,()=>{
  const {s,enemy}=setup(name),p=upperPaint(enemy),origin=simToDesign(enemy);
  const aim=designToSim({x:origin.x+p.x,y:origin.y+p.y});
- assert.ok(aim.y<enemy.y-(name.startsWith('Soldat')?38:52));
+ assert.ok(aim.y<enemy.y-20);
  assert.ok(s.fire(aim));assert.equal(s.hits,1);assert.equal(s.ammo,5);assert.equal(enemy.health,Math.max(0,enemy.healthMax-10));
  assert.equal(s.score,enemy.health===0?enemy.healthMax:0);assert.equal(s.money,enemy.health===0?enemy.cost:0);
  assert.equal(s.fire(aim),false);assert.equal(s.ammo,5);

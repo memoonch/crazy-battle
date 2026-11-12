@@ -42,7 +42,7 @@ test('paused defense timers and flashes remain frozen',()=>{
 
 const manifest=JSON.parse(fs.readFileSync(new URL('../assets/art/manifest.json',import.meta.url)));
 test('all production textures match the manifest and cutouts have real alpha',()=>{
- assert.equal(Object.keys(manifest).length,11);
+ assert.equal(Object.keys(manifest).length,13);
  for(const [name,m]of Object.entries(manifest)){const b=fs.readFileSync(new URL('../assets/art/'+m.file,import.meta.url));assert.equal(crypto.createHash('sha256').update(b).digest('hex'),m.sha256);assert.equal(b.readUInt32BE(16),m.imageWidth);assert.equal(b.readUInt32BE(20),m.imageHeight);if(name!=='forest-battlefield'){assert.equal(b[25],6);assert.ok(m.transparentFraction>.4);}}
 });
 test('atlas frames stay within their declared cells and have usable painted bounds',()=>{

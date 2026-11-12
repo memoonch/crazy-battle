@@ -1,0 +1,9 @@
+# Barrel-tip alignment and launch effects
+
+Replaced generic firing offsets with painted-art landmarks for the helicopter, six enemy vehicle variants and all five defense types. Helicopter drawing and muzzle placement now share its tilt/recoil transform. Vehicle firing points use their sprite scale and small presentation reaction/bob transforms. Defense points include the gun's recoil offset; mortar flash points along the elevated tube. Infantry retains its existing gun-tip offset.
+
+Traces and directional muzzle flames originate from the same visual point. Duplicate generic flashes on vehicles and defenses were removed. Stronger muzzle fire has a warm outer shape and bright core. Short barrel smoke persists for 220–480 ms. Rockets/bazooka rounds have directional exhaust and a fading trail, capped together with muzzle smoke at 180 puffs. Reduced motion reduces flashes/smoke travel and disables emitted rocket trails.
+
+Projectile source metadata identifies the firing unit. A visual-only origin correction tapers to zero at impact; simulation coordinates, flight update rules, damage, targeting, fire rate and reload timing remain unchanged. This avoids changing when a projectile hits while making its visible path start at the barrel. Original audio remains in place.
+
+Validation: 96 tests pass, including helicopter transform agreement, all vehicle tip landmarks, and projectile start/end mapping without simulation mutation. Browser QA inspected a frozen helicopter/six-vehicle firing fixture, all five defense barrels, and an actual rocket flight trail in separate QA storage. Screenshots: `muzzle-alignment-preview.png`, `defense-muzzle-preview.png`, `rocket-trail-preview.png`. The synthetic fixtures are reproducible with `scripts/create-browser-qa.cjs`; they are not normal campaign states. No new stress benchmark or cross-browser certification was performed.

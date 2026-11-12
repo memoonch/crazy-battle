@@ -64,6 +64,7 @@ export class Combat {
   get earnedScore() { return this.score - this.checkpoint.score; }
   tick({ aim = { x: 400, y: 250 }, shots = [], held = false } = {}) {
     if (this.status !== 'running') return;
+    this.aim={...aim};
     this.events = [];
     this.elapsedMs += STEP_MS;
     for (const list of [this.effects, this.traces, this.corpses]) {
@@ -98,13 +99,13 @@ export class Combat {
       } else {
         enemy.counter++;
         if (enemy.counter > enemy.rate) {
-          enemy.counter = 0; enemy.attackFlash = 100;
+          enemy.counter = 0; enemy.attackFlash = 100;enemy.lastAttackAt=this.elapsedMs;
           this.events.push({type:'enemy-shot',vehicle:!enemy.name.startsWith('Soldat'),weapon:enemy.name});
           const slot = Math.min(4, Math.max(0, Math.floor((enemy.y - 120) / 53)));
           const defense = this.defenses[slot];
-          if (['SoldatAK','BTR','BTRLite'].includes(enemy.name)) this.damageBaseOrDefense(defense?.health>0?defense:null, enemy.damage);
-          else this.launch({x:enemy.x-10,y:enemy.y-25},{x:50,y:enemy.y-25},[],enemy.damage,enemy.name,defense?.health>0?defense:'base');
-          this.traces.push({ from: { x: enemy.x - 8, y: enemy.y - 20 }, to: defense?.health > 0 ? { x: 74, y: 122 + slot * 55 - 14 } : { x: 50, y: enemy.y - 20 }, ttl: 75, enemy: true });
+          if (['SoldatAK','BTR','BTRLite'].includes(enemy.name)) this.damageBaseOrDefense(defense?.health>0?defense:null, enemy.damage,{x:defense?.health>0?74:50,y:enemy.y-20});
+          else this.launch({x:enemy.x-10,y:enemy.y-25},{x:50,y:enemy.y-25},[],enemy.damage,enemy.name,defense?.health>0?defense:'base',{enemyId:enemy.id});
+          this.traces.push({ from: { x: enemy.x - 8, y: enemy.y - 20 }, to: defense?.health > 0 ? { x: 74, y: 122 + slot * 55 - 14 } : { x: 50, y: enemy.y - 20 }, ttl: 75, enemy: true,enemyId:enemy.id,weapon:enemy.name });
         }
       }
     }
@@ -202,23 +203,24 @@ export class Combat {
     const d=this.defenses[slot];if(!this.canShop || !d || d.health<=0)return false;
     this.money+=d.costSale;this.defenses[slot]=null;return true;
   }
-  damageBaseOrDefense(defense, damage) {
+  damageBaseOrDefense(defense, damage,point=null) {
     if(defense && defense !== 'base') {
       if(defense.health<=0)return;
       defense.health=Math.max(0,defense.health-damage);if(!defense.health)defense.destroyedAt=this.elapsedMs;
       this.events.push({type:'defense-hit',damage});
     }else {this.achievements.baseDamage+=Math.min(this.health,damage);this.health=Math.max(0,this.health-damage);this.events.push({type:'base-hit',damage});}
+    this.effects.push({...(point||{x:50,y:240}),ttl:220,baseImpact:true,damage});
   }
-  launch(from,to,targets,damage,type,baseTarget=null) {
-    this.projectiles.push({x:from.x,y:from.y,from:{...from},to:{x:to.x,y:to.y},targets:[...new Set(targets)],damage,type,baseTarget});
+  launch(from,to,targets,damage,type,baseTarget=null,source=null) {
+    this.projectiles.push({x:from.x,y:from.y,from:{...from},to:{x:to.x,y:to.y},targets:[...new Set(targets)],damage,type,baseTarget,source:source||(['Bazooka','Rocket'].includes(type)?{player:true}:null)});
   }
   updateProjectiles() {
     for(const p of [...this.projectiles]) {
       const dx=p.to.x-p.x,dy=p.to.y-p.y;
       if(Math.hypot(dx,dy)<24 || (p.to.x-p.from.x)*(p.to.x-p.x)<=0) {
-        if(p.baseTarget)this.damageBaseOrDefense(p.baseTarget,p.damage);
+        if(p.baseTarget)this.damageBaseOrDefense(p.baseTarget,p.damage,p.to);
         else for(const target of p.targets)this.damageEnemy(target,p.damage);
-        this.effects.push({...p.to,ttl:250,duration:250,hit:true,blast:true});this.events.push({type:'explosion'});
+        this.effects.push({...p.to,ttl:250,duration:250,kind:p.type,hit:true,blast:true});this.events.push({type:'explosion'});
         this.projectiles.splice(this.projectiles.indexOf(p),1);continue;
       }
       const step=p.type==='Mortar'?10:16;
@@ -238,7 +240,7 @@ export class Combat {
     const name=this.armed;this.armed=null;
     if(this.status!=='running' || !this.supplies[name])return false;
     this.supplies[name]--;
-    if(name==='Atom') {for(const enemy of [...this.enemies])this.damageEnemy(enemy,100);this.effects.push({...point,ttl:600,duration:600,hit:true,blast:true});}
+    if(name==='Atom') {for(const enemy of [...this.enemies])this.damageEnemy(enemy,100);this.effects.push({...point,ttl:600,duration:600,kind:'Atom',hit:true,blast:true});}
     else if(name==='Mine')this.mines.push({...point});
     else this.airstrikes.push({x:-200,y:point.y,targetX:point.x});
     this.events.push({type:'explosion',sound:name});return true;
@@ -246,13 +248,13 @@ export class Combat {
   updateSupport() {
     for(const mine of [...this.mines]) {
       const target=this.enemies.find(e=>Math.abs(e.x-mine.x)<(e.name.startsWith('Soldat')?15:32)&&Math.abs(e.y-mine.y)<18);
-      if(target){this.damageEnemy(target,100);this.effects.push({...mine,ttl:250,duration:250,hit:true,blast:true});this.mines.splice(this.mines.indexOf(mine),1);this.events.push({type:'explosion'});}
+      if(target){this.damageEnemy(target,100);this.effects.push({...mine,ttl:250,duration:250,kind:'Mine',hit:true,blast:true});this.mines.splice(this.mines.indexOf(mine),1);this.events.push({type:'explosion'});}
     }
     for(const plane of [...this.airstrikes]) {
       plane.x+=20;
       if(plane.x>plane.targetX && plane.x<plane.targetX+150){
         for(const enemy of [...this.enemies])if(Math.hypot(enemy.x-plane.x,enemy.y-plane.y)<80)this.damageEnemy(enemy,100);
-        this.effects.push({...plane,ttl:250,duration:250,hit:true,blast:true});
+        this.effects.push({...plane,ttl:250,duration:250,kind:'Avia',hit:true,blast:true});
       }
       if(plane.x>840)this.airstrikes.splice(this.airstrikes.indexOf(plane),1);
     }
@@ -266,9 +268,9 @@ export class Combat {
       if(d.counter<=d.rate)d.counter++;
       if(!target || d.counter<=d.rate)continue;
       d.counter=0;d.flash=100;
-      this.traces.push({from:{x:origin.x+12,y:origin.y-14},to:{x:target.x,y:target.y-18},ttl:70,enemy:false});
+      this.traces.push({from:{x:origin.x+12,y:origin.y-14},to:{x:target.x,y:target.y-18},ttl:70,enemy:false,slot,weapon:d.name});
       if(d.name==='Maxim')this.damageEnemy(target,d.damage);
-      else {const targets=d.radius?this.enemies.filter(e=>Math.hypot(e.x-target.x,e.y-target.y)<d.radius):[target];this.launch({x:origin.x+32,y:origin.y-20},target,targets,d.damage,d.name);}
+      else {const targets=d.radius?this.enemies.filter(e=>Math.hypot(e.x-target.x,e.y-target.y)<d.radius):[target];this.launch({x:origin.x+32,y:origin.y-20},target,targets,d.damage,d.name,null,{slot});}
       this.events.push({type:'defense-shot',weapon:d.name});
     }
   }

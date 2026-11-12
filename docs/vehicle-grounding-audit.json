@@ -1,0 +1,38 @@
+[
+  {
+    "name": "BTRLite",
+    "groundY": 304,
+    "beforeHeight": 288,
+    "height": 288
+  },
+  {
+    "name": "BTR",
+    "groundY": 315,
+    "beforeHeight": 305,
+    "height": 305
+  },
+  {
+    "name": "TankLite",
+    "groundY": 632,
+    "beforeHeight": 286,
+    "height": 286
+  },
+  {
+    "name": "Tank",
+    "groundY": 633,
+    "beforeHeight": 294,
+    "height": 294
+  },
+  {
+    "name": "RocketLite",
+    "groundY": 1003,
+    "beforeHeight": 310,
+    "height": 310
+  },
+  {
+    "name": "RocketBig",
+    "groundY": 1005,
+    "beforeHeight": 325,
+    "height": 325
+  }
+]
