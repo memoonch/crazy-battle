@@ -1,7 +1,7 @@
 import {DEATH_MS,simToDesign} from './combat.js';
 export const SCAR_LIMIT=28,WRECK_LIMIT=8;
 export function wreckEnvelope(age){
- return {visible:age>=DEATH_MS&&age<8000,alpha:Math.max(0,Math.min(1,(8000-age)/2000)),
+ return {visible:age>=DEATH_MS&&age<4000,alpha:Math.max(0,Math.min(1,(4000-age)/2000)),
   smoke:Math.max(0,1-age/6000),fire:Math.max(0,1-age/2200)};
 }
 export class BattleAftermath {
@@ -20,6 +20,6 @@ export class BattleAftermath {
    if(p.x>=145&&p.x<=960)this.scars.push({x:p.x,y:Math.min(460,p.y+4),born,life:30000,frame:3,width:105});
   }
   this.scars=this.scars.filter(s=>now-s.born<s.life).slice(-SCAR_LIMIT);
-  this.wrecks=this.wrecks.filter(w=>now-w.born<8000).slice(-WRECK_LIMIT);
+  this.wrecks=this.wrecks.filter(w=>now-w.born<4000).slice(-WRECK_LIMIT);
  }
 }

@@ -1,5 +1,5 @@
 import { shopHint, repairHint, supportHint, hintedControl } from './control-hints.js';
-import { equipmentArt } from './equipment-art.js';
+import { equipmentArt, ammoArt } from './equipment-art.js';
 import { ACHIEVEMENTS } from './achievements.js';
 import { DEFAULT_SETTINGS } from './save.js';
 import { Combat, FixedStepClock, designToSim } from './combat.js';
@@ -77,7 +77,7 @@ export class Scenes {
     else if (action === 'replay') { this.startNew(); this.startCombat(); }
     else if (action === 'outpost') { this.combat = null; this.campaign = this.store.campaign; this.prepare(); }
     else if (action === 'settings') { this.returnScene = this.name === 'combat' ? 'pause' : this.name; this.settingsDraft = this.store.settings; this.go('settings'); }
-    else if (action === 'apply-settings') { this.store.saveSettings(this.settingsDraft); this.audio.apply(this.store.settings); this.settingsDraft = null; this.notify(this.store.status); this.go(this.returnScene); }
+    else if (action === 'apply-settings') { this.store.saveSettings(this.settingsDraft); this.audio.apply(this.store.settings); this.settingsDraft = null; if(this.store.status!=='Saved on this browser')this.notify(this.store.status); this.go(this.returnScene); }
     else if (action === 'cancel-settings') { this.audio.apply(this.store.settings); this.settingsDraft = null; this.go(this.returnScene); }
     else if (action === 'reset-settings') { this.settingsDraft = { ...DEFAULT_SETTINGS }; this.audio.apply(this.settingsDraft); this.render(); }
     else if (action === 'test-audio') {
@@ -85,9 +85,9 @@ export class Scenes {
       else if (!this.settingsDraft?.master || !this.settingsDraft?.effects) this.notify('Raise Master volume and Effects above 0% to hear the preview');
       else this.audio.combatEvent('shot',{weapon:this.campaign?.activeWeapon||'Cannon'});
     }
-    else if (action === 'save') { this.store.saveCheckpoint(this.campaign); this.notify(this.store.status); this.updateDiagnostics(); }
+    else if (action === 'save') { this.store.saveCheckpoint(this.campaign); if(this.store.status!=='Saved on this browser')this.notify(this.store.status); this.updateDiagnostics(); }
   }
-  startNew() { this.combat = null; this.campaign = this.store.startNew(); this.notify(this.store.status); this.prepare(); }
+  startNew() { this.combat = null; this.campaign = this.store.startNew(); if(this.store.status!=='Saved on this browser')this.notify(this.store.status); this.prepare(); }
   prepare() {
     this.combat=this.campaign.wave<=20?new Combat(this.assets.balance,this.campaign,undefined,this.assets.art):null;
     this.go('preparation');
@@ -95,7 +95,7 @@ export class Scenes {
   persistPreparation() {
     if(this.combat.status!=='ready')return;
     this.campaign=this.combat.snapshot();this.combat.checkpoint=structuredClone(this.campaign);
-    this.store.saveCheckpoint(this.campaign);this.notify(this.store.status);
+    this.store.saveCheckpoint(this.campaign);if(this.store.status!=='Saved on this browser')this.notify(this.store.status);
   }
   startCombat() {
     if(this.combat?.status!=='ready')this.combat = new Combat(this.assets.balance, this.campaign,undefined,this.assets.art);
@@ -113,7 +113,7 @@ export class Scenes {
       for (const event of this.combat.drainEvents()) {this.audio.combatEvent(event.type,event);if(event.type==='reload-start')this.input.release();if(event.type==='achievement')this.notify('Award earned · '+ACHIEVEMENTS.find(a=>a.id===event.id).name);}
       if (this.combat.status === 'victory') {
         this.campaign = this.combat.victoryCheckpoint();
-        this.store.saveCheckpoint(this.campaign);this.notify(this.store.status); this.go('victory'); return false;
+        this.store.saveCheckpoint(this.campaign);if(this.store.status!=='Saved on this browser')this.notify(this.store.status); this.go('victory'); return false;
       }
       if (this.combat.status === 'defeat') { this.go('defeat'); return false; }
     });
@@ -173,7 +173,7 @@ export class Scenes {
   }
   menu() {
     const c = this.store.campaign;
-    this.ui.innerHTML = `<section class="menu-card" aria-labelledby="menu-title"><p class="eyebrow">FOREST OUTPOST / CAMPAIGN 01</p><h1 id="menu-title">CRAZY<br><span>BATTLE</span></h1><p class="menu-description">Hold the line.<br>Build your defenses. Protect the outpost.</p><div class="menu-actions"><button class="primary" data-action="continue" ${c ? 'data-initial-focus' : 'disabled'}>Continue ${icon('arrow')}</button><button data-action="new" ${c ? '' : 'data-initial-focus'}>New campaign <span class="button-detail">20 WAVES</span></button><div class="menu-utility"><button class="quiet" data-action="help">How to play</button><button class="quiet" data-action="medals">Medals</button><button class="quiet" data-action="settings">Settings</button></div></div><p class="checkpoint-line">${c ? `${c.wave>20?'CAMPAIGN COMPLETE':`CHECKPOINT · WAVE ${String(c.wave).padStart(2,'0')} / 20`} · BASE ${Math.round(c.health / 8)}%` : 'YOUR FIRST OUTPOST AWAITS'}</p></section><div class="menu-insignia" aria-hidden="true"><div class="menu-commander"></div><span>OUTPOST COMMAND</span><small>20 WAVES · ONE LINE TO HOLD</small></div><div class="outpost-caption"><span class="caption-rule"></span>SECTOR 01 <strong>FOREST OUTPOST</strong><small>DEFEND • PREPARE • SURVIVE</small></div>`;
+    this.ui.innerHTML = `<section class="menu-card" aria-labelledby="menu-title"><h1 id="menu-title">CRAZY<br><span>BATTLE</span></h1><p class="menu-description">Hold the line.<br>Build your defenses. Protect the outpost.</p><div class="menu-actions"><button class="primary" data-action="continue" ${c ? 'data-initial-focus' : 'disabled'}>Continue ${icon('arrow')}</button><button data-action="new" ${c ? '' : 'data-initial-focus'}>New campaign</button><div class="menu-utility"><button class="quiet" data-action="help">How to play</button><button class="quiet" data-action="medals">Medals</button><button class="quiet" data-action="settings">Settings</button></div></div></section><div class="menu-insignia" aria-hidden="true"><div class="menu-commander"></div><span>OUTPOST COMMAND</span></div><div class="outpost-caption"><strong>FOREST OUTPOST</strong></div>`;
   }
   preparation() {
     const c = this.campaign, wave = Math.min(c.wave, 20), count = Object.values(this.assets.balance.levels[wave - 1]).reduce((a, n) => a + n, 0);
@@ -189,7 +189,7 @@ export class Scenes {
     const inEncounter = this.combat?.status!=='ready' && ['combat', 'pause', 'defenses'].includes(this.name), pauseAction = this.name === 'combat' ? 'pause' : inEncounter ? 'resume' : 'menu';
     const canPrepare=this.combat?.canShop;
     return `<div class="top-hud"><div class="hud-brand">${icon('shield')}<strong>CRAZY BATTLE</strong></div><div class="hud-stats"><span><small>WAVE</small><b>${String(wave).padStart(2, '0')} <em>/ 20</em></b></span><span><small>SCORE</small><b data-live="score">${c.score.toLocaleString()}</b></span><span class="money">${icon('supply')}<b data-live="money">${c.money}</b></span></div>${this.muteControl()}<button class="icon-button" data-action="${pauseAction}" aria-label="${inEncounter ? this.name === 'pause' ? 'Resume' : 'Pause' : 'Main menu'}">${icon('pause')}</button></div>
-    <div class="bottom-hud"><div class="base-health"><div class="commander-portrait" aria-hidden="true"></div><div><div class="health-caption"><strong>BASE</strong><b data-live="health">${Math.round(c.health / 8)}%</b></div><div class="health-bar" role="meter" aria-label="Base health" aria-valuemin="0" aria-valuemax="800" aria-valuenow="${c.health}"><span data-live="health-bar" style="width:${c.health / 8}%"></span></div></div>${hintedControl(`<button class="icon-button" data-action="repair-base" ${canPrepare&&c.health>0&&c.health<800&&c.money>4?'':'disabled'} aria-label="Repair base">${icon('cross')}</button>`,repairHint({health:c.health,money:c.money,canShop:canPrepare}),'repair-hint',!(canPrepare&&c.health>0&&c.health<800&&c.money>4))}</div><div class="weapon-hud">${equipmentArt(this.assets.art,c.activeWeapon)}<div><strong>${name.toUpperCase()}</strong><span><i class="ammo-dot"></i><b data-live="ammo">${magazine}</b> <em>/ ${magazine}</em></span><small data-live="reload" class="reload-label">READY</small></div></div><div class="supply-hud">${['Mine','Avia','Atom'].map(key=>hintedControl(`<button data-action="arm" data-name="${key}" ${this.name==='combat'&&c.supplies[key]>0?'':'disabled'} aria-pressed="${this.combat?.armed===key}" class="supply" aria-label="${key}, ${c.supplies[key]} available">${equipmentArt(this.assets.art,key)}<b>${c.supplies[key]}</b></button>`,supportHint(this.assets.balance.omps.find(i=>i.name===key),c.supplies[key],this.name==='combat',this.combat?.armed===key),'support-hint-'+key,!(this.name==='combat'&&c.supplies[key]>0))).join('')}</div><div class="shop-nav">${['Defenses','Support','Weapons'].map(label=>hintedControl(`<button ${label==='Defenses'?'data-action="defenses" aria-label="Open defenses"':`data-action="shop" data-tab="${label.toLowerCase()}"`} ${canPrepare?'':'disabled'}>${label}</button>`,shopHint(canPrepare,this.combat?.status),'shop-hint-'+label.toLowerCase(),!canPrepare)).join('')}</div></div>`;
+    <div class="bottom-hud"><div class="base-health"><div class="commander-portrait" aria-hidden="true"></div><div><div class="health-caption"><strong>BASE</strong><b data-live="health">${Math.round(c.health / 8)}%</b></div><div class="health-bar" role="meter" aria-label="Base health" aria-valuemin="0" aria-valuemax="800" aria-valuenow="${c.health}"><span data-live="health-bar" style="width:${c.health / 8}%"></span></div></div>${hintedControl(`<button class="icon-button" data-action="repair-base" ${canPrepare&&c.health>0&&c.health<800&&c.money>4?'':'disabled'} aria-label="Repair base">${icon('cross')}</button>`,repairHint({health:c.health,money:c.money,canShop:canPrepare}),'repair-hint',!(canPrepare&&c.health>0&&c.health<800&&c.money>4))}</div><div class="weapon-hud">${equipmentArt(this.assets.art,c.activeWeapon)}<div><strong>${name.toUpperCase()}</strong><span>${ammoArt(this.assets.art,c.activeWeapon)}<b data-live="ammo">${magazine}</b> <em>/ ${magazine}</em></span><small data-live="reload" class="reload-label">READY</small></div></div><div class="supply-hud">${['Mine','Avia','Atom'].map(key=>hintedControl(`<button data-action="arm" data-name="${key}" ${this.name==='combat'&&c.supplies[key]>0?'':'disabled'} aria-pressed="${this.combat?.armed===key}" class="supply" aria-label="${key}, ${c.supplies[key]} available">${equipmentArt(this.assets.art,key)}<b>${c.supplies[key]}</b></button>`,supportHint(this.assets.balance.omps.find(i=>i.name===key),c.supplies[key],this.name==='combat',this.combat?.armed===key),'support-hint-'+key,!(this.name==='combat'&&c.supplies[key]>0))).join('')}</div><div class="shop-nav">${['Defenses','Support','Weapons'].map(label=>hintedControl(`<button ${label==='Defenses'?'data-action="defenses" aria-label="Open defenses"':`data-action="shop" data-tab="${label.toLowerCase()}"`} ${canPrepare?'':'disabled'}>${label}</button>`,shopHint(canPrepare,this.combat?.status),'shop-hint-'+label.toLowerCase(),!canPrepare)).join('')}</div></div>`;
   }
   updateHint(button,message) {
     const wrapper=button.closest('.control-hint'),tooltip=wrapper.querySelector('.control-tooltip');
@@ -213,7 +213,7 @@ export class Scenes {
   updateHud() {
     if (!this.combat || !['combat', 'pause', 'defenses', 'victory', 'defeat'].includes(this.name)) return;
     const s = this.combat, text = (key, value) => { const node = this.ui.querySelector(`[data-live="${key}"]`); if (node && node.textContent !== String(value)) node.textContent = value; };
-    text('score', s.score.toLocaleString()); text('money', s.money); text('health', Math.round(s.health / 8) + '%'); text('ammo', s.ammo);
+    text('score', s.score.toLocaleString()); text('money', s.money); text('health', Math.round(s.health / 8) + '%'); text('ammo', s.reloading ? 0 : s.ammo);
     text('reload', s.reloading ? 'RELOADING' : 'READY'); text('progress', `${s.kills} / ${s.total} eliminated`);
     this.ui.querySelector('[data-live="health-bar"]').style.width = s.health / 8 + '%';
     this.ui.querySelector('[role="meter"]').setAttribute('aria-valuenow', s.health);
@@ -253,12 +253,12 @@ export class Scenes {
 
   result() {
     const s = this.combat, won = this.name === 'victory';
-    this.ui.innerHTML = this.hud(s.checkpoint) + `<section class="modal encounter-modal result-card ${won ? 'won' : 'lost'}" role="dialog" aria-modal="true" aria-labelledby="result-title"><p class="eyebrow">WAVE ${String(s.wave).padStart(2,'0')} / ${won ? 'SECURED' : 'BASE LOST'}</p><h2 id="result-title">${won ? s.wave===20?'Campaign secured.':'Line held.' : 'Outpost overrun.'}</h2><div class="result-grid"><span>Eliminated<strong>${s.kills} / ${s.total}</strong></span><span>Points earned<strong>+${s.earnedScore}</strong></span><span>Supplies earned<strong>+${s.earnedMoney}</strong></span><span>Base condition<strong>${Math.round(s.health / 8)}%</strong></span></div><p>${won ? this.store.writable ? (s.wave===20?'Campaign complete. Final total: '+(s.score+s.money).toLocaleString():`Wave ${s.wave+1} checkpoint saved on this browser.`) : `Wave ${s.wave+1} checkpoint ready for this session.` : 'Your checkpoint is intact. Regroup and try again.'}</p>${won?this.awardSummary(s):''}<div class="stack-actions"><button class="primary" data-action="${won ? 'outpost' : 'retry'}" data-initial-focus>${won ? 'Return to outpost' : 'Retry wave'} ${icon('arrow')}</button><button class="quiet" data-action="menu">Main menu</button></div></section>`;
+    this.ui.innerHTML = this.hud(s.checkpoint) + `<section class="modal encounter-modal result-card ${won ? 'won' : 'lost'}" role="dialog" aria-modal="true" aria-labelledby="result-title"><p class="eyebrow">WAVE ${String(s.wave).padStart(2,'0')} / ${won ? 'SECURED' : 'BASE LOST'}</p><h2 id="result-title">${won ? s.wave===20?'Campaign secured.':'Line held.' : 'Outpost overrun.'}</h2><div class="result-grid"><span>Eliminated<strong>${s.kills} / ${s.total}</strong></span><span>Points earned<strong>+${s.earnedScore}</strong></span><span>Supplies earned<strong>+${s.earnedMoney}</strong></span><span>Base condition<strong>${Math.round(s.health / 8)}%</strong></span></div>${won?(s.wave===20?`<p>Campaign complete. Final total: ${(s.score+s.money).toLocaleString()}</p>`:''):'<p>Your checkpoint is intact. Regroup and try again.</p>'}${won?this.awardSummary(s):''}<div class="stack-actions"><button class="primary" data-action="${won ? 'outpost' : 'retry'}" data-initial-focus>${won ? 'Continue' : 'Retry wave'} ${icon('arrow')}</button><button class="quiet" data-action="menu">Main menu</button></div></section>`;
     this.updateHud();
   }
   briefingText(wave) {
     const threats=Object.entries(this.assets.balance.levels[wave-1]).filter(([,n])=>n>0);
-    const names={SoldatAK:'riflemen',SoldatBazooka:'bazooka infantry',BTRLite:'light APCs',BTR:'heavy APCs',TankLite:'light tanks',Tank:'heavy tanks',RocketLite:'rocket carriers',Rocket:'heavy rocket carriers'};
+    const names={SoldatAK:'riflemen',SoldatBazooka:'bazooka infantry',BTRLite:'light machine-gun jeeps',BTR:'machine-gun jeeps',TankLite:'light tanks',Tank:'heavy tanks',RocketLite:'rocket carriers',Rocket:'heavy rocket carriers'};
     return threats.map(([name,n])=>`${n} ${names[name]}`).join(' · ');
   }
   awardSummary(s) {

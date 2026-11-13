@@ -36,8 +36,9 @@ export class Renderer {
       for(const enemy of [...combat.enemies].sort((a,b)=>a.y-b.y))this.soldier(c,enemy,motion,false,combat.elapsedMs);
       this.helicopterAim=pointer.inside&&pointer.battlefield?{x:pointer.x,y:pointer.y}:undefined;
       const heli=helicopterPose(combat,settings.reducedMotion);
-      c.save();c.translate(heli.x,heli.y);c.rotate(heli.angle);this.helicopter(c,0,0,motion,helicopterGun(this.assets.art,combat,settings.reducedMotion,this.helicopterAim));c.restore();
+      // Launch effects sit behind the aircraft, so rear/upward fire cannot paint over its cockpit.
       this.effects(c,combat,settings);
+      c.save();c.translate(heli.x,heli.y);c.rotate(heli.angle);this.helicopter(c,0,0,motion,helicopterGun(this.assets.art,combat,settings.reducedMotion,this.helicopterAim));c.restore();
     }else this.helicopter(c,265,153+Math.sin(motion*1.4)*2,motion);
     c.restore();
     if(scene==='combat'&&pointer.inside&&pointer.battlefield){
@@ -122,8 +123,19 @@ export class Renderer {
     }
     if(!dead&&!this.reducedMotion)this.runningGear(c,e,layout,drive,elapsedMs);
     if(e.health<e.healthMax&&!dead){c.fillStyle='#10251fe8';c.fillRect(-25,-h-9,50,5);c.fillStyle=e.health/e.healthMax<.3?'#ef995d':'#e6c879';c.fillRect(-24,-h-8,48*e.health/e.healthMax,3);}
-    if(e.health/e.healthMax<.3||dead){for(let i=0;i<3;i++){c.globalAlpha=.25;this.vfx(c,4,i*8-5,-h-((time*28+i*15)%35),20+i*6);}c.globalAlpha=dead?Math.min(1,e.ttl/150):1;this.vfx(c,2,8,-h*.55,24,28);}
+    if(e.health/e.healthMax<.3||dead)this.vehicleSmoke(c,e,layout,elapsedMs,dead);
     if(!dead)this.hitFeedback(c,e,elapsedMs,0,-h*.5);c.restore();
+  }
+  vehicleSmoke(c,enemy,layout,elapsedMs,dead=false){
+    const t=this.reducedMotion?0:elapsedMs/1000,seed=enemy.id*1.73,baseY=-layout.h*.48;
+    c.save();c.globalAlpha*=dead?Math.min(1,enemy.ttl/150):1;
+    const opacity=c.globalAlpha;
+    for(let i=0;i<5;i++){
+      const f=((t*.38+i/5+seed*.1)%1+1)%1;
+      c.globalAlpha=opacity*Math.sin(f*Math.PI)*.32;
+      this.vfx(c,4,5+i*1.5,baseY-10-f*46,20+f*18,24+f*23,0);
+    }
+    c.restore();
   }
   contactShadow(c,width,height) {
     c.fillStyle='rgba(25,31,21,.17)';c.beginPath();c.ellipse(0,1,width,height,0,0,Math.PI*2);c.fill();
@@ -155,8 +167,6 @@ export class Renderer {
       c.save();c.translate(p.x,p.y+3);c.globalAlpha=envelope.alpha*.28;this.vehicleContactShadow(c,e,layout);
       for(let i=0;i<3;i++)this.vfx(c,i%2?13:12,-layout.w*.3+i*layout.w*.28,4+(i%2)*3,6+i*2,undefined,e.id+i);
       c.save();c.rotate(.025);this.enemySprite(c,layout,e,now,true);c.restore();
-      if(envelope.fire>0){c.globalAlpha=envelope.fire*envelope.alpha*(settings.reducedMotion?.18:.35);
-        this.vfx(c,2,5,-layout.h*.45,24,30);}
       for(let i=0;i<3;i++){
         const phase=settings.reducedMotion?.5:((age/1900+i*.32)%1);
         c.globalAlpha=envelope.smoke*envelope.alpha*(1-phase)*.22;
@@ -175,7 +185,7 @@ export class Renderer {
       const px=x+(cx-b.x)*scale,py=y+(cy-b.y)*scale+drive.bob;
       c.save();c.translate(px,py);c.scale(rx*scale,ry*scale);
       c.beginPath();c.arc(0,0,1,0,Math.PI*2);c.clip();c.rotate(wheelAngle(-drive.roll,radius,scale));
-      this.sprite(c,'vehicles-painted',{x:cx-rx,y:cy-ry,width:rx*2,height:ry*2},-1,-1,2,2);
+      this.sprite(c,layout.key,{x:cx-rx,y:cy-ry,width:rx*2,height:ry*2},-1,-1,2,2);
       c.globalAlpha*=.24;c.strokeStyle='#d2bc86';c.lineWidth=.13;c.beginPath();
       c.moveTo(-.65,0);c.lineTo(.65,0);c.moveTo(0,-.65);c.lineTo(0,.65);c.stroke();c.restore();
     }
@@ -259,14 +269,19 @@ export class Renderer {
   helicopter(c,x,y,time,gun) {
     const b=this.assets.art['helicopter-body'];c.save();c.translate(x,y);
     c.fillStyle='rgba(35,38,25,.13)';c.beginPath();c.ellipse(0,94,53,7,0,0,Math.PI*2);c.fill();
+    if(gun){c.save();c.translate(gun.pivot.x,gun.pivot.y);c.rotate(gun.localAngle);c.translate(-gun.recoil,0);
+      if(Math.cos(gun.angle)<0)c.scale(1,-1);
+      this.sprite(c,'weapons-equipment',gun.b,-gun.w*.32,gun.drawY,gun.w,gun.h);c.restore();
+      // An olive chin fairing seats the breech inside the aircraft instead of hanging it on a rod.
+      const mount=c.createLinearGradient(gun.pivot.x,gun.pivot.y-4,gun.pivot.x,gun.pivot.y+4);
+      mount.addColorStop(0,'#8c8050');mount.addColorStop(.42,'#615c36');mount.addColorStop(1,'#303a27');
+      c.fillStyle=mount;c.strokeStyle='#333b27';c.lineWidth=.65;c.beginPath();c.ellipse(gun.pivot.x-1.5,gun.pivot.y,5,3.3,0,0,Math.PI*2);c.fill();c.stroke();
+      c.fillStyle='#34392a';c.beginPath();c.arc(gun.pivot.x+1,gun.pivot.y,1.7,0,Math.PI*2);c.fill();
+      c.fillStyle='#b0a16a';c.beginPath();c.arc(gun.pivot.x+.6,gun.pivot.y-.5,.5,0,Math.PI*2);c.fill();}
     // Exclude the old fixed chin barrel while preserving the fuselage and skids.
     c.save();const s=151/b.width;
     if(gun){c.beginPath();c.rect(-92,-24,151,(638-b.y)*s);c.rect(-92,-24+(638-b.y)*s,(1450-b.x)*s,62);c.rect(-92+(1450-b.x)*s,-24+(705-b.y)*s,151,25);c.clip();}
     this.sprite(c,'helicopter-body',b,-92,-24,151,151*b.height/b.width);c.restore();
-    if(gun){c.save();c.translate(gun.pivot.x,gun.pivot.y);c.rotate(gun.localAngle);
-      if(Math.cos(gun.angle)<0)c.scale(1,-1);
-      this.sprite(c,'weapons-equipment',gun.b,-gun.w*.2,gun.drawY,gun.w,gun.h);c.restore();
-      c.fillStyle='#514e32';c.beginPath();c.arc(gun.pivot.x,gun.pivot.y,2.5,0,Math.PI*2);c.fill();}
     c.strokeStyle='rgba(43,45,31,.20)';c.lineWidth=3;c.beginPath();c.ellipse(-1,-28,85,8,0,0,Math.PI*2);c.stroke();
     c.save();c.translate(-1,-28);c.scale(1,.10);c.rotate(time*23);c.strokeStyle='rgba(40,43,30,.58)';c.lineWidth=7;c.beginPath();c.moveTo(-86,0);c.lineTo(86,0);c.moveTo(0,-86);c.lineTo(0,86);c.stroke();c.restore();c.restore();
   }
@@ -286,7 +301,7 @@ export class Renderer {
         const heavy=!['MashineGun','Maxim','SoldatAK','BTR','BTRLite'].includes(trace.weapon),size=settings.reducedMotion?3:heavy?9:5;
         if(!this.seenMuzzles.has(trace)){this.seenMuzzles.add(trace);this.muzzleSmoke.push({...from,born:combat.elapsedMs,life:heavy?480:220,trail:false});}
         this.flash(c,from.x,from.y,size*(trace.player?.5:1));
-        const angle=muzzleDirection(combat,trace,settings.reducedMotion,from,to),scale=(settings.reducedMotion?.65:1)*(trace.player?.5:1);
+        const angle=trace.player?helicopterGun(this.assets.art,combat,settings.reducedMotion,this.helicopterAim).angle:muzzleDirection(combat,trace,settings.reducedMotion,from,to),scale=(settings.reducedMotion?.65:1)*(trace.player?.5:1);
         this.vfx(c,heavy?7:6,from.x,from.y,(heavy?70:42)*scale,(heavy?48:34)*scale,angle,heavy?.14:.27,.56);
       }
     }

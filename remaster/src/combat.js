@@ -94,7 +94,7 @@ export class Combat {
     for (const enemy of this.enemies) {
       enemy.attackFlash = Math.max(0, enemy.attackFlash - STEP_MS);
       if (enemy.state === 'move') {
-        if (enemy.x > enemy.distance + this.random() * 50) enemy.x -= enemy.speed;
+        if (enemy.x > enemy.distance + this.random() * 50) enemy.x -= enemy.speed * (['BTR','BTRLite'].includes(enemy.name) ? .85 : 1);
         else enemy.state = 'attack';
       } else {
         enemy.counter++;

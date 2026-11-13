@@ -54,6 +54,14 @@ export function installReleaseQA(ctx){
   store.startNew();store.saveCheckpoint(checkpoint);scenes.campaign=store.campaign;scenes.prepare();
  }
  document.querySelector('#qa-shop').onclick=()=>{fixture();status('Shop fixture · 300 supplies, damaged base, support stock 1 each.');};
+ for(const weapon of ['Cannon','MashineGun','Bazooka','Rocket']){
+  const button=document.createElement('button');button.textContent=`Check helicopter ${weapon}`;document.querySelector('#qa-controls').append(button);
+  button.onclick=()=>{fixture({weapons:['Cannon','MashineGun','Bazooka','Rocket'],activeWeapon:weapon});scenes.startCombat();const s=scenes.combat;
+   s.queue=[];s.total=1;s.enemies=[{...s.enemyTypes.Tank,id:1,x:440,y:260,healthMax:s.enemyTypes.Tank.health,state:'move',counter:0,attackFlash:0}];
+   s.helicopter={x:130,y:160,tilt:8};const target={x:440,y:242};s.aim=target;s.fire(target);s.pause();scenes.updateHud();render();
+   status(`Helicopter ${weapon}: actual fire, paused at launch; separate QA save.`);
+  };
+ }
  const shootingPreview=document.createElement('button');shootingPreview.textContent='Freeze shooting preview';document.querySelector('#qa-controls').append(shootingPreview);
  const aftermathPreview=document.createElement('button');aftermathPreview.textContent='Freeze battle aftermath';document.querySelector('#qa-controls').append(aftermathPreview);
  aftermathPreview.onclick=()=>{
@@ -117,6 +125,8 @@ export function installReleaseQA(ctx){
     const skin=s.enemyTypes[name];return {...skin,id:i+1,x:510+i*15,y:115+i*49,healthMax:skin.health,state:'move',counter:0,attackFlash:0};
   });s.nextId=7;scenes.updateHud();render();status('Six moving vehicle types · synthetic QA convoy, separate test save.');
  };
+ const burnPreview=document.createElement('button');burnPreview.textContent='Preview smoking vehicles';document.querySelector('#qa-controls').append(burnPreview);
+ burnPreview.onclick=()=>{convoyPreview.onclick();for(const e of scenes.combat.enemies)e.health=Math.ceil(e.healthMax*.15);status('Live low-health smoke on all six variants; no persistent flames.');};
  const blastPreview=document.createElement('button');blastPreview.textContent='Freeze explosion preview';document.querySelector('#qa-controls').append(blastPreview);
  const smokePreview=document.createElement('button');smokePreview.textContent='Freeze lingering smoke';document.querySelector('#qa-controls').append(smokePreview);
  smokePreview.onclick=()=>{

@@ -1,0 +1,10 @@
+const fs=require('node:fs'),crypto=require('node:crypto');
+const {png,bounds}=require('./png-alpha.cjs');
+const file='remaster/assets/art/machine-gun-jeep-v1.png',bytes=fs.readFileSync(file),image=png(bytes),b=bounds(image);
+const groundY=1021;b.height=groundY+2-b.y;
+const mask=Array.from({length:32},()=>Array(32).fill('0'));
+for(let y=0;y<b.height;y++)for(let x=0;x<b.width;x++)if(image.pixels[((b.y+y)*image.width+b.x+x)*4+3]>24)mask[Math.floor(y/b.height*32)][Math.floor(x/b.width*32)]='1';
+Object.assign(b,{groundY,sourceHeight:b.height,hitMask:mask.map(row=>row.join(''))});
+const path='remaster/assets/art/manifest.json',m=JSON.parse(fs.readFileSync(path));
+m['machine-gun-jeep']={file:'machine-gun-jeep-v1.png',imageWidth:image.width,imageHeight:image.height,columns:1,rows:1,transparentFraction:b.transparentFraction,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),frames:[b]};
+fs.writeFileSync(path,JSON.stringify(m,null,2)+'\n');

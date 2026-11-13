@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {helicopterGun,helicopterPose,muzzlePoint,projectileDisplay,muzzleDirection,VEHICLE_MUZZLES} from '../src/muzzle-layout.js';
+import {HELICOPTER_GUN_ARC,helicopterGun,helicopterPose,muzzlePoint,projectileDisplay,muzzleDirection,VEHICLE_MUZZLES} from '../src/muzzle-layout.js';
 import {vehicleLayout} from '../src/sprite-layout.js';
 import {simToDesign} from '../src/combat.js';
 const art=JSON.parse(fs.readFileSync(new URL('../assets/art/manifest.json',import.meta.url)));
@@ -12,7 +12,7 @@ test('helicopter rotating mount shares the muzzle endpoint for every weapon and 
   c.activeWeapon=weapon;const gun=helicopterGun(art,c,reduced,aim),p=muzzlePoint(art,c,{player:true},reduced,{},aim);
   assert.deepEqual(p,gun.tip);
   assert.ok(Math.abs(Math.atan2(p.y-gun.world.y,p.x-gun.world.x)-gun.angle)<1e-9);
-  assert.ok(Math.abs(Math.hypot(p.x-gun.world.x,p.y-gun.world.y)-gun.w*.8)<1e-9);
+  assert.ok(Math.abs(Math.hypot(p.x-gun.world.x,p.y-gun.world.y)-gun.length)<1e-9);
  }
  assert.equal(new Set(['Cannon','MashineGun','Bazooka','Rocket'].map(activeWeapon=>helicopterGun(art,{...c,activeWeapon}).index)).size,4);
 });
@@ -49,4 +49,29 @@ test('mortar muzzle follows the rising projectile segment rather than an instant
  assert.ok(muzzleDirection(c,{slot:1},false,from,to)<0);
  c.projectiles[0]={...c.projectiles[0],...c.projectiles[0].from,type:'Mortar'};
  assert.ok(muzzleDirection(c,{slot:1},false,from,to)<-.5);
+});
+
+test('helicopter mount recoil settles and reduced motion disables it',()=>{
+ const c=combat();c.activeWeapon='Rocket';c.traces=[{player:true,ttl:65,weapon:'Rocket',to:{x:500,y:250}}];
+ const kick=helicopterGun(art,c),quiet=helicopterGun(art,c,true);
+ assert.equal(kick.recoil,1.6);assert.equal(quiet.recoil,0);
+ c.traces[0].ttl=20;assert.ok(helicopterGun(art,c).recoil<kick.recoil);
+ c.traces=[];assert.equal(helicopterGun(art,c).recoil,0);
+});
+test('visible launch locks to its shot target while cursor moves, then follows cursor',()=>{
+ const c=combat();c.traces=[{player:true,ttl:65,to:{x:500,y:250}}];
+ assert.equal(helicopterGun(art,c,false,{x:5,y:5}).angle,helicopterGun(art,c,false,{x:900,y:450}).angle);
+ c.traces=[];assert.notEqual(helicopterGun(art,c,false,{x:5,y:5}).angle,helicopterGun(art,c,false,{x:900,y:450}).angle);
+});
+
+test('chin gun stays in its forward firing arc with only a small rearward allowance',()=>{
+ const c=combat();c.traces=[];
+ for(const activeWeapon of ['Cannon','MashineGun','Bazooka','Rocket'])for(let i=0;i<360;i++){
+  const aim={x:400+Math.cos(i*Math.PI/180)*1000,y:200+Math.sin(i*Math.PI/180)*1000};
+  const gun=helicopterGun(art,{...c,activeWeapon},false,aim);
+  assert.ok(gun.localAngle>=HELICOPTER_GUN_ARC.min&&gun.localAngle<=HELICOPTER_GUN_ARC.max);
+  assert.ok(Math.hypot(gun.pivot.x-gun.anchor.x,gun.pivot.y-gun.anchor.y)<3);
+  assert.ok(gun.length>0);
+ }
+ assert.equal(HELICOPTER_GUN_ARC.max,105*Math.PI/180);
 });

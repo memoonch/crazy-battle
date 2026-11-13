@@ -7,7 +7,7 @@ test('aftermath survives expired combat effects without mutation or duplicate re
  assert.equal(a.scars.length,2);assert.equal(a.wrecks.length,1);assert.deepEqual(c,original);
  c.effects=[];c.corpses=[];c.elapsedMs=1000;a.update(c);
  assert.equal(a.wrecks.length,1);assert.ok(wreckEnvelope(c.elapsedMs-a.wrecks[0].born).visible);
- c.elapsedMs=8100;a.update(c);assert.equal(a.wrecks.length,0);assert.equal(a.scars.length,2);
+ c.elapsedMs=4100;a.update(c);assert.equal(a.wrecks.length,0);assert.equal(a.scars.length,2);
  c.elapsedMs=30101;a.update(c);assert.equal(a.scars.length,0);
 });
 test('crowded aftermath is bounded and ignores infantry wrecks and off-field blast scars',()=>{
@@ -22,7 +22,8 @@ test('crowded aftermath is bounded and ignores infantry wrecks and off-field bla
 test('wreck envelopes freeze with combat time and fade before expiry; new encounters start clean',()=>{
  assert.equal(wreckEnvelope(300).visible,false);assert.equal(wreckEnvelope(350).visible,true);
  assert.deepEqual(wreckEnvelope(1500),wreckEnvelope(1500));
- assert.ok(wreckEnvelope(7000).alpha<wreckEnvelope(1000).alpha);
- assert.equal(wreckEnvelope(8000).visible,false);assert.equal(wreckEnvelope(6000).smoke,0);
+ assert.ok(wreckEnvelope(3000).alpha<wreckEnvelope(1000).alpha);
+ assert.equal(wreckEnvelope(4000).visible,false);assert.equal(wreckEnvelope(6000).smoke,0);
+ assert.equal(wreckEnvelope(2000).alpha,1);assert.equal(wreckEnvelope(3000).alpha,.5);assert.equal(wreckEnvelope(4000).alpha,0);
  assert.equal(new BattleAftermath().wrecks.length,0);
 });

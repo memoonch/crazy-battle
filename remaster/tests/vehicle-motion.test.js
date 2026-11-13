@@ -26,7 +26,7 @@ test('stopped, destroyed and reduced-motion vehicles do not animate running gear
 test('running gear rotates only the audited inner hub patches at every phase',()=>{
  const renderer=new Renderer({getContext:()=>({})},{view:{scale:1,dpr:1}});
  let expected=[],draws=0;
- renderer.sprite=(c,key,b)=>{draws++;assert.equal(key,'vehicles-painted');assert.ok(expected.some(([x,y,rx,ry])=>b.x===x-rx&&b.y===y-ry&&b.width===rx*2&&b.height===ry*2));};
+ renderer.sprite=(c,key,b)=>{draws++;assert.ok(['vehicles-painted','machine-gun-jeep'].includes(key));assert.ok(expected.some(([x,y,rx,ry])=>b.x===x-rx&&b.y===y-ry&&b.width===rx*2&&b.height===ry*2));};
  const c={globalAlpha:1,save(){},restore(){},translate(){},scale(){},beginPath(){},arc(){},ellipse(){},clip(){},rotate(){},moveTo(){},lineTo(){},stroke(){}};
  for(const name of Object.keys(VEHICLE_WHEELS))for(const x of [510,509,495,470]){
   const enemy={name,x,id:1,state:'move',health:100,healthMax:100};
@@ -51,4 +51,19 @@ test('wheel rotation uses the outer tyre radius so one circumference gives one r
    assert.ok(Math.abs(wheelAngle(2*Math.PI*outerRadius*scale,outerRadius,scale)+2*Math.PI)<1e-9);
   }
  }
+});
+
+test('vehicle smoke animates from combat time and stays still when paused or reduced motion is enabled',()=>{
+ const r=new Renderer({getContext:()=>({})},{view:{scale:1,dpr:1}}),enemy={name:'Tank',id:3,ttl:300},layout=vehicleLayout(art,enemy);
+ function sample(time,reduced=false){const calls=[];r.reducedMotion=reduced;r.vfx=(...args)=>calls.push(args.slice(1));r.vehicleSmoke({globalAlpha:1,save(){},restore(){}},enemy,layout,time);return calls;}
+ assert.deepEqual(sample(1000),sample(1000));assert.notDeepEqual(sample(1000),sample(1100));
+ assert.deepEqual(sample(1000,true),sample(2000,true));assert.ok(sample(1000).every(call=>call[0]===4));
+});
+
+test('vehicle smoke rises vertically without flames or horizontal sway',()=>{
+ const r=new Renderer({getContext:()=>({})},{view:{scale:1,dpr:1}}),enemy={name:'Tank',id:3,ttl:300},layout=vehicleLayout(art,enemy);
+ function sample(time){const calls=[];r.vfx=(c,...args)=>calls.push(args);r.vehicleSmoke({globalAlpha:1,save(){},restore(){}},enemy,layout,time);return calls;}
+ const a=sample(1000),b=sample(1100);
+ assert.equal(a.length,b.length);
+ for(let i=0;i<a.length;i++){assert.equal(a[i][1],b[i][1]);assert.equal(a[i][5],0);assert.equal(b[i][5],0);if(a[i][0]===2){assert.equal(a[i][3],b[i][3]);assert.equal(a[i][4],b[i][4]);}}
 });

@@ -9,3 +9,8 @@ export function equipmentArt(art,name) {
   const [key,index]=EQUIPMENT_FRAMES[name],atlas=art[key],b=atlas.frames[index];
   return `<span class="equipment-art" aria-hidden="true"><svg viewBox="${b.x} ${b.y} ${b.width} ${b.height}" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="/remaster/assets/art/${atlas.file}" width="${atlas.imageWidth}" height="${atlas.imageHeight}"/></svg></span>`;
 }
+
+export function ammoArt(art,name) {
+  const index={Cannon:0,MashineGun:1,Bazooka:2,Rocket:3}[name]??0,atlas=art['ammo-equipment'],b=atlas.frames[index];
+  return `<i class="ammo-art" aria-hidden="true"><svg viewBox="${b.x} ${b.y} ${b.width} ${b.height}" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="/remaster/assets/art/${atlas.file}" width="${atlas.imageWidth}" height="${atlas.imageHeight}"/></svg></i>`;
+}

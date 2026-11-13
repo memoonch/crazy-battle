@@ -3,17 +3,23 @@ import {vehicleLayout,SOLDIER_HEIGHT} from './sprite-layout.js';
 import {enemyFeedback} from './enemy-feedback.js';
 import {vehicleMotion} from './vehicle-motion.js';
 import {enemyAttackFeedback} from './enemy-attack-feedback.js';
-export const VEHICLE_MUZZLES={BTRLite:[259,55],BTR:[954,81],TankLite:[48,423],Tank:[780,425],RocketLite:[301,712],RocketBig:[1069,696]};
+export const VEHICLE_MUZZLES={BTRLite:[338,166],BTR:[338,166],TankLite:[48,423],Tank:[780,425],RocketLite:[301,712],RocketBig:[1069,696]};
 const rotate=(p,a)=>({x:p.x*Math.cos(a)-p.y*Math.sin(a),y:p.x*Math.sin(a)+p.y*Math.cos(a)});
+export const HELICOPTER_GUN_ARC={min:-18*Math.PI/180,max:105*Math.PI/180};
 export function helicopterGun(art,combat,reducedMotion=false,aim){
  const pose=helicopterPose(combat,reducedMotion),body=art['helicopter-body'],s=151/body.width;
- const pivot={x:-92+(1480-body.x)*s,y:-24+(655-body.y)*s};
+ const anchor={x:-92+(1480-body.x)*s,y:-24+(655-body.y)*s};
+ const pivot={x:anchor.x+2,y:anchor.y+1};
  const offset=rotate(pivot,pose.angle),world={x:pose.x+offset.x,y:pose.y+offset.y};
- const target=aim??simToDesign(combat.aim??combat.traces.findLast(t=>t.player)?.to??{x:500,y:250});
- const angle=Math.atan2(target.y-world.y,target.x-world.x),index={Cannon:0,MashineGun:1,Bazooka:2,Rocket:3}[combat.activeWeapon]??0;
- const b=art['weapons-equipment'].frames[index],w=[22,25,28,27][index],h=w*b.height/b.width;
+ const shot=combat.traces.findLast(t=>t.player&&t.ttl>0),target=shot?.to?simToDesign(shot.to):aim??simToDesign(combat.aim??{x:500,y:250});
+ const requested=Math.atan2(target.y-world.y,target.x-world.x)-pose.angle;
+ const localAngle=Math.max(HELICOPTER_GUN_ARC.min,Math.min(HELICOPTER_GUN_ARC.max,requested)),angle=localAngle+pose.angle,index={Cannon:0,MashineGun:1,Bazooka:2,Rocket:3}[combat.activeWeapon]??0;
+ // Aircraft barrels use the weapon cores, excluding handheld grips and tall shop-display mounts.
+ const original=art['weapons-equipment'].frames[index],regions=[[155,135,658,250],[1000,134,755,112],[44,553,801,180],[968,570,704,262]][index];
+ const b={...original,x:regions[0],y:regions[1],width:regions[2],height:regions[3]},w=[19,23,24,23][index],h=w*b.height/b.width;
  const tipY=[270,190,645,650][index],drawY=-(tipY-b.y)*w/b.width;
- return {pivot,world,angle,localAngle:angle-pose.angle,index,b,w,h,drawY,tip:{x:world.x+Math.cos(angle)*w*.8,y:world.y+Math.sin(angle)*w*.8}};
+ const recoil=reducedMotion?0:Math.max(0,Math.min(1,(shot?.ttl??0)/65))*[1.1,.65,1.4,1.6][index],length=w*.68-recoil;
+ return {anchor,pivot,world,angle,localAngle,index,b,w,h,drawY,recoil,length,tip:{x:world.x+Math.cos(angle)*length,y:world.y+Math.sin(angle)*length}};
 }
 export function helicopterPose(combat,reducedMotion){
  const p=simToDesign({x:combat.helicopter.x+40,y:combat.helicopter.y+100}),shot=combat.traces.findLast(t=>t.player);

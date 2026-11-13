@@ -1,0 +1,4 @@
+const fs=require('node:fs'),crypto=require('node:crypto'),{png,bounds}=require('./png-alpha.cjs');
+const bytes=fs.readFileSync('remaster/assets/art/ammo-equipment-v1.png'),im=png(bytes),frames=[];
+for(let i=0;i<4;i++){const col=i%2,row=Math.floor(i/2),x=Math.floor(col*im.width/2),y=Math.floor(row*im.height/2);frames.push(bounds(im,{x,y,width:Math.floor((col+1)*im.width/2)-x,height:Math.floor((row+1)*im.height/2)-y}));}
+const file='remaster/assets/art/manifest.json',m=JSON.parse(fs.readFileSync(file));m['ammo-equipment']={file:'ammo-equipment-v1.png',imageWidth:im.width,imageHeight:im.height,columns:2,rows:2,transparentFraction:bounds(im).transparentFraction,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),frames};fs.writeFileSync(file,JSON.stringify(m,null,2)+'\n');console.log(frames);

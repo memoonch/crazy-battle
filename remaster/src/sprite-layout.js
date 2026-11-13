@@ -9,7 +9,7 @@ export function soldierLayout(art,enemy,index) {
   return {key,b,x:(b.x%cellW-cellW*.54)*scale,y:(b.y%cellH-baseline)*scale,w:b.width*scale,h:b.height*scale};
 }
 export function vehicleLayout(art,enemy) {
-  const key='vehicles-painted',b=art[key].frames[VEHICLE_FRAMES[enemy.name]];
+  const key=['BTR','BTRLite'].includes(enemy.name)&&art['machine-gun-jeep']?'machine-gun-jeep':'vehicles-painted',b=key==='machine-gun-jeep'?art[key].frames[0]:art[key].frames[VEHICLE_FRAMES[enemy.name]];
   const scale=Math.min(105/b.width,62/(b.sourceHeight??b.height)),w=b.width*scale,h=b.height*scale;
   const ground=b.groundY??b.y+b.height;
   return {key,b,x:-w/2,y:-(ground-b.y)*scale,w,h};
