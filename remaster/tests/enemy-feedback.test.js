@@ -20,3 +20,11 @@ test('death feedback stays within existing corpse lifetime and respects reduced 
   assert.equal(enemyFeedback({...enemy,ttl:-25},200,true,false).death,1);
  }
 });
+
+test('both infantry types preserve their original gentle death lean',()=>{
+ for(const name of ['SoldatAK','SoldatBazooka']){
+  const early=enemyFeedback({name,ttl:DEATH_MS*.8},100,true,false),late=enemyFeedback({name,ttl:DEATH_MS*.1},100,true,false);
+  assert.ok(early.lean>0&&late.lean>early.lean);assert.ok(late.lean>.12&&late.lean<.14);
+ }
+ assert.ok(enemyFeedback({name:'Tank',ttl:0},100,true,false).lean<.03);
+});

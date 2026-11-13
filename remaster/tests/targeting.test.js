@@ -87,3 +87,10 @@ test('highest-lane upper armor is clickable at native, narrow and fullscreen siz
   assert.equal(clientToWorld(rect.left+view.offsetX+500*view.scale,rect.top+view.offsetY+100*view.scale,rect,view).battlefield,false);
  }
 });
+
+test('infantry retains original falling frame and replaces only the final resting pose',()=>{
+ for(const name of ['SoldatAK','SoldatBazooka']){
+  assert.equal(soldierLayout(art,{name},6).key,name==='SoldatAK'?'rifle-soldier-atlas':'bazooka-soldier-atlas-v3');
+  const final=soldierLayout(art,{name},7);assert.equal(final.key,'infantry-backward-rest');assert.ok(final.w>final.h*2);
+ }
+});

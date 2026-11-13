@@ -42,11 +42,11 @@ test('paused defense timers and flashes remain frozen',()=>{
 
 const manifest=JSON.parse(fs.readFileSync(new URL('../assets/art/manifest.json',import.meta.url)));
 test('all production textures match the manifest and cutouts have real alpha',()=>{
- assert.equal(Object.keys(manifest).length,15);
+ assert.equal(Object.keys(manifest).length,16);
  for(const [name,m]of Object.entries(manifest)){const b=fs.readFileSync(new URL('../assets/art/'+m.file,import.meta.url));assert.equal(crypto.createHash('sha256').update(b).digest('hex'),m.sha256);assert.equal(b.readUInt32BE(16),m.imageWidth);assert.equal(b.readUInt32BE(20),m.imageHeight);if(name!=='forest-battlefield'){assert.equal(b[25],6);assert.ok(m.transparentFraction>.4);}}
 });
 test('atlas frames stay within their declared cells and have usable painted bounds',()=>{
- for(const name of ['rifle-soldier-atlas','outpost-equipment','vehicles-painted','defenses-painted','bazooka-soldier-atlas-v3','weapons-equipment','support-equipment','outpost-fortifications','ammo-equipment']){const m=manifest[name],w=m.imageWidth/m.columns,h=m.imageHeight/m.rows;assert.equal(m.frames.length,m.columns*m.rows);for(const [i,b]of m.frames.entries()){assert.ok(b.width>0&&b.height>0);assert.ok(b.x>=Math.floor(i%m.columns*w));assert.ok(b.y>=Math.floor(Math.floor(i/m.columns)*h));assert.ok(b.x+b.width<=Math.floor((i%m.columns+1)*w));assert.ok(b.y+b.height<=Math.floor((Math.floor(i/m.columns)+1)*h));}}
+ for(const name of ['rifle-soldier-atlas','outpost-equipment','vehicles-painted','defenses-painted','bazooka-soldier-atlas-v3','weapons-equipment','support-equipment','outpost-fortifications','ammo-equipment','infantry-backward-rest']){const m=manifest[name],w=m.imageWidth/m.columns,h=m.imageHeight/m.rows;assert.equal(m.frames.length,m.columns*m.rows);for(const [i,b]of m.frames.entries()){assert.ok(b.width>0&&b.height>0);assert.ok(b.x>=Math.floor(i%m.columns*w));assert.ok(b.y>=Math.floor(Math.floor(i/m.columns)*h));assert.ok(b.x+b.width<=Math.floor((i%m.columns+1)*w));assert.ok(b.y+b.height<=Math.floor((Math.floor(i/m.columns)+1)*h));}}
 });
 
 test('bazooka animation leaves clear gutters around every complete launcher and death pose',()=>{

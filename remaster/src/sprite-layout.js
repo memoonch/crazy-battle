@@ -2,6 +2,10 @@ export const VEHICLE_FRAMES = Object.freeze({BTRLite:0,BTR:1,TankLite:2,Tank:3,R
 export const SOLDIER_HEIGHT = 42.5; // About 15% larger; shared by drawing and targeting.
 
 export function soldierLayout(art,enemy,index) {
+  if(index===7&&art['infantry-backward-rest']){
+    const key='infantry-backward-rest',b=art[key].frames[enemy.name==='SoldatBazooka'?1:0],w=enemy.name==='SoldatBazooka'?44:46,h=w*b.height/b.width;
+    return {key,b,x:-w*.4,y:-h,w,h};
+  }
   const bazooka=enemy.name==='SoldatBazooka',key=bazooka?'bazooka-soldier-atlas-v3':'rifle-soldier-atlas';
   const atlas=art[key],b=atlas.frames[index],cellW=atlas.imageWidth/4,cellH=atlas.imageHeight/2;
   const scale=SOLDIER_HEIGHT/(bazooka?Math.max(...atlas.frames.slice(0,6).map(f=>f.height)):329);

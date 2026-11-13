@@ -1,0 +1,11 @@
+# Infantry final backward landing
+
+Restored the previous two-stage death animation: original falling pose 6 until halfway through the existing 350 ms corpse lifetime, then final pose 7. The earlier 0.95-radian tumble, horizontal push, and rotated silhouette grounding are removed; the original gentle 0.13-radian lean and sink return. Only the final resting artwork is replaced with soldiers on their backs, boots left and head right. Final resting art stays level on the ground.
+
+New asset: remaster/assets/art/infantry-backward-rest-v1.png. Metadata registration: node scripts/register-infantry-rest.cjs. Original atlas pixels and alive/movement/firing poses are unchanged. No combat or death lifetime changes.
+
+Browser checked both infantry types at 0, 105, 210 and 315 ms using production rendering; no console errors. Screenshot: infantry-final-backward-landing.png. 113 automated tests pass.
+
+Generated with the built-in image generation tool, transparency enabled. Both original soldier atlases were identity/style references. Final prompt:
+
+> Use case: stylized-concept. Create replacement final fallen-on-back poses for the exact two illustrated game soldiers in reference atlases. References are identity/style guides only, do not reproduce the atlases. Output one transparent sprite sheet with exactly TWO isolated horizontal full body poses, arranged one above the other in equal height rows, plenty transparent gutter between. Top row: same olive uniform helmet backpack rifleman as reference1. Bottom row: same gray-green uniform helmet bazooka soldier as reference2, his bazooka beside his body parallel to him. Both lie fully on their BACKS after falling backward from a left-facing standing position. BOOTS to LEFT, HEAD to RIGHT. Faces looking UP toward sky, chest and belt facing up, backs touching ground, relaxed arms, slightly bent knees. Fully settled on back, not floating, not sitting, not face-down, not belly-down, not jumping. Non-graphic defeated game characters, no blood or injuries. Match hand-painted outlined warm military game style and original character proportions. Slight elevated three-quarter SIDE view matches reference pose6, but completed fall lying flat. Entire characters and weapons within each row. NO ground, no shadow, no background, no text, no labels.

@@ -99,7 +99,7 @@ export class Renderer {
     c.save();c.translate(p.x,p.y);this.contactShadow(c,15,4);
     const reaction=enemyFeedback(enemy,elapsedMs,dead,this.reducedMotion);
     if(dead)this.destruction(c,enemy,reaction,17);
-    c.translate(0,reaction.sink);c.rotate(reaction.lean);
+    c.translate(0,reaction.sink);c.rotate(dead&&index===7?0:reaction.lean);
     if(dead)c.globalAlpha=Math.min(1,enemy.ttl/110);
     this.enemySprite(c,layout,enemy,elapsedMs,dead);
     if(!dead)this.hitFeedback(c,enemy,elapsedMs,0,-h*.55);

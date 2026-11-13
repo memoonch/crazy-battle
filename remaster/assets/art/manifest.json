@@ -1312,5 +1312,30 @@
         "transparentFraction": 0.8488796777454372
       }
     ]
+  },
+  "infantry-backward-rest": {
+    "file": "infantry-backward-rest-v1.png",
+    "imageWidth": 1536,
+    "imageHeight": 1024,
+    "columns": 1,
+    "rows": 2,
+    "transparentFraction": 0.7530186971028646,
+    "sha256": "009a4570529cb3401af27738bd4c3edaae04a4a9a2544f3278c949a4efff0533",
+    "frames": [
+      {
+        "x": 344,
+        "y": 84,
+        "width": 824,
+        "height": 357,
+        "transparentFraction": 0.7608451843261719
+      },
+      {
+        "x": 344,
+        "y": 601,
+        "width": 831,
+        "height": 384,
+        "transparentFraction": 0.7451922098795573
+      }
+    ]
   }
 }
