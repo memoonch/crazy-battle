@@ -35,6 +35,7 @@ export class Viewport {
     this.canvas.width = Math.round(width * dpr);
     this.canvas.height = Math.round(height * dpr);
     this.element.style.setProperty('--u', `${scale}px`);
+    this.element.style.setProperty('--field-x',`${this.view.offsetX}px`);this.element.style.setProperty('--field-y',`${this.view.offsetY}px`);
     document.querySelector('#display-info').textContent = `${Math.round(width)} × ${Math.round(height)} · uniform scale ${scale.toFixed(3)}`;
   }
   point(event) { return clientToWorld(event.clientX, event.clientY, this.element.getBoundingClientRect(), this.view); }

@@ -3,7 +3,7 @@
 export const EQUIPMENT_FRAMES = Object.freeze({
   Cannon:['weapons-equipment',0], MashineGun:['weapons-equipment',1],
   Bazooka:['weapons-equipment',2], Rocket:['weapons-equipment',3],
-  Mine:['support-equipment',0], Avia:['support-equipment',1], Atom:['support-equipment',2]
+  Supplies:['outpost-fortifications',3], Mine:['support-equipment',0], Avia:['support-equipment',1], Atom:['support-equipment',2]
 });
 export function equipmentArt(art,name) {
   const [key,index]=EQUIPMENT_FRAMES[name],atlas=art[key],b=atlas.frames[index];

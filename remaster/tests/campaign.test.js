@@ -28,7 +28,7 @@ test('weapon acquisition charges once, requires ownership, equips and reloads at
   s.start();s.resume();for(let i=0;i<w.magazine;i++){s.rateCounter=w.rate+1;s.fire({x:600,y:220});}
   assert.equal(s.reloading,true);const duration=s.roundReloadMs*w.magazine;ticks(s,duration/25-1);assert.equal(s.reloading,true);s.tick();assert.equal(s.reloading,false);assert.equal(s.ammo,w.magazine);s.pause();
  }
- s.resume();assert.equal(s.buyWeapon('invalid'),false);assert.equal(s.equip('Cannon'),false);
+ s.resume();assert.equal(s.buyWeapon('invalid'),false);assert.equal(s.equip('Cannon'),true);
 });
 test('held input fires only the machine gun at the strict tick threshold',()=>{
  const s=game({weapons:['Cannon','MashineGun'],activeWeapon:'MashineGun'});s.start();

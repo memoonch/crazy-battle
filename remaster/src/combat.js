@@ -62,6 +62,15 @@ export class Combat {
   get remaining() { return this.total - this.kills; }
   get earnedMoney() { return this.rewardMoney; }
   get earnedScore() { return this.score - this.checkpoint.score; }
+  get reloadProgress() {
+    const start=this.reloadStartAmmo||0;
+    return this.reloading ? Math.min(1, Math.max(0, (this.ammo-start + this.reloadTime / this.roundReloadMs) / (this.weapon.magazine-start))) : 1;
+  }
+  reload() {
+    if(this.status!=='running'||this.reloading||this.ammo>=this.weapon.magazine)return false;
+    this.reloadStartAmmo=this.ammo;this.reloading=true;this.reloadTime=0;
+    this.events.push({type:'reload-start'});return true;
+  }
   tick({ aim = { x: 400, y: 250 }, shots = [], held = false } = {}) {
     if (this.status !== 'running') return;
     this.aim={...aim};
@@ -89,8 +98,9 @@ export class Combat {
     }
     // A press is queued by input, so a quick down/up between frames still fires.
     // Cannon is semi-automatic: held input is deliberately not an autofire source.
-    for (const point of shots) { if (this.armed) this.deploy(point); else this.fire(point); }
-    if (held && !shots.length && this.activeWeapon === 'MashineGun' && !this.armed) this.fire(aim);
+    let supportClick=false;
+    for (const point of shots) { if (this.armed) {supportClick=true;this.deploy(point);break;} else this.fire(point); }
+    if (!supportClick && held && !shots.length && this.activeWeapon === 'MashineGun' && !this.armed) this.fire(aim);
     for (const enemy of this.enemies) {
       enemy.attackFlash = Math.max(0, enemy.attackFlash - STEP_MS);
       if (enemy.state === 'move') {
@@ -137,7 +147,7 @@ export class Combat {
       if(targets.length)this.hits++;
       this.launch({x:this.helicopter.x+75,y:this.helicopter.y+15},targets[0] || point,targets,this.weapon.damage,this.activeWeapon);
     } else if (target) { this.hits++; this.damageEnemy(target, this.weapon.damage); }
-    if (!this.ammo) { this.reloading = true; this.reloadTime = 0; this.events.push({ type: 'reload-start' }); }
+    if (!this.ammo) this.reload();
     return true;
   }
   damageEnemy(target, damage) {
@@ -150,7 +160,7 @@ export class Combat {
       this.corpses.push({ ...target, ttl: DEATH_MS });
       this.emitAchievements(this.achievements.kill(this.elapsedMs,target));
       this.kills++; this.money += target.cost; this.rewardMoney += target.cost; this.score += target.healthMax;
-      this.events.push({ type: 'kill', id: target.id, money: target.cost, score: target.healthMax });
+      this.events.push({ type: 'kill', id: target.id, x: target.x, y: target.y, money: target.cost, score: target.healthMax });
     }
   }
   contains(enemy, point) {
@@ -160,12 +170,12 @@ export class Combat {
     const origin=simToDesign(enemy),hit=simToDesign(point);
     return paintedContains(this.art,enemy,{x:hit.x-origin.x,y:hit.y-origin.y});
   }
-  get canShop() { return ['ready','paused'].includes(this.status); }
+  get canShop() { return ['ready','running','paused'].includes(this.status)&&this.health>0; }
   equip(name) {
     if(!this.canShop || !this.weapons.includes(name) || this.activeWeapon===name)return false;
-    this.weaponStates.set(this.activeWeapon,{ammo:this.ammo,rateCounter:this.rateCounter,reloading:this.reloading,reloadTime:this.reloadTime});
+    this.weaponStates.set(this.activeWeapon,{ammo:this.ammo,rateCounter:this.rateCounter,reloading:this.reloading,reloadTime:this.reloadTime,reloadStartAmmo:this.reloadStartAmmo||0});
     this.activeWeapon=name;this.weapon={...this.balance.weapons.find(w=>w.name===name)};
-    this.ammo=this.weapon.magazine;this.rateCounter=this.weapon.rate+1;this.reloading=false;this.reloadTime=0;
+    this.ammo=this.weapon.magazine;this.rateCounter=this.weapon.rate+1;this.reloading=false;this.reloadTime=0;this.reloadStartAmmo=0;
     this.roundReloadMs=Math.ceil(Math.floor(this.weapon.timeReload/this.weapon.magazine)/STEP_MS)*STEP_MS;
     if(this.weaponStates.has(name))Object.assign(this,this.weaponStates.get(name));
     return true;
@@ -232,18 +242,37 @@ export class Combat {
       p.y=p.from.y+(p.to.y-p.from.y)*t-4*arc*t*(1-t);
     }
   }
+  supportPrice(name) {
+    const item=this.balance.omps.find(i=>i.name===name);
+    return item?(this.supplies[name]>0?0:item.cost):Infinity;
+  }
   arm(name) {
-    if(this.status!=='running' || !Object.hasOwn(this.supplies,name) || !this.supplies[name])return false;
-    this.armed=this.armed===name?null:name;return true;
+    if(this.armed===name){this.armed=null;return true;}
+    if(this.status!=='running'||this.money<this.supportPrice(name))return false;
+    this.armed=name;return true;
   }
   deploy(point) {
-    const name=this.armed;this.armed=null;
-    if(this.status!=='running' || !this.supplies[name])return false;
-    this.supplies[name]--;
+    const name=this.armed,cost=this.supportPrice(name),p=point&&simToDesign(point);
+    if(this.status!=='running'||!p||!Number.isFinite(p.x)||!Number.isFinite(p.y)||p.x<145||p.x>960||p.y<170||p.y>465||!Number.isFinite(cost)||this.money<cost)return false;
+    this.armed=null;
+    // Previously purchased support remains prepaid; all new deployments charge here.
+    if(this.supplies[name]>0)this.supplies[name]--;else {this.money-=cost;this.spent+=cost;}
     if(name==='Atom') {for(const enemy of [...this.enemies])this.damageEnemy(enemy,100);this.effects.push({...point,ttl:600,duration:600,kind:'Atom',hit:true,blast:true});}
     else if(name==='Mine')this.mines.push({...point});
     else this.airstrikes.push({x:-200,y:point.y,targetX:point.x});
-    this.events.push({type:'explosion',sound:name});return true;
+    this.events.push({type:'support-placed',name,cost},{type:'explosion',sound:name});return true;
+  }
+  replacementPrice(slot,name) {
+    const item=this.balance.inventory.find(i=>i.name===name),old=this.defenses[slot];
+    return item?item.cost-(old?.health>0?old.costSale:0):Infinity;
+  }
+  replaceDefense(slot,name) {
+    const item=this.balance.inventory.find(i=>i.name===name),old=this.defenses[slot],cost=this.replacementPrice(slot,name);
+    if(!this.canShop||!Number.isInteger(slot)||slot<0||slot>4||!item||(old?.health>0&&old.name===name)||this.money<cost)return false;
+    this.money-=cost;this.spent+=item.cost;
+    this.defenses[slot]={...item,maxHealth:item.health,counter:item.rate,flash:0};
+    for(const shot of this.projectiles)if(old&&shot.baseTarget===old)shot.baseTarget=this.defenses[slot];
+    return true;
   }
   updateSupport() {
     for(const mine of [...this.mines]) {

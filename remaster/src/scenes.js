@@ -1,4 +1,7 @@
-import { shopHint, repairHint, supportHint, hintedControl } from './control-hints.js';
+import {SupplyPickups} from './supply-pickups.js';
+import {helicopterPose} from './muzzle-layout.js';
+import {supportControls,emplacementControls,liveUpgradePanel} from './live-upgrades.js';
+import { repairHint, hintedControl } from './control-hints.js';
 import { equipmentArt, ammoArt, medalArt } from './equipment-art.js';
 import { ACHIEVEMENTS } from './achievements.js';
 import { DEFAULT_SETTINGS } from './save.js';
@@ -25,14 +28,18 @@ export class Scenes {
     Object.assign(this, { ui, store, audio, input, assets, notify });
     this.name = 'menu'; this.campaign = store.campaign; this.settingsDraft = null; this.returnScene = 'menu';
     this.combat = null; this.clock = new FixedStepClock();
-    this.selectedSlot = 0; this.shopTab = 'defenses';
+    this.supplyPickups=new SupplyPickups(ui,assets.art);
+    this.selectedSlot = 0; this.shopTab = 'defenses';this.livePanel=null;this.panelSignature=null;
     ui.addEventListener('click', event => this.action(event));
+    ui.addEventListener('pointerdown',()=>this.input.clear());
     ui.addEventListener('input', event => this.changeSetting(event));
     ui.addEventListener('change', event => this.changeSetting(event));
     ui.addEventListener('keydown', event => this.key(event));
     this.render(false);
   }
   go(name) {
+    this.livePanel=null;this.panelSignature=null;
+    if (['menu','preparation','defeat','confirm'].includes(name)) this.supplyPickups.clear();
     if (name !== 'combat') this.combat?.pause();
     if (name === 'combat') this.combat?.resume();
     this.clock.reset();
@@ -42,6 +49,14 @@ export class Scenes {
     const button = event.target.closest('[data-action]');
     if (!button || button.disabled) return;
     const action = button.dataset.action;
+    if(['emplacement','weapon-tray','close-upgrade','live-weapon','live-defense','live-repair'].includes(action)){
+      this.input.clear();this.audio.unlock().catch(()=>{});this.audio.click();if(!this.combat?.canShop||!['combat','preparation'].includes(this.name))return;
+      if(action==='close-upgrade')this.livePanel=null;
+      else if(action==='emplacement'){this.selectedSlot=Number(button.dataset.slot);this.livePanel={kind:'defense',slot:this.selectedSlot};this.combat.armed=null;}
+      else if(action==='weapon-tray'){this.livePanel=this.livePanel?.kind==='weapons'?null:{kind:'weapons'};this.combat.armed=null;}
+      else {const c=this.combat,changed=action==='live-weapon'?(c.weapons.includes(button.dataset.name)?c.equip(button.dataset.name):c.buyWeapon(button.dataset.name)):action==='live-defense'?c.replaceDefense(this.selectedSlot,button.dataset.name):c.repairDefense(this.selectedSlot);if(changed)this.persistPreparation();}
+      this.panelSignature=null;this.render(false);return;
+    }
     if(action==='toggle-mute'){
       const settings={...this.store.settings,muted:!this.store.settings.muted};
       this.store.saveSettings(settings);this.audio.apply(settings);await this.audio.unlock().catch(()=>{});
@@ -65,8 +80,8 @@ export class Scenes {
       const changed=kind==='weapon'?c.buyWeapon(name):kind==='equip'?c.equip(name):kind==='support'?c.buySupport(name):c.placeDefense(this.selectedSlot,name);
       if(changed)this.persistPreparation();this.render();
     }
-    else if (action === 'repair-base') {if(this.combat.repairBase())this.persistPreparation();this.render();}
-    else if (action === 'arm') {this.combat.arm(button.dataset.name);this.combatScreen();}
+    else if (action === 'repair-base') {if(this.combat.repairBase())this.persistPreparation();this.render(false);}
+    else if (action === 'arm') {this.livePanel=null;this.panelSignature=null;this.combat.arm(button.dataset.name);this.render(false);}
     else if (action === 'back-pause') this.go(this.combat.status==='ready'?'preparation':'pause');
     else if (action === 'select-slot') { this.selectedSlot = Number(button.dataset.slot); this.render(); }
     
@@ -110,7 +125,7 @@ export class Scenes {
     if (this.name !== 'combat') { this.clock.reset(); return; }
     this.clock.advance(seconds, () => {
       this.combat.tick({ aim: designToSim(this.input.state), shots: this.input.drainShots().map(designToSim), held: this.input.state.pressed });
-      for (const event of this.combat.drainEvents()) {this.audio.combatEvent(event.type,event);if(event.type==='reload-start')this.input.release();if(event.type==='achievement')this.notify('Award earned · '+ACHIEVEMENTS.find(a=>a.id===event.id).name);}
+      for (const event of this.combat.drainEvents()) {this.audio.combatEvent(event.type,event);if(event.type==='kill')this.supplyPickups.drop(event,this.store.settings.reducedMotion);if(event.type==='reload-start'||event.type==='support-placed')this.input.release();if(event.type==='achievement')this.notify('Award earned · '+ACHIEVEMENTS.find(a=>a.id===event.id).name);}
       if (this.combat.status === 'victory') {
         this.campaign = this.combat.victoryCheckpoint();
         this.store.saveCheckpoint(this.campaign);if(this.store.status!=='Saved on this browser')this.notify(this.store.status); this.go('victory'); return false;
@@ -121,6 +136,12 @@ export class Scenes {
   }
   handleKey(event) {
     if (event.repeat || (event.key !== 'Escape' && /INPUT|SELECT|TEXTAREA/.test(event.target.tagName))) return false;
+    if(event.key.toLowerCase()==='r'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&this.name==='combat'){
+      if(this.combat.reload()){this.input.clear();this.audio.combatEvent('reload-start');this.updateHud();}
+      return true;
+    }
+    if(event.key==='Escape'&&this.livePanel){this.livePanel=null;this.panelSignature=null;this.combat.armed=null;this.input.clear();this.render(false);return true;}
+    if(event.key==='Escape'&&this.combat?.armed&&this.name==='combat'){this.combat.armed=null;this.input.clear();this.updateHud();return true;}
     if (event.key.toLowerCase() === 'p' || event.key === 'Escape') {
       if (this.name === 'combat') { this.pause(); return true; }
       if (this.name === 'pause') { this.go('combat'); return true; }
@@ -167,6 +188,7 @@ export class Scenes {
     if (this.name === 'pause') this.pauseScreen();
     if (this.name === 'defenses') this.defensesScreen();
     if (this.name === 'victory' || this.name === 'defeat') this.result();
+    if(this.combat&&['preparation','combat'].includes(this.name)){this.ui.insertAdjacentHTML('beforeend',emplacementControls(this.combat,true));this.panelSignature=null;this.refreshLivePanel();this.updateHud();}
     this.updateDiagnostics();
     const scope = this.ui.querySelector('[role="dialog"]') || this.ui;
     if (focus && this.name !== 'combat') (scope.querySelector('[data-initial-focus]') || scope.querySelector('button:not(:disabled)'))?.focus({ preventScroll: true });
@@ -187,9 +209,20 @@ export class Scenes {
     const name = { Cannon: 'Cannon', MashineGun: 'Machine gun', Bazooka: 'Bazooka', Rocket: 'Rocket' }[c.activeWeapon];
     const magazine = this.assets.balance.weapons.find(w => w.name === c.activeWeapon).magazine;
     const inEncounter = this.combat?.status!=='ready' && ['combat', 'pause', 'defenses'].includes(this.name), pauseAction = this.name === 'combat' ? 'pause' : inEncounter ? 'resume' : 'menu';
-    const canPrepare=this.combat?.canShop;
-    return `<div class="top-hud"><div class="hud-brand">${icon('shield')}<strong>CRAZY BATTLE</strong></div><div class="hud-stats"><span><small>WAVE</small><b>${String(wave).padStart(2, '0')} <em>/ 20</em></b></span><span><small>SCORE</small><b data-live="score">${c.score.toLocaleString()}</b></span><span class="money">${icon('supply')}<b data-live="money">${c.money}</b></span></div>${this.muteControl()}<button class="icon-button" data-action="${pauseAction}" aria-label="${inEncounter ? this.name === 'pause' ? 'Resume' : 'Pause' : 'Main menu'}">${icon('pause')}</button></div>
-    <div class="bottom-hud"><div class="base-health"><div class="commander-portrait" aria-hidden="true"></div><div><div class="health-caption"><strong>BASE</strong><b data-live="health">${Math.round(c.health / 8)}%</b></div><div class="health-bar" role="meter" aria-label="Base health" aria-valuemin="0" aria-valuemax="800" aria-valuenow="${c.health}"><span data-live="health-bar" style="width:${c.health / 8}%"></span></div></div>${hintedControl(`<button class="icon-button" data-action="repair-base" ${canPrepare&&c.health>0&&c.health<800&&c.money>4?'':'disabled'} aria-label="Repair base">${icon('cross')}</button>`,repairHint({health:c.health,money:c.money,canShop:canPrepare}),'repair-hint',!(canPrepare&&c.health>0&&c.health<800&&c.money>4))}</div><div class="weapon-hud">${equipmentArt(this.assets.art,c.activeWeapon)}<div><strong>${name.toUpperCase()}</strong><span>${ammoArt(this.assets.art,c.activeWeapon)}<b data-live="ammo">${magazine}</b> <em>/ ${magazine}</em></span><small data-live="reload" class="reload-label">READY</small></div></div><div class="supply-hud">${['Mine','Avia','Atom'].map(key=>hintedControl(`<button data-action="arm" data-name="${key}" ${this.name==='combat'&&c.supplies[key]>0?'':'disabled'} aria-pressed="${this.combat?.armed===key}" class="supply" aria-label="${key}, ${c.supplies[key]} available">${equipmentArt(this.assets.art,key)}<b>${c.supplies[key]}</b></button>`,supportHint(this.assets.balance.omps.find(i=>i.name===key),c.supplies[key],this.name==='combat',this.combat?.armed===key),'support-hint-'+key,!(this.name==='combat'&&c.supplies[key]>0))).join('')}</div><div class="shop-nav">${['Defenses','Support','Weapons'].map(label=>hintedControl(`<button ${label==='Defenses'?'data-action="defenses" aria-label="Open defenses"':`data-action="shop" data-tab="${label.toLowerCase()}"`} ${canPrepare?'':'disabled'}>${label}</button>`,shopHint(canPrepare,this.combat?.status),'shop-hint-'+label.toLowerCase(),!canPrepare)).join('')}</div></div>`;
+    const canPrepare=this.combat?.canShop;const interactive=['combat','preparation'].includes(this.name);
+    return `<div class="top-hud"><div class="hud-brand">${icon('shield')}<strong>CRAZY BATTLE</strong></div><div class="hud-stats"><span><small>WAVE</small><b>${String(wave).padStart(2, '0')} <em>/ 20</em></b></span><span><small>SCORE</small><b data-live="score">${c.score.toLocaleString()}</b></span><span class="money" title="Supplies">${equipmentArt(this.assets.art,'Supplies')}<b data-live="money">${c.money}</b></span></div>${this.muteControl()}<button class="icon-button" data-action="${pauseAction}" aria-label="${inEncounter ? this.name === 'pause' ? 'Resume' : 'Pause' : 'Main menu'}">${icon('pause')}</button></div>
+    <div class="bottom-hud"><div class="base-health"><div class="commander-portrait" aria-hidden="true"></div><div><div class="health-caption"><strong>BASE</strong><b data-live="health">${Math.round(c.health / 8)}%</b></div><div class="health-bar" role="meter" aria-label="Base health" aria-valuemin="0" aria-valuemax="800" aria-valuenow="${c.health}"><span data-live="health-bar" style="width:${c.health / 8}%"></span></div></div>${hintedControl(`<button class="icon-button" data-action="repair-base" ${canPrepare&&c.health>0&&c.health<800&&c.money>4?'':'disabled'} aria-label="Repair base">${icon('cross')}</button>`,repairHint({health:c.health,money:c.money,canShop:canPrepare}),'repair-hint',!(canPrepare&&c.health>0&&c.health<800&&c.money>4))}</div><button class="weapon-hud weapon-tray-toggle" data-action="weapon-tray" aria-label="Chopper weapons" ${interactive?'':'disabled'}>${equipmentArt(this.assets.art,c.activeWeapon)}<div><strong>${name.toUpperCase()}</strong><span>${ammoArt(this.assets.art,c.activeWeapon)}<b data-live="ammo">${magazine}</b> <em>/ ${magazine}</em></span><small data-live="reload" class="reload-label">READY</small></div></button>${this.combat?supportControls(this.assets.art,this.combat,this.name==='combat'):''}<div class="hud-fill"></div></div>`;
+  }
+  refreshLivePanel(){
+    if(!this.combat||!['combat','preparation'].includes(this.name))return;
+    const s=this.combat,p=this.livePanel;this.ui.classList.toggle('upgrading',!!p);const signature=JSON.stringify([p,s.money,s.activeWeapon,s.weapons,s.defenses.map(d=>d&&[d.name,Math.ceil(d.health)])]);
+    if(signature===this.panelSignature)return;this.panelSignature=signature;
+    const old=this.ui.querySelector('.live-upgrade'),focused=old?.contains(document.activeElement)?{action:document.activeElement.dataset.action,name:document.activeElement.dataset.name}:null;
+    old?.remove();
+    if(p)this.ui.insertAdjacentHTML('beforeend',liveUpgradePanel(this.assets.art,s,p.kind,p.slot));
+    if(focused){const nodes=[...this.ui.querySelectorAll('.live-upgrade [data-action]')];nodes.find(n=>n.dataset.action===focused.action&&n.dataset.name===focused.name&&!n.disabled)?.focus({preventScroll:true});}
+    this.ui.querySelector('[data-action="weapon-tray"]')?.setAttribute('aria-expanded',String(p?.kind==='weapons'));
+    for(const button of this.ui.querySelectorAll('[data-action="emplacement"]'))button.setAttribute('aria-pressed',String(p?.kind==='defense'&&p.slot===Number(button.dataset.slot)));
   }
   updateHint(button,message) {
     const wrapper=button.closest('.control-hint'),tooltip=wrapper.querySelector('.control-tooltip');
@@ -207,11 +240,11 @@ export class Scenes {
     button.setAttribute('aria-label',label);button.setAttribute('title',label);button.setAttribute('aria-pressed',String(muted));button.innerHTML=icon(muted?'muted':'sound');
   }
   combatScreen() {
-    this.ui.innerHTML = this.hud(this.combat.checkpoint) + `<div class="wave-status"><span data-live="progress">0 / ${this.combat.total} eliminated</span><div class="wave-bar"><span data-live="progress-bar"></span></div></div><p class="combat-tip">${this.combat.armed?'Click battlefield to deploy '+this.combat.armed:'Click to fire · Hold machine gun · P to pause'}</p>`;
+    this.ui.innerHTML = this.hud(this.combat.snapshot()) + `<div class="wave-status"><span data-live="progress">0 / ${this.combat.total} eliminated</span><div class="wave-bar"><span data-live="progress-bar"></span></div></div>`;
     this.updateHud();
   }
   updateHud() {
-    if (!this.combat || !['combat', 'pause', 'defenses', 'victory', 'defeat'].includes(this.name)) return;
+    if (!this.combat || !['preparation','combat', 'pause', 'defenses', 'victory', 'defeat'].includes(this.name)) return;
     const s = this.combat, text = (key, value) => { const node = this.ui.querySelector(`[data-live="${key}"]`); if (node && node.textContent !== String(value)) node.textContent = value; };
     text('score', s.score.toLocaleString()); text('money', s.money); text('health', Math.round(s.health / 8) + '%'); text('ammo', s.reloading ? 0 : s.ammo);
     text('reload', s.reloading ? 'RELOADING' : 'READY'); text('progress', `${s.kills} / ${s.total} eliminated`);
@@ -220,13 +253,13 @@ export class Scenes {
     this.ui.querySelector('.base-health').classList.toggle('critical', s.health <= 200);
     const progress = this.ui.querySelector('[data-live="progress-bar"]'); if (progress) progress.style.width = s.kills / s.total * 100 + '%';
     for (const button of this.ui.querySelectorAll('[data-action="arm"]')) {
-      const name=button.dataset.name,count=s.supplies[name];
-      button.querySelector('b').textContent=count;
-      button.disabled=this.name!=='combat'||count===0;
-      button.setAttribute('aria-pressed',String(s.armed===name));
-      button.setAttribute('aria-label',`${name}, ${count} available`);
-      this.updateHint(button,supportHint(this.assets.balance.omps.find(i=>i.name===name),count,this.name==='combat',s.armed===name));
+      const name=button.dataset.name,cost=s.supportPrice(name),label={Mine:'Mine',Avia:'Air strike',Atom:'Atomic strike'}[name];
+      button.querySelector('b').textContent=cost;
+      button.disabled=this.name!=='combat'||s.money<cost;
+      button.setAttribute('aria-pressed',String(s.armed===name));button.setAttribute('aria-label',label+', '+cost+' supplies');
     }
+    const chopper=this.ui.querySelector('.chopper-target');if(chopper){const p=this.name==='combat'?helicopterPose(s,this.store.settings.reducedMotion):{x:265,y:153};chopper.style.left=`calc(var(--field-x, 0px) + ${p.x-60} * var(--u))`;chopper.style.top=`calc(var(--field-y, 0px) + ${p.y-16} * var(--u))`;}
+    this.refreshLivePanel();
     const repair=this.ui.querySelector('[data-action="repair-base"]');
     repair.disabled=!s.canShop||s.health<=0||s.health>=800||s.money<5;
     this.updateHint(repair,repairHint({health:s.health,money:s.money,canShop:s.canShop}));
@@ -266,7 +299,7 @@ export class Scenes {
     return earned.length?`<div class="earned-medals" role="group" aria-label="New honors">${earned.map(a=>medalArt(this.assets.art,a)).join('')}</div>`:'';
   }
   help() {
-    const tips=[['weapon','Aim & fire','Click enemies. Hold for the machine gun. Empty magazines reload automatically; release and press again afterward.'],['shield','Build the line','Open Defenses while preparing or paused. Choose one of five positions, then a defense. Select placed guns to repair or sell.'],['plane','Deploy support','Buy stock in Support. In battle select Mine, Air strike or Atomic strike, then click the battlefield. Click the item again to cancel.'],['cross','Keep the base standing','Repair the base for 3 supplies while preparing or paused. Each repair restores 80 HP and requires 5 supplies in reserve.'],['pause','Take command','P pauses and resumes. F expands the game; Escape returns. Pause to open shops. The speaker toggles all sounds.'],['supply','Save your campaign','Preparation purchases save immediately. Victory saves the next wave. Retry or reloading restores the whole wave checkpoint.']];
+    const tips=[['weapon','Aim & fire','Click enemies. Hold for the machine gun. R reloads. Empty magazines reload automatically; release and press again afterward.'],['shield','Build the line','Click an emplacement to build, repair or replace its defense.'],['plane','Deploy support','Select a support icon, then click the battlefield. Pay on placement. Escape cancels.'],['cross','Keep the base standing','Repair the base for 3 supplies at any time. Each repair restores 80 HP and requires 5 supplies in reserve.'],['pause','Take command','P pauses and resumes. F expands the game; Escape returns. Upgrades stay available during battle. The speaker toggles all sounds.'],['supply','Save your campaign','Preparation purchases save immediately. Victory saves the next wave. Retry or reloading restores the whole wave checkpoint.']];
     this.ui.innerHTML=`<section class="modal guide-panel" role="dialog" aria-modal="true" aria-labelledby="guide-title"><div class="shop-heading"><div><p class="eyebrow">FIELD MANUAL</p><h2 id="guide-title">Your outpost. Your orders.</h2></div><button data-action="back-panel" data-initial-focus>Back</button></div><div class="guide-grid">${tips.map(([glyph,title,copy])=>`<article>${icon(glyph)}<div><h3>${title}</h3><p>${copy}</p></div></article>`).join('')}</div></section>`;
   }
   medals() {

@@ -9,10 +9,10 @@ const balance=JSON.parse(fs.readFileSync(new URL('../../docs/reference/balance.j
 function prepared(money=10){const s=new Combat(balance,{...newCampaign(),money},42);s.start();s.pause();return s;}
 function ticks(s,n){for(let i=0;i<n;i++)s.tick();}
 
-test('Maxim placement charges original price once and rejects active/occupied/invalid placement',()=>{
+test('Maxim placement charges original price once and allows live building and rejects occupied/invalid placement',()=>{
  const s=prepared(10);assert.equal(s.placeMaxim(0),true);assert.equal(s.money,5);assert.equal(s.defenses[0].health,35);
  assert.equal(s.placeMaxim(0),false);assert.equal(s.placeMaxim(-1),false);assert.equal(s.placeMaxim(5),false);assert.equal(s.placeMaxim(.5),false);
- s.resume();assert.equal(s.placeMaxim(1),false);assert.equal(s.money,5);
+ s.resume();assert.equal(s.placeMaxim(1),true);assert.equal(s.money,0);
 });
 test('unaffordable defense placement cannot create negative money',()=>{
  const s=prepared(4);assert.equal(s.placeMaxim(0),false);assert.equal(s.money,4);assert.equal(s.defenses[0],null);

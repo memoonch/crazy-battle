@@ -43,10 +43,17 @@ export class Renderer {
     c.restore();
     if(scene==='combat'&&pointer.inside&&pointer.battlefield){
       const hit=combat.effects.some(e=>e.hit&&e.ttl>25&&Math.hypot(simToDesign(e).x-pointer.x,simToDesign(e).y-pointer.y)<24);c.save();c.translate(pointer.x,pointer.y);
+      if(combat.armed){const b=this.assets.art['support-equipment'].frames[{Mine:0,Avia:1,Atom:2}[combat.armed]],w=32;c.save();c.globalAlpha=.7;this.sprite(c,'support-equipment',b,18,-24,w,w*b.height/b.width);c.restore();}
       c.strokeStyle='#17231b';c.lineWidth=3;c.beginPath();c.arc(0,0,13,0,Math.PI*2);c.stroke();
-      c.strokeStyle=hit?'#fff6d4':'#f3b544';c.lineWidth=1.5;
+      const reloading=combat.reloading&&!combat.armed;
+      c.strokeStyle=reloading?'#a5a99b':hit?'#fff6d4':'#f3b544';c.lineWidth=1.5;
       for(const a of [0,Math.PI/2,Math.PI,Math.PI*1.5]){c.beginPath();c.moveTo(Math.cos(a)*5,Math.sin(a)*5);c.lineTo(Math.cos(a)*15,Math.sin(a)*15);c.stroke();}
-      if(hit){c.beginPath();c.arc(0,0,19,0,Math.PI*2);c.stroke();}c.restore();
+      if(reloading){
+        const progress=combat.reloadProgress,angle=-Math.PI/2+progress*Math.PI*2;
+        c.lineWidth=4;c.strokeStyle='rgba(15,25,23,.8)';c.beginPath();c.arc(0,0,20,0,Math.PI*2);c.stroke();
+        c.lineWidth=2.5;c.lineCap='round';c.strokeStyle='#f3b544';c.beginPath();c.arc(0,0,20,-Math.PI/2,angle);c.stroke();
+        c.fillStyle='#fff0bd';c.beginPath();c.arc(Math.cos(angle)*20,Math.sin(angle)*20,2,0,Math.PI*2);c.fill();
+      }c.restore();
     }
     if(!['preparation','combat'].includes(scene)){
       const shade=c.createLinearGradient(left,0,left+width,0);shade.addColorStop(0,scene==='defenses'?'rgba(9,19,19,.30)':'rgba(9,19,19,.94)');shade.addColorStop(.47,'rgba(9,19,19,.73)');shade.addColorStop(1,'rgba(9,19,19,.15)');c.fillStyle=shade;c.fillRect(left,top,width,height);

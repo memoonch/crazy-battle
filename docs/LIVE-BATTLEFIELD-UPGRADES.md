@@ -1,0 +1,15 @@
+# Direct battlefield upgrades
+
+Replaced the player-facing pause/shop flow with non-modal live panels. The five painted emplacement positions have accessible click targets. Clicking a position opens its build, repair and replacement options; health and prices update live. Replacements charge the new gun price minus the old defense's existing resale value, atomically. A positive +price denotes a returned balance. In-flight attacks retain the emplacement target after replacement.
+
+Click the chopper or its current-weapon HUD tile to open a four-weapon tray. Owned weapons equip without cost and retain their magazine/reload state; new purchases charge the existing prices. Shops and base repair allow running combat. Opening/closing these panels does not pause the clock. UI pointer presses clear held fire and queued shots, so clicking a control cannot shoot through it. Preparation uses the same panels, temporarily hiding its briefing to avoid overlapping menus. Preparation purchases save immediately; in-wave changes save on victory and roll back to the wave checkpoint on retry.
+
+Support has no shop button or visible stock counts. Each icon shows its current deployment price. Selection and cancellation cost nothing. A valid battlefield placement rechecks status, bounds, finite coordinates and available funds before charging exactly once. Invalid placement is free. The placement click cannot also fire the chopper. Previously purchased support in legacy saves remains prepaid, showing price 0 until consumed; this prevents charging twice or discarding a purchased item. All new support uses direct payment on placement.
+
+The field manual was updated; redundant on-field instruction banners and old HUD shop navigation are absent. The pause menu stays in the user-approved order. Production saves were not touched during testing.
+
+Viewport offsets are published as CSS variables so emplacement and helicopter click targets align with the centered logical arena in taller/wider fullscreen views. Panels fit between HUD bars, including the fifth occupied position.
+
+Validation: 124 tests passed, including live purchases, retained reloads, atomic defense swaps, projectile target retention, direct support charges, cancellation, invalid/funds-race placement, legacy prepaid stock, and a support click not firing/changing ammo. Existing campaign/save/achievements tests pass. Browser checked real repair (300 to 296), replacement (296 to 287), weapon purchase (287 to 262), selection/cancellation (262 unchanged), and mine placement (262 to 252 with chopper ammo still 10). The combat clock advanced while panels were open. Also checked preparation persistence, chopper click access, and lower-position alignment in a taller fullscreen view. No console errors. A normal unattended test wave correctly reached defeat and closed its panel. This is not a new full campaign or cross-browser/performance certification.
+
+QA uses the isolated browser fixture: node scripts/create-browser-qa.cjs, then Start live upgrades. Screenshot files: direct-emplacement-upgrades.png and live-weapons-and-support.png. No new art assets were needed.
