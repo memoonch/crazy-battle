@@ -62,6 +62,10 @@ export function installReleaseQA(ctx){
    status(`Helicopter ${weapon}: actual fire, paused at launch; separate QA save.`);
   };
  }
+ const honorPreview=document.createElement('button');honorPreview.textContent='Preview honors collection';document.querySelector('#qa-controls').append(honorPreview);
+ honorPreview.onclick=()=>{fixture({achievements:['achivementsDefender','achivementsBronze','honorFirstBlood','honorArmorHunter']});scenes.panelReturn='menu';scenes.go('medals');status('Mixed earned and locked painted honors · separate QA save.');};
+ const earnedPreview=document.createElement('button');earnedPreview.textContent='Preview earned medals';document.querySelector('#qa-controls').append(earnedPreview);
+ earnedPreview.onclick=()=>{fixture();scenes.startCombat();const s=scenes.combat;s.status='victory';s.kills=s.total;for(const id of ['achivementsDefender','honorFirstBlood','achivementsCombo2'])s.achievements.owned.add(id);scenes.go('victory');status('Painted medals on victory · synthetic visual fixture only.');};
  const shootingPreview=document.createElement('button');shootingPreview.textContent='Freeze shooting preview';document.querySelector('#qa-controls').append(shootingPreview);
  const aftermathPreview=document.createElement('button');aftermathPreview.textContent='Freeze battle aftermath';document.querySelector('#qa-controls').append(aftermathPreview);
  aftermathPreview.onclick=()=>{

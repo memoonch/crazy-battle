@@ -1,5 +1,5 @@
 import { shopHint, repairHint, supportHint, hintedControl } from './control-hints.js';
-import { equipmentArt, ammoArt } from './equipment-art.js';
+import { equipmentArt, ammoArt, medalArt } from './equipment-art.js';
 import { ACHIEVEMENTS } from './achievements.js';
 import { DEFAULT_SETTINGS } from './save.js';
 import { Combat, FixedStepClock, designToSim } from './combat.js';
@@ -236,7 +236,7 @@ export class Scenes {
   }
   pauseScreen() {
     this.combatScreen();
-    this.ui.insertAdjacentHTML('beforeend', `<section class="modal encounter-modal" role="dialog" aria-modal="true" aria-labelledby="pause-title"><p class="eyebrow">HOLD POSITION</p><h2 id="pause-title">Battle paused.</h2><p>The outpost will wait for you.</p><div class="stack-actions"><button class="primary" data-action="resume" data-initial-focus>Resume ${icon('arrow')}</button><button data-action="defenses">Defenses</button><button class="quiet" data-action="retry">Restart wave</button><div class="pause-utility"><button class="quiet" data-action="help">How to play</button><button class="quiet" data-action="medals">Medals</button><button class="quiet" data-action="settings">Settings</button></div><button class="quiet" data-action="menu">Quit to menu</button></div></section>`);
+    this.ui.insertAdjacentHTML('beforeend', `<section class="modal encounter-modal pause-card" role="dialog" aria-modal="true" aria-labelledby="pause-title"><p class="eyebrow">HOLD POSITION</p><h2 id="pause-title">Battle paused.</h2><p>The outpost will wait for you.</p><div class="pause-actions"><button class="primary pause-resume" data-action="resume" data-initial-focus>Resume ${icon('arrow')}</button><button data-action="retry">Restart wave</button><button data-action="menu">Quit to menu</button><div class="pause-utility"><button class="quiet" data-action="help">How to play</button><button class="quiet" data-action="medals">Medals</button><button class="quiet" data-action="settings">Settings</button></div></div></section>`);
   }
   defensesScreen() {
     const s=this.combat,d=s.defenses[this.selectedSlot],live=d?.health>0;
@@ -263,7 +263,7 @@ export class Scenes {
   }
   awardSummary(s) {
     const earned=ACHIEVEMENTS.filter(a=>s.achievements.owned.has(a.id)&&!s.checkpoint.achievements.includes(a.id));
-    return earned.length?`<p class="earned-awards">NEW HONORS · ${earned.map(a=>a.name).join(' · ')}</p>`:'';
+    return earned.length?`<div class="earned-medals" role="group" aria-label="New honors">${earned.map(a=>medalArt(this.assets.art,a)).join('')}</div>`:'';
   }
   help() {
     const tips=[['weapon','Aim & fire','Click enemies. Hold for the machine gun. Empty magazines reload automatically; release and press again afterward.'],['shield','Build the line','Open Defenses while preparing or paused. Choose one of five positions, then a defense. Select placed guns to repair or sell.'],['plane','Deploy support','Buy stock in Support. In battle select Mine, Air strike or Atomic strike, then click the battlefield. Click the item again to cancel.'],['cross','Keep the base standing','Repair the base for 3 supplies while preparing or paused. Each repair restores 80 HP and requires 5 supplies in reserve.'],['pause','Take command','P pauses and resumes. F expands the game; Escape returns. Pause to open shops. The speaker toggles all sounds.'],['supply','Save your campaign','Preparation purchases save immediately. Victory saves the next wave. Retry or reloading restores the whole wave checkpoint.']];
@@ -271,7 +271,7 @@ export class Scenes {
   }
   medals() {
     const c=this.combat?.snapshot()||this.store.campaign,owned=new Set(c?.achievements||[]);
-    this.ui.innerHTML=`<section class="modal medal-panel" role="dialog" aria-modal="true" aria-labelledby="medal-title"><div class="shop-heading"><div><p class="eyebrow">CAMPAIGN HONORS · ${ACHIEVEMENTS.filter(a=>owned.has(a.id)).length} / 6</p><h2 id="medal-title">Service remembered.</h2></div><button data-action="back-panel" data-initial-focus>Back</button></div><div class="medal-grid">${ACHIEVEMENTS.map(a=>`<article class="medal-card ${owned.has(a.id)?'unlocked':'locked'}"><span class="medallion ${a.tone||'gold'}" aria-hidden="true">${a.mark}</span><div><h3>${a.name}</h3><p>${a.description}</p><small>${owned.has(a.id)?'EARNED':'LOCKED'}</small></div></article>`).join('')}</div><p class="panel-note">Honors belong to this campaign. Awards earned during a wave are saved at victory.</p></section>`;
+    this.ui.innerHTML=`<section class="modal medal-panel" role="dialog" aria-modal="true" aria-labelledby="medal-title"><div class="shop-heading"><div><p class="eyebrow">CAMPAIGN HONORS · ${ACHIEVEMENTS.filter(a=>owned.has(a.id)).length} / ${ACHIEVEMENTS.length}</p><h2 id="medal-title">Service remembered.</h2></div><button data-action="back-panel" data-initial-focus>Back</button></div><div class="medal-grid">${ACHIEVEMENTS.map(a=>`<article class="medal-card ${owned.has(a.id)?'unlocked':'locked'}">${medalArt(this.assets.art,a)}<div><h3>${a.name}</h3><p>${a.description}</p><small>${owned.has(a.id)?'EARNED':'LOCKED'}</small></div></article>`).join('')}</div><p class="panel-note">Honors belong to this campaign. Awards earned during a wave are saved at victory.</p></section>`;
   }
   settings() {
     const s = this.settingsDraft;

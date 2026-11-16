@@ -1,0 +1,15 @@
+# Expanded honors and painted medals
+
+Expanded campaign honors from 6 to 12. Rapid assault (legacy ID achivementsCombo2) now requires 4 kills in 2 seconds. Overwhelming force (legacy ID achivementsCombo5) requires 8 kills in 3 seconds. Blitz adds a 10-kill / 3-second challenge. Windows are rolling simulation time and exclude the exact endpoint. Pausing freezes them.
+
+New honors: First blood (first kill), Blitz, Frontline veteran (25 kills in one wave), Armor hunter (5 vehicle kills in one wave, including jeeps), Iron fortress (wave 10 or later without base damage), Last stand (victory with base health above zero and at most 25%). Counts reset per wave/retry; earned IDs persist at victory. Existing earned honors keep their IDs and remain unlocked, including the revised rapid challenges. No kill/reward/damage changes.
+
+Save validation accepts the expanded list using the existing save format; all twelve round-trip in tests. The UI counter is dynamic. Both the collection and victory display use the same twelve painted medal PNG regions, with muted locked variants and accessible names.
+
+Asset: remaster/assets/art/honor-medals-v1.png. Regenerate metadata with node scripts/register-honors.cjs. Built-in image generation tool used, transparency enabled. Final prompt:
+
+> Use case: stylized-concept. Production hand-painted military honors medal atlas, exactly TWELVE distinct complete medals in strict 4 columns by 3 rows equal grid. Transparent background, each centered with generous gutters. Each medal has a short fabric ribbon ABOVE its metal pendant, detailed weathered bronze silver or gold with clear embossed emblem readable small. No text letters digits or labels anywhere. Row1 left to right: bronze crossed rifles with dark red ribbon; gold blast star with orange-black ribbon; gold protective shield with green ribbon; bronze laurel star with brown-green ribbon. Row2: silver laurel star with blue ribbon; gold laurel eagle with red-blue ribbon; bronze single cartridge with khaki ribbon; silver lightning bolt with red ribbon. Row3: bronze skull-free crossed swords with olive ribbon; silver tank silhouette with blue-green ribbon; gold fortress with purple ribbon; gold heart inside shield with deep red ribbon. Premium illustrated army game UI style, warm metal highlights, dark outlines, real colored fabric ribbon, flat front view, clean transparent cutouts. Complete ribbons and pendants fully inside each cell, no ground shadow, no background, no UI panels.
+
+Validation: 116 automated tests pass, covering exact rapid-window boundaries, one-time awards, vehicle counts, wave reset, health conditions, original earned-ID preservation, save round-trip, PNG alpha, hashes and atlas bounds. Browser inspected the collection with mixed earned/locked honors and the victory summary with multiple painted medals. All twelve fit the collection; victory buttons remain visible. No browser console errors observed. This was isolated visual QA, not a new 20-wave playthrough.
+
+Screenshots: expanded-honors-preview.png and painted-victory-medals.png.

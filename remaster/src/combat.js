@@ -119,7 +119,7 @@ export class Combat {
     // Explicit terminal state: never award both a victory and a defeat.
     if (this.health <= 0) { this.status = 'defeat'; this.events.push({ type: 'defeat' }); }
     else if (!this.queue.length && !this.enemies.length && !this.corpses.length && !this.projectiles.length) {
-      this.status = 'victory';this.emitAchievements(this.achievements.victory(this.wave)); this.events.push({ type: 'victory' });
+      this.status = 'victory';this.emitAchievements(this.achievements.victory(this.wave,this.health)); this.events.push({ type: 'victory' });
     }
   }
   fire(point) {
@@ -148,7 +148,7 @@ export class Combat {
     if (!target.health) {
       this.enemies.splice(this.enemies.indexOf(target), 1);
       this.corpses.push({ ...target, ttl: DEATH_MS });
-      this.emitAchievements(this.achievements.kill(this.elapsedMs));
+      this.emitAchievements(this.achievements.kill(this.elapsedMs,target));
       this.kills++; this.money += target.cost; this.rewardMoney += target.cost; this.score += target.healthMax;
       this.events.push({ type: 'kill', id: target.id, money: target.cost, score: target.healthMax });
     }
@@ -282,7 +282,7 @@ export class Combat {
   }
   victoryCheckpoint() {
     if (this.status !== 'victory') throw new Error('Checkpoint requires victory');
-    this.emitAchievements(this.achievements.victory(this.wave));
+    this.emitAchievements(this.achievements.victory(this.wave,this.health));
     return this.snapshot(this.wave+1);
   }
 }

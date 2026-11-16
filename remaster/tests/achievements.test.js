@@ -6,16 +6,17 @@ import { Combat } from '../src/combat.js';
 import { newCampaign, SaveStore } from '../src/save.js';
 const balance=JSON.parse(fs.readFileSync(new URL('../../docs/reference/balance.json',import.meta.url)));
 
-test('combo awards include same-tick kills and award each threshold once',()=>{
- const t=new AchievementTracker();assert.deepEqual(t.kill(0),[]);
- assert.deepEqual(t.kill(0),['achivementsCombo2']);t.kill(25);t.kill(50);
- assert.deepEqual(t.kill(75),['achivementsCombo5']);assert.deepEqual(t.kill(100),[]);
+test('rapid honors require four in two seconds and eight in three seconds, once each',()=>{
+ const t=new AchievementTracker();assert.deepEqual(t.kill(0),['honorFirstBlood']);
+ t.kill(200);t.kill(400);assert.deepEqual(t.kill(600),['achivementsCombo2']);
+ for(const time of [800,1000,1200])t.kill(time);
+ assert.deepEqual(t.kill(1400),['achivementsCombo5']);t.kill(1600);
+ assert.deepEqual(t.kill(1800),['honorBlitz']);assert.deepEqual(t.kill(1900),[]);
 });
-test('combo window excludes exactly 300ms and requires all five kills inside the window',()=>{
- const t=new AchievementTracker();t.kill(0);assert.deepEqual(t.kill(300),[]);
- t.kill(400);t.kill(500);t.kill(600);assert.equal(t.owned.has('achivementsCombo5'),false);
- t.kill(625);assert.equal(t.owned.has('achivementsCombo5'),false);
- t.kill(650);assert.ok(t.owned.has('achivementsCombo5'));
+test('rapid honor windows exclude their exact two and three second boundaries',()=>{
+ const a=new AchievementTracker();[0,500,1000,2000].forEach(t=>a.kill(t));assert.equal(a.owned.has('achivementsCombo2'),false);
+ const b=new AchievementTracker();[0,400,800,1200,1600,2000,2400,3000].forEach(t=>b.kill(t));assert.equal(b.owned.has('achivementsCombo5'),false);
+ b.kill(3100);assert.ok(b.owned.has('achivementsCombo5'));
 });
 test('service medals unlock after waves 5, 10 and 20 rather than the original early-wave bug',()=>{
  const t=new AchievementTracker();t.baseDamage=1;
@@ -32,8 +33,8 @@ test('base repairs cannot conceal damage from Defender; emplacement hits do not 
 });
 test('achievement state pauses with combat and is discarded by retry before victory',()=>{
  const s=new Combat(balance,newCampaign(),1);s.start();for(let i=0;i<120;i++)s.tick();
- const enemies=[...s.enemies];s.damageEnemy(enemies[0],10);s.pause();const time=s.elapsedMs;for(let i=0;i<100;i++)s.tick();assert.equal(s.elapsedMs,time);
- s.damageEnemy(enemies[1],10);assert.ok(s.achievements.owned.has('achivementsCombo2'));
+ s.enemies=Array.from({length:4},(_,i)=>({...s.enemies[0],id:i+100,health:10,healthMax:10}));const enemies=[...s.enemies];s.damageEnemy(enemies[0],10);s.pause();const time=s.elapsedMs;for(let i=0;i<100;i++)s.tick();assert.equal(s.elapsedMs,time);
+ for(const enemy of enemies.slice(1))s.damageEnemy(enemy,10);assert.ok(s.achievements.owned.has('achivementsCombo2'));
  const retry=new Combat(balance,s.checkpoint,1);assert.equal(retry.achievements.owned.has('achivementsCombo2'),false);
 });
 test('earned honors persist once with victory and do not change combat rewards',()=>{
@@ -43,5 +44,24 @@ test('earned honors persist once with victory and do not change combat rewards',
  assert.deepEqual(s.victoryCheckpoint(),checkpoint);
  let raw;const storage={getItem:()=>raw,setItem:(k,v)=>raw=v};new SaveStore(storage).saveCheckpoint(checkpoint);
  assert.deepEqual(new SaveStore(storage).campaign,checkpoint);
- assert.equal(new Set(ACHIEVEMENTS.map(a=>a.id)).size,6);
+ assert.equal(new Set(ACHIEVEMENTS.map(a=>a.id)).size,12);
+});
+
+test('new wave honors count vehicles separately and reset on retry while preserving earned medals',()=>{
+ const t=new AchievementTracker(['achivementsBronze']);
+ for(let i=0;i<24;i++)t.kill(i*4000,{name:i<4?'Tank':'SoldatAK'});
+ assert.equal(t.owned.has('honorArmorHunter'),false);assert.equal(t.owned.has('honorFrontline'),false);
+ const ids=t.kill(100000,{name:'BTRLite'});assert.ok(ids.includes('honorArmorHunter')&&ids.includes('honorFrontline'));
+ const fresh=new AchievementTracker(['achivementsBronze']);assert.equal(fresh.waveKills,0);assert.ok(fresh.owned.has('achivementsBronze'));
+});
+test('survival medals respect real damage and health bounds',()=>{
+ const clean=new AchievementTracker();assert.ok(clean.victory(10,800).includes('honorFortress'));
+ const damaged=new AchievementTracker();damaged.baseDamage=600;assert.ok(damaged.victory(3,200).includes('honorLastStand'));
+ assert.equal(new AchievementTracker().victory(3,201).includes('honorLastStand'),false);
+ assert.equal(new AchievementTracker().victory(3,0).includes('honorLastStand'),false);
+});
+test('all twelve honors can be saved and restored with the existing campaign format',()=>{
+ let raw;const storage={getItem:()=>raw,setItem:(k,v)=>raw=v};const store=new SaveStore(storage);
+ const c={...newCampaign(),achievements:ACHIEVEMENTS.map(a=>a.id)};store.saveCheckpoint(c);
+ assert.deepEqual(new SaveStore(storage).campaign,c);
 });

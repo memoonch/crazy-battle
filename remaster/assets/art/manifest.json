@@ -1337,5 +1337,100 @@
         "transparentFraction": 0.7451922098795573
       }
     ]
+  },
+  "honor-medals": {
+    "file": "honor-medals-v1.png",
+    "imageWidth": 1448,
+    "imageHeight": 1086,
+    "columns": 4,
+    "rows": 3,
+    "transparentFraction": 0.502651145162439,
+    "sha256": "f077a6dc2336cd8f800392d511fec94de136066a0e61137c33d270869dbc0b30",
+    "frames": [
+      {
+        "x": 89,
+        "y": 12,
+        "width": 234,
+        "height": 348,
+        "transparentFraction": 0.5062727022984647
+      },
+      {
+        "x": 421,
+        "y": 12,
+        "width": 259,
+        "height": 348,
+        "transparentFraction": 0.5632001465156741
+      },
+      {
+        "x": 789,
+        "y": 12,
+        "width": 210,
+        "height": 349,
+        "transparentFraction": 0.5629025365526082
+      },
+      {
+        "x": 1118,
+        "y": 12,
+        "width": 240,
+        "height": 348,
+        "transparentFraction": 0.4884313665639022
+      },
+      {
+        "x": 87,
+        "y": 374,
+        "width": 237,
+        "height": 340,
+        "transparentFraction": 0.5171316504380208
+      },
+      {
+        "x": 426,
+        "y": 374,
+        "width": 250,
+        "height": 341,
+        "transparentFraction": 0.47110894050853147
+      },
+      {
+        "x": 775,
+        "y": 374,
+        "width": 236,
+        "height": 340,
+        "transparentFraction": 0.5178184426604805
+      },
+      {
+        "x": 1120,
+        "y": 374,
+        "width": 238,
+        "height": 341,
+        "transparentFraction": 0.514918653276762
+      },
+      {
+        "x": 83,
+        "y": 727,
+        "width": 252,
+        "height": 345,
+        "transparentFraction": 0.4792283507829431
+      },
+      {
+        "x": 419,
+        "y": 728,
+        "width": 259,
+        "height": 344,
+        "transparentFraction": 0.470139800372394
+      },
+      {
+        "x": 764,
+        "y": 728,
+        "width": 263,
+        "height": 345,
+        "transparentFraction": 0.45938005555385975
+      },
+      {
+        "x": 1110,
+        "y": 728,
+        "width": 258,
+        "height": 345,
+        "transparentFraction": 0.48128109642562805
+      }
+    ]
   }
 }

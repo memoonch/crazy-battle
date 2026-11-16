@@ -1,3 +1,4 @@
+import {ACHIEVEMENTS} from './achievements.js';
 export const SAVE_KEY = 'crazy-battle.remaster.v1';
 export const DEFAULT_SETTINGS = Object.freeze({ master: 75, music: 45, effects: 70, reducedMotion: false, shake: 'low', muted: false });
 const weaponNames = new Set(['Cannon', 'MashineGun', 'Bazooka', 'Rocket']);
@@ -13,7 +14,7 @@ export function validCampaign(c) {
     && new Set(c.weapons).size === c.weapons.length && c.weapons.every(w => weaponNames.has(w))
     && c.weapons.includes('Cannon') && c.weapons.includes(c.activeWeapon)
     && !!c.supplies && ['Mine', 'Avia', 'Atom'].every(k => integer(c.supplies[k], 0, 9999))
-    && Array.isArray(c.achievements) && c.achievements.length <= 6 && c.achievements.every(a => typeof a === 'string')
+    && Array.isArray(c.achievements) && c.achievements.length <= ACHIEVEMENTS.length && c.achievements.every(a => typeof a === 'string')
     && (c.defenses === undefined || (Array.isArray(c.defenses) && c.defenses.length === 5 && c.defenses.every(d => d === null || ({Maxim:35,Mortar:45,CannonSmall:65,CannonNormal:120,CannonBig:150}[d.name] && integer(d.health,1,{Maxim:35,Mortar:45,CannonSmall:65,CannonNormal:120,CannonBig:150}[d.name])))))
     && c.checkpoint === 'preparation';
 }
