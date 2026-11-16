@@ -1,3 +1,4 @@
+import {MedalReveals} from './medal-reveal.js';
 import {SupplyPickups} from './supply-pickups.js';
 import {helicopterPose} from './muzzle-layout.js';
 import {supportControls,emplacementControls,liveUpgradePanel} from './live-upgrades.js';
@@ -29,17 +30,34 @@ export class Scenes {
     this.name = 'menu'; this.campaign = store.campaign; this.settingsDraft = null; this.returnScene = 'menu';
     this.combat = null; this.clock = new FixedStepClock();
     this.supplyPickups=new SupplyPickups(ui,assets.art);
+    this.medalReveals=new MedalReveals(ui.parentElement,assets.art,()=>this.audio.combatEvent('achievement'));
     this.selectedSlot = 0; this.shopTab = 'defenses';this.livePanel=null;this.panelSignature=null;
     ui.addEventListener('click', event => this.action(event));
     ui.addEventListener('pointerdown',()=>this.input.clear());
     ui.addEventListener('input', event => this.changeSetting(event));
     ui.addEventListener('change', event => this.changeSetting(event));
     ui.addEventListener('keydown', event => this.key(event));
+    ui.parentElement.addEventListener('pointerdown',event=>{
+      this.dismissedUpgradeClick=false;
+      if(this.dismissUpgradeOutside(event))this.dismissedUpgradeClick=true;
+    },true);
+    ui.parentElement.addEventListener('click',event=>{
+      if(!this.dismissedUpgradeClick)return;
+      this.dismissedUpgradeClick=false;event.preventDefault();event.stopPropagation();
+    },true);
     this.render(false);
+  }
+  dismissUpgradeOutside(event){
+    if(!this.livePanel||!['combat','preparation'].includes(this.name)||event.button!==0)return false;
+    // Keep panel controls usable and let another emplacement/chopper switch panels directly.
+    if(event.target.closest('.live-upgrade,[data-action="emplacement"],[data-action="weapon-tray"]'))return false;
+    this.livePanel=null;this.panelSignature=null;this.input.clear();this.refreshLivePanel();
+    event.preventDefault();event.stopPropagation();return true;
   }
   go(name) {
     this.livePanel=null;this.panelSignature=null;
-    if (['menu','preparation','defeat','confirm'].includes(name)) this.supplyPickups.clear();
+    if (['menu','preparation','defeat','confirm'].includes(name)) {this.supplyPickups.clear();this.medalReveals.clear();}
+    this.medalReveals.update(0,['combat','victory'].includes(name),this.store.settings.reducedMotion);
     if (name !== 'combat') this.combat?.pause();
     if (name === 'combat') this.combat?.resume();
     this.clock.reset();
@@ -113,7 +131,7 @@ export class Scenes {
     this.store.saveCheckpoint(this.campaign);if(this.store.status!=='Saved on this browser')this.notify(this.store.status);
   }
   startCombat() {
-    if(this.combat?.status!=='ready')this.combat = new Combat(this.assets.balance, this.campaign,undefined,this.assets.art);
+    if(this.combat?.status!=='ready'){this.medalReveals.clear();this.combat = new Combat(this.assets.balance, this.campaign,undefined,this.assets.art);}
     this.combat.start(); this.go('combat');
   }
   pause(reason) {
@@ -122,10 +140,11 @@ export class Scenes {
     if (reason) this.notify(reason);
   }
   advance(seconds) {
+    this.medalReveals.update(seconds,['combat','victory'].includes(this.name),this.store.settings.reducedMotion);
     if (this.name !== 'combat') { this.clock.reset(); return; }
     this.clock.advance(seconds, () => {
       this.combat.tick({ aim: designToSim(this.input.state), shots: this.input.drainShots().map(designToSim), held: this.input.state.pressed });
-      for (const event of this.combat.drainEvents()) {this.audio.combatEvent(event.type,event);if(event.type==='kill')this.supplyPickups.drop(event,this.store.settings.reducedMotion);if(event.type==='reload-start'||event.type==='support-placed')this.input.release();if(event.type==='achievement')this.notify('Award earned · '+ACHIEVEMENTS.find(a=>a.id===event.id).name);}
+      for (const event of this.combat.drainEvents()) {if(event.type!=='achievement')this.audio.combatEvent(event.type,event);if(event.type==='kill')this.supplyPickups.drop(event,this.store.settings.reducedMotion);if(event.type==='reload-start'||event.type==='support-placed')this.input.release();if(event.type==='achievement')this.medalReveals.enqueue(event.id);}
       if (this.combat.status === 'victory') {
         this.campaign = this.combat.victoryCheckpoint();
         this.store.saveCheckpoint(this.campaign);if(this.store.status!=='Saved on this browser')this.notify(this.store.status); this.go('victory'); return false;
