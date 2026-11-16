@@ -4,19 +4,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#13191d">
-  <title>Crazy Battle · Remaster</title>
+  <link rel="icon" type="image/png" href="/remaster/assets/art/game-icon-v1.png">
+  <link rel="apple-touch-icon" href="/remaster/assets/art/game-icon-v1.png">
+  <link rel="preload" as="image" href="/remaster/assets/preloader/forest-loading.jpg">
+  <link rel="preload" as="image" href="/remaster/assets/preloader/soldier-run.png">
+  <title>Helicopter: Last Stand</title>
+  <link rel="preload" as="image" href="/remaster/assets/marketing/game-logo-640.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="page-header"><a class="wordmark" href="index.html"><span class="chevron">⌄</span> CRAZY BATTLE <span class="edition">REMASTER</span></a><nav aria-label="Project links"><a href="/web/index.html">Original game</a><a href="/docs/art-direction/index.html">Art direction</a><button id="fullscreen" type="button">Fullscreen <kbd>F</kbd></button></nav></header>
+  <header class="page-header"><a class="wordmark" href="index.html"><span class="chevron">⌄</span> HELICOPTER: LAST STAND <span class="edition">REMASTER</span></a><nav aria-label="Project links"><a href="/web/index.html">Original game</a><a href="/docs/art-direction/index.html">Art direction</a><button id="fullscreen" type="button">Fullscreen <kbd>F</kbd></button></nav></header>
   <main>
     <div id="viewport" aria-label="Crazy Battle game">
       <canvas id="world" aria-label="Crazy Battle battlefield"></canvas>
       <div id="ui"></div>
       <p id="toast" role="status" aria-live="polite"></p>
-      <div id="loading" role="status"><span class="load-mark">⌄</span><h1>CRAZY BATTLE</h1><p id="loading-message">Preparing the outpost…</p><button id="retry" type="button" hidden>Try again</button></div>
+      <div id="loading" aria-label="Loading game" aria-busy="true">
+        <div class="loading-content">
+          <h1><img class="game-logo" src="/remaster/assets/marketing/game-logo-640.png" width="640" height="246" alt="Helicopter: Last Stand" decoding="async" fetchpriority="high"></h1>
+          <div class="loading-progress">
+            <div class="loading-runner" aria-hidden="true"><span></span></div>
+            <div class="loading-track" role="progressbar" aria-label="Loading game" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+            <div class="loading-caption"><span>LOADING</span><b id="loading-percent" aria-hidden="true">0%</b></div>
+          </div>
+          <p id="loading-message" role="status" aria-live="polite">Preparing the outpost…</p>
+          <button id="retry" type="button" hidden>Try again</button>
+        </div>
+      </div>
     </div>
-    <footer class="preview-info"><div><span class="preview-dot"></span><strong>CRAZY BATTLE · REMASTER</strong><span>Step 7 / 9</span></div><p>20 waves · Click to fire · P to pause · F for fullscreen.</p><details><summary>Input &amp; save diagnostics</summary><dl><dt>Display</dt><dd id="display-info">—</dd><dt>Pointer / logical coordinates</dt><dd id="pointer-info">—</dd><dt>Save</dt><dd id="save-info">—</dd><dt>Scene</dt><dd id="scene-info">Loading</dd><dt>Combat</dt><dd id="combat-info">Not started</dd></dl></details></footer>
+    <footer class="preview-info"><div><span class="preview-dot"></span><strong>HELICOPTER: LAST STAND · REMASTER</strong><span>Step 7 / 9</span></div><p>20 waves · Click to fire · P to pause · F for fullscreen.</p><details><summary>Input &amp; save diagnostics</summary><dl><dt>Display</dt><dd id="display-info">—</dd><dt>Pointer / logical coordinates</dt><dd id="pointer-info">—</dd><dt>Save</dt><dd id="save-info">—</dd><dt>Scene</dt><dd id="scene-info">Loading</dd><dt>Combat</dt><dd id="combat-info">Not started</dd></dl></details></footer>
   </main>
   <script type="module" src="src/main.js"></script>
 </body>

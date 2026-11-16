@@ -1432,5 +1432,34 @@
         "transparentFraction": 0.48128109642562805
       }
     ]
+  },
+  "campaign-story": {
+    "file": "campaign-triptych-v2.png",
+    "imageWidth": 1672,
+    "imageHeight": 941,
+    "columns": 3,
+    "rows": 1,
+    "frames": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 557.3333333333334,
+        "height": 941
+      },
+      {
+        "x": 557.3333333333334,
+        "y": 0,
+        "width": 557.3333333333334,
+        "height": 941
+      },
+      {
+        "x": 1114.6666666666667,
+        "y": 0,
+        "width": 557.3333333333334,
+        "height": 941
+      }
+    ],
+    "sha256": "42549f263fafc6e6b4e98f24e0b6bb00f0cd3e154cfe34a1b72f6326eff0986c",
+    "transparentFraction": 0
   }
 }

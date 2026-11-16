@@ -1,3 +1,4 @@
+import {Preloader} from '../src/preloader.js';
 import {Combat,simToDesign} from '../src/combat.js';
 import {newCampaign,validCampaign} from '../src/save.js';
 const raf=()=>new Promise(resolve=>requestAnimationFrame(resolve));
@@ -66,6 +67,10 @@ export function installReleaseQA(ctx){
  honorPreview.onclick=()=>{fixture({achievements:['achivementsDefender','achivementsBronze','honorFirstBlood','honorArmorHunter']});scenes.panelReturn='menu';scenes.go('medals');status('Mixed earned and locked painted honors � separate QA save.');};
  const earnedPreview=document.createElement('button');earnedPreview.textContent='Preview earned medals';document.querySelector('#qa-controls').append(earnedPreview);
  earnedPreview.onclick=()=>{fixture();scenes.startCombat();const s=scenes.combat;s.status='victory';s.kills=s.total;for(const id of ['achivementsDefender','honorFirstBlood','achivementsCombo2'])s.achievements.owned.add(id);scenes.go('victory');status('Painted medals on victory � synthetic visual fixture only.');};
+ const loadingPreview=document.createElement('button');loadingPreview.textContent='Preview preloader';document.querySelector('#qa-controls').append(loadingPreview);
+ loadingPreview.onclick=async()=>{document.querySelector('#viewport').classList.add('expanded');await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));busy(true);const preview=new Preloader(document.querySelector('#loading'));preview.reset();preview.setProgress(12,21);status('Preloader held at 57%; real four-frame running animation.');};
+ const openingPreview=document.createElement('button');openingPreview.textContent='Preview new campaign story';document.querySelector('#qa-controls').append(openingPreview);
+ openingPreview.onclick=async()=>{document.querySelector('#viewport').classList.add('expanded');await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));scenes.startNew(true);status('Fresh campaign opening and guided tutorial; isolated QA save.');};
  const revealPreview=document.createElement('button');revealPreview.textContent='Preview medal reveal queue';document.querySelector('#qa-controls').append(revealPreview);
  revealPreview.onclick=async()=>{document.querySelector('#viewport').classList.add('expanded');await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));fixture();scenes.startCombat();scenes.combat.pause();for(const id of ['honorFirstBlood','achivementsCombo2','honorBlitz'])scenes.medalReveals.enqueue(id);scenes.medalReveals.update(0,true,false);status('Three medal reveals queued, 2.5 seconds each, 0.35 second gap.');};
  const reloadPreview=document.createElement('button');reloadPreview.textContent='Preview reload reticle';document.querySelector('#qa-controls').append(reloadPreview);

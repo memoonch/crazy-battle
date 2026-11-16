@@ -1,3 +1,5 @@
+import {GAME_VERSION,releaseNotes} from './release-notes.js';
+import {Onboarding} from './onboarding.js';
 import {MedalReveals} from './medal-reveal.js';
 import {SupplyPickups} from './supply-pickups.js';
 import {helicopterPose} from './muzzle-layout.js';
@@ -31,6 +33,8 @@ export class Scenes {
     this.combat = null; this.clock = new FixedStepClock();
     this.supplyPickups=new SupplyPickups(ui,assets.art);
     this.medalReveals=new MedalReveals(ui.parentElement,assets.art,()=>this.audio.combatEvent('achievement'));
+    this.onboarding=new Onboarding(this);
+    this.releaseOpen=false;
     this.selectedSlot = 0; this.shopTab = 'defenses';this.livePanel=null;this.panelSignature=null;
     ui.addEventListener('click', event => this.action(event));
     ui.addEventListener('pointerdown',()=>this.input.clear());
@@ -39,6 +43,9 @@ export class Scenes {
     ui.addEventListener('keydown', event => this.key(event));
     ui.parentElement.addEventListener('pointerdown',event=>{
       this.dismissedUpgradeClick=false;
+      if(this.releaseOpen&&!event.target.closest('.release-popover,[data-action="releases"]'))this.setReleaseOpen(false);
+      if(this.onboarding.capture(event)){this.dismissedUpgradeClick=true;return;}
+      if(this.onboarding.step)return;
       if(this.dismissUpgradeOutside(event))this.dismissedUpgradeClick=true;
     },true);
     ui.parentElement.addEventListener('click',event=>{
@@ -46,6 +53,15 @@ export class Scenes {
       this.dismissedUpgradeClick=false;event.preventDefault();event.stopPropagation();
     },true);
     this.render(false);
+  }
+  setReleaseOpen(open,restoreFocus=false){
+    if(this.name!=='menu')return;
+    this.releaseOpen=open;const meta=this.ui.querySelector('.menu-meta');
+    meta?.querySelector('.release-popover')?.remove();
+    if(open)meta?.insertAdjacentHTML('afterbegin',releaseNotes());
+    const trigger=meta?.querySelector('[data-action="releases"]');trigger?.setAttribute('aria-expanded',String(open));
+    if(open)meta?.querySelector('[data-action="close-releases"]')?.focus({preventScroll:true});
+    else if(restoreFocus)trigger?.focus({preventScroll:true});
   }
   dismissUpgradeOutside(event){
     if(!this.livePanel||!['combat','preparation'].includes(this.name)||event.button!==0)return false;
@@ -55,6 +71,7 @@ export class Scenes {
     event.preventDefault();event.stopPropagation();return true;
   }
   go(name) {
+    this.releaseOpen=false;
     this.livePanel=null;this.panelSignature=null;
     if (['menu','preparation','defeat','confirm'].includes(name)) {this.supplyPickups.clear();this.medalReveals.clear();}
     this.medalReveals.update(0,['combat','victory'].includes(name),this.store.settings.reducedMotion);
@@ -67,13 +84,17 @@ export class Scenes {
     const button = event.target.closest('[data-action]');
     if (!button || button.disabled) return;
     const action = button.dataset.action;
+    if(action==='releases'||action==='close-releases'){this.audio.unlock().catch(()=>{});this.audio.click();this.setReleaseOpen(action==='releases'?!this.releaseOpen:false,action==='close-releases');return;}
+    if(!this.onboarding.allowed(action,button))return;
+    if(action==='story-deploy'){this.onboarding.finishStory();return;}
+    if(action==='tutorial-finish'||action==='tutorial-skip'){this.onboarding.finish();return;}
     if(['emplacement','weapon-tray','close-upgrade','live-weapon','live-defense','live-repair'].includes(action)){
       this.input.clear();this.audio.unlock().catch(()=>{});this.audio.click();if(!this.combat?.canShop||!['combat','preparation'].includes(this.name))return;
       if(action==='close-upgrade')this.livePanel=null;
       else if(action==='emplacement'){this.selectedSlot=Number(button.dataset.slot);this.livePanel={kind:'defense',slot:this.selectedSlot};this.combat.armed=null;}
       else if(action==='weapon-tray'){this.livePanel=this.livePanel?.kind==='weapons'?null:{kind:'weapons'};this.combat.armed=null;}
       else {const c=this.combat,changed=action==='live-weapon'?(c.weapons.includes(button.dataset.name)?c.equip(button.dataset.name):c.buyWeapon(button.dataset.name)):action==='live-defense'?c.replaceDefense(this.selectedSlot,button.dataset.name):c.repairDefense(this.selectedSlot);if(changed)this.persistPreparation();}
-      this.panelSignature=null;this.render(false);return;
+      this.onboarding.sync();this.panelSignature=null;this.render(false);return;
     }
     if(action==='toggle-mute'){
       const settings={...this.store.settings,muted:!this.store.settings.muted};
@@ -83,9 +104,9 @@ export class Scenes {
     await this.audio.unlock().catch(() => {}); this.audio.click();
     if (action === 'new') {
       if (this.store.campaign) this.go('confirm');
-      else this.startNew();
-    } else if (action === 'confirm-new') this.startNew();
-    else if (action === 'continue') { this.combat = null; this.campaign = this.store.campaign; if (this.campaign) this.prepare(); }
+      else this.startNew(true);
+    } else if (action === 'confirm-new') this.startNew(true);
+    else if (action === 'continue') { this.combat = null; this.campaign = this.store.campaign; if(this.campaign?.introStage==='story')this.onboarding.begin();else if (this.campaign) this.prepare(); }
     else if (action === 'menu') { this.combat?.pause(); this.combat = null; this.go('menu'); }
     else if (action === 'help' || action === 'medals') {this.panelReturn=this.name==='combat'?'pause':this.name;this.go(action);}
     else if (action === 'back-panel') this.go(this.panelReturn || 'menu');
@@ -99,7 +120,7 @@ export class Scenes {
       if(changed)this.persistPreparation();this.render();
     }
     else if (action === 'repair-base') {if(this.combat.repairBase())this.persistPreparation();this.render(false);}
-    else if (action === 'arm') {this.livePanel=null;this.panelSignature=null;this.combat.arm(button.dataset.name);this.render(false);}
+    else if (action === 'arm') {this.livePanel=null;this.panelSignature=null;this.combat.arm(button.dataset.name);this.onboarding.sync();this.render(false);}
     else if (action === 'back-pause') this.go(this.combat.status==='ready'?'preparation':'pause');
     else if (action === 'select-slot') { this.selectedSlot = Number(button.dataset.slot); this.render(); }
     
@@ -118,9 +139,8 @@ export class Scenes {
       else if (!this.settingsDraft?.master || !this.settingsDraft?.effects) this.notify('Raise Master volume and Effects above 0% to hear the preview');
       else this.audio.combatEvent('shot',{weapon:this.campaign?.activeWeapon||'Cannon'});
     }
-    else if (action === 'save') { this.store.saveCheckpoint(this.campaign); if(this.store.status!=='Saved on this browser')this.notify(this.store.status); this.updateDiagnostics(); }
   }
-  startNew() { this.combat = null; this.campaign = this.store.startNew(); if(this.store.status!=='Saved on this browser')this.notify(this.store.status); this.prepare(); }
+  startNew(intro=false) { this.onboarding.step=null;this.combat = null; this.campaign = this.store.startNew(); if(this.store.status!=='Saved on this browser')this.notify(this.store.status); if(intro)this.onboarding.begin();else this.prepare(); }
   prepare() {
     this.combat=this.campaign.wave<=20?new Combat(this.assets.balance,this.campaign,undefined,this.assets.art):null;
     this.go('preparation');
@@ -132,7 +152,7 @@ export class Scenes {
   }
   startCombat() {
     if(this.combat?.status!=='ready'){this.medalReveals.clear();this.combat = new Combat(this.assets.balance, this.campaign,undefined,this.assets.art);}
-    this.combat.start(); this.go('combat');
+    this.combat.start();this.onboarding.start(); this.go('combat');
   }
   pause(reason) {
     if (this.name !== 'combat') return;
@@ -140,6 +160,7 @@ export class Scenes {
     if (reason) this.notify(reason);
   }
   advance(seconds) {
+    if(this.onboarding.update(seconds))return;
     this.medalReveals.update(seconds,['combat','victory'].includes(this.name),this.store.settings.reducedMotion);
     if (this.name !== 'combat') { this.clock.reset(); return; }
     this.clock.advance(seconds, () => {
@@ -154,6 +175,8 @@ export class Scenes {
     this.updateHud();
   }
   handleKey(event) {
+    if(event.key==='Escape'&&this.releaseOpen){this.setReleaseOpen(false,true);return true;}
+    if(!event.ctrlKey&&!event.metaKey&&!event.altKey&&this.name==='combat'&&this.onboarding?.step&&['p','r','escape'].includes(event.key.toLowerCase()))return true;
     if (event.repeat || (event.key !== 'Escape' && /INPUT|SELECT|TEXTAREA/.test(event.target.tagName))) return false;
     if(event.key.toLowerCase()==='r'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&this.name==='combat'){
       if(this.combat.reload()){this.input.clear();this.audio.combatEvent('reload-start');this.updateHud();}
@@ -182,7 +205,7 @@ export class Scenes {
   }
   key(event) {
     // Modal scene keyboard focus stays within the scene, not behind its overlay.
-    if (event.key === 'Tab' && ['settings', 'confirm', 'pause', 'defenses', 'help', 'medals', 'victory', 'defeat'].includes(this.name)) {
+    if (event.key === 'Tab' && ['story','settings', 'confirm', 'pause', 'defenses', 'help', 'medals', 'victory', 'defeat'].includes(this.name)) {
       const scope = this.ui.querySelector('[role="dialog"]') || this.ui;
       const nodes = [...scope.querySelectorAll('button:not(:disabled), input, select, .control-hint[tabindex="0"]')];
       const first = nodes[0], last = nodes.at(-1);
@@ -197,6 +220,7 @@ export class Scenes {
   }
   render(focus = true) {
     this.ui.dataset.scene = this.name;
+    if (this.name === 'story')this.ui.innerHTML=this.onboarding.story();
     if (this.name === 'menu') this.menu();
     if(this.name==='help')this.help();
     if(this.name==='medals')this.medals();
@@ -208,18 +232,19 @@ export class Scenes {
     if (this.name === 'defenses') this.defensesScreen();
     if (this.name === 'victory' || this.name === 'defeat') this.result();
     if(this.combat&&['preparation','combat'].includes(this.name)){this.ui.insertAdjacentHTML('beforeend',emplacementControls(this.combat,true));this.panelSignature=null;this.refreshLivePanel();this.updateHud();}
+    this.onboarding.decorate();
     this.updateDiagnostics();
     const scope = this.ui.querySelector('[role="dialog"]') || this.ui;
     if (focus && this.name !== 'combat') (scope.querySelector('[data-initial-focus]') || scope.querySelector('button:not(:disabled)'))?.focus({ preventScroll: true });
   }
   menu() {
     const c = this.store.campaign;
-    this.ui.innerHTML = `<section class="menu-card" aria-labelledby="menu-title"><h1 id="menu-title">CRAZY<br><span>BATTLE</span></h1><p class="menu-description">Hold the line.<br>Build your defenses. Protect the outpost.</p><div class="menu-actions"><button class="primary" data-action="continue" ${c ? 'data-initial-focus' : 'disabled'}>Continue ${icon('arrow')}</button><button data-action="new" ${c ? '' : 'data-initial-focus'}>New campaign</button><div class="menu-utility"><button class="quiet" data-action="help">How to play</button><button class="quiet" data-action="medals">Medals</button><button class="quiet" data-action="settings">Settings</button></div></div></section><div class="menu-insignia" aria-hidden="true"><div class="menu-commander"></div><span>OUTPOST COMMAND</span></div><div class="outpost-caption"><strong>FOREST OUTPOST</strong></div>`;
+    this.ui.innerHTML = `<section class="menu-card" aria-labelledby="menu-title"><h1 id="menu-title"><img class="game-logo" src="/remaster/assets/marketing/game-logo-640.png" width="640" height="246" alt="Helicopter: Last Stand" decoding="async"></h1><div class="menu-actions"><button class="primary" data-action="continue" ${c ? 'data-initial-focus' : 'disabled'}>Continue ${icon('arrow')}</button><button data-action="new" ${c ? '' : 'data-initial-focus'}>New campaign</button><div class="menu-utility"><button class="quiet" data-action="help">How to play</button><button class="quiet" data-action="medals">Medals</button><button class="quiet" data-action="settings">Settings</button></div></div></section><div class="menu-insignia" aria-hidden="true"><div class="menu-commander"></div><span>OUTPOST COMMAND</span></div><div class="outpost-caption"><strong>FOREST OUTPOST</strong></div><div class="menu-meta"><button data-action="releases" aria-expanded="false" aria-controls="release-popover" aria-label="v${GAME_VERSION} — What's new">v${GAME_VERSION}</button><span>© freeonlinegames.com</span></div>`;
   }
   preparation() {
     const c = this.campaign, wave = Math.min(c.wave, 20), count = Object.values(this.assets.balance.levels[wave - 1]).reduce((a, n) => a + n, 0);
     const cleared=c.wave>20;
-    this.ui.innerHTML=this.hud(c)+`<section class="briefing" aria-labelledby="briefing-title"><p class="eyebrow">${cleared?'CAMPAIGN COMPLETE':'OUTPOST BRIEFING'}</p><h2 id="briefing-title">${cleared?'All 20 waves secured.':'Prepare the line.'}</h2><p>${cleared?`Final total: ${(c.score+c.money).toLocaleString()}`:`Wave ${wave}`}</p><div class="briefing-rule"></div><p class="briefing-copy">${cleared?'The outpost stands. Your final checkpoint is saved.':`${count} incoming enemies`}</p><button class="primary" data-action="${cleared?'new':'start'}" data-initial-focus>${cleared?'New campaign':'Start wave'} ${icon('arrow')}</button><div class="briefing-tools"><button class="quiet" data-action="save">Save checkpoint</button><button class="quiet" data-action="${cleared?'medals':'help'}">${cleared?'View honors':'Field manual'}</button></div></section>`;
+    this.ui.innerHTML=this.hud(c)+`<section class="briefing" aria-labelledby="briefing-title"><p class="eyebrow">${cleared?'CAMPAIGN COMPLETE':'OUTPOST BRIEFING'}</p><h2 id="briefing-title">${cleared?'All 20 waves secured.':'Prepare the line.'}</h2><p>${cleared?'Evacuation complete.':`Wave ${wave}`}</p><div class="briefing-rule"></div><p class="briefing-copy">${cleared?'The outpost stands.':`${count} incoming enemies`}</p><button class="primary" data-action="${cleared?'new':'start'}" data-initial-focus>${cleared?'New campaign':'Start wave'} ${icon('arrow')}</button><div class="briefing-tools"><button class="quiet" data-action="${cleared?'medals':'help'}">${cleared?'View honors':'Field manual'}</button></div></section>`;
   }
 
   hud(c) {
@@ -229,7 +254,7 @@ export class Scenes {
     const magazine = this.assets.balance.weapons.find(w => w.name === c.activeWeapon).magazine;
     const inEncounter = this.combat?.status!=='ready' && ['combat', 'pause', 'defenses'].includes(this.name), pauseAction = this.name === 'combat' ? 'pause' : inEncounter ? 'resume' : 'menu';
     const canPrepare=this.combat?.canShop;const interactive=['combat','preparation'].includes(this.name);
-    return `<div class="top-hud"><div class="hud-brand">${icon('shield')}<strong>CRAZY BATTLE</strong></div><div class="hud-stats"><span><small>WAVE</small><b>${String(wave).padStart(2, '0')} <em>/ 20</em></b></span><span><small>SCORE</small><b data-live="score">${c.score.toLocaleString()}</b></span><span class="money" title="Supplies">${equipmentArt(this.assets.art,'Supplies')}<b data-live="money">${c.money}</b></span></div>${this.muteControl()}<button class="icon-button" data-action="${pauseAction}" aria-label="${inEncounter ? this.name === 'pause' ? 'Resume' : 'Pause' : 'Main menu'}">${icon('pause')}</button></div>
+    return `<div class="top-hud"><div class="hud-brand">${icon('shield')}<strong>HELICOPTER: LAST STAND</strong></div><div class="hud-stats"><span><small>WAVE</small><b>${String(wave).padStart(2, '0')} <em>/ 20</em></b></span><span class="money" title="Supplies">${equipmentArt(this.assets.art,'Supplies')}<b data-live="money">${c.money}</b></span></div>${this.muteControl()}<button class="icon-button" data-action="${pauseAction}" aria-label="${inEncounter ? this.name === 'pause' ? 'Resume' : 'Pause' : 'Main menu'}">${icon('pause')}</button></div>
     <div class="bottom-hud"><div class="base-health"><div class="commander-portrait" aria-hidden="true"></div><div><div class="health-caption"><strong>BASE</strong><b data-live="health">${Math.round(c.health / 8)}%</b></div><div class="health-bar" role="meter" aria-label="Base health" aria-valuemin="0" aria-valuemax="800" aria-valuenow="${c.health}"><span data-live="health-bar" style="width:${c.health / 8}%"></span></div></div>${hintedControl(`<button class="icon-button" data-action="repair-base" ${canPrepare&&c.health>0&&c.health<800&&c.money>4?'':'disabled'} aria-label="Repair base">${icon('cross')}</button>`,repairHint({health:c.health,money:c.money,canShop:canPrepare}),'repair-hint',!(canPrepare&&c.health>0&&c.health<800&&c.money>4))}</div><button class="weapon-hud weapon-tray-toggle" data-action="weapon-tray" aria-label="Chopper weapons" ${interactive?'':'disabled'}>${equipmentArt(this.assets.art,c.activeWeapon)}<div><strong>${name.toUpperCase()}</strong><span>${ammoArt(this.assets.art,c.activeWeapon)}<b data-live="ammo">${magazine}</b> <em>/ ${magazine}</em></span><small data-live="reload" class="reload-label">READY</small></div></button>${this.combat?supportControls(this.assets.art,this.combat,this.name==='combat'):''}<div class="hud-fill"></div></div>`;
   }
   refreshLivePanel(){
@@ -265,7 +290,7 @@ export class Scenes {
   updateHud() {
     if (!this.combat || !['preparation','combat', 'pause', 'defenses', 'victory', 'defeat'].includes(this.name)) return;
     const s = this.combat, text = (key, value) => { const node = this.ui.querySelector(`[data-live="${key}"]`); if (node && node.textContent !== String(value)) node.textContent = value; };
-    text('score', s.score.toLocaleString()); text('money', s.money); text('health', Math.round(s.health / 8) + '%'); text('ammo', s.reloading ? 0 : s.ammo);
+    text('money', s.money); text('health', Math.round(s.health / 8) + '%'); text('ammo', s.reloading ? 0 : s.ammo);
     text('reload', s.reloading ? 'RELOADING' : 'READY'); text('progress', `${s.kills} / ${s.total} eliminated`);
     this.ui.querySelector('[data-live="health-bar"]').style.width = s.health / 8 + '%';
     this.ui.querySelector('[role="meter"]').setAttribute('aria-valuenow', s.health);
@@ -305,7 +330,7 @@ export class Scenes {
 
   result() {
     const s = this.combat, won = this.name === 'victory';
-    this.ui.innerHTML = this.hud(s.checkpoint) + `<section class="modal encounter-modal result-card ${won ? 'won' : 'lost'}" role="dialog" aria-modal="true" aria-labelledby="result-title"><p class="eyebrow">WAVE ${String(s.wave).padStart(2,'0')} / ${won ? 'SECURED' : 'BASE LOST'}</p><h2 id="result-title">${won ? s.wave===20?'Campaign secured.':'Line held.' : 'Outpost overrun.'}</h2><div class="result-grid"><span>Eliminated<strong>${s.kills} / ${s.total}</strong></span><span>Points earned<strong>+${s.earnedScore}</strong></span><span>Supplies earned<strong>+${s.earnedMoney}</strong></span><span>Base condition<strong>${Math.round(s.health / 8)}%</strong></span></div>${won?(s.wave===20?`<p>Campaign complete. Final total: ${(s.score+s.money).toLocaleString()}</p>`:''):'<p>Your checkpoint is intact. Regroup and try again.</p>'}${won?this.awardSummary(s):''}<div class="stack-actions"><button class="primary" data-action="${won ? 'outpost' : 'retry'}" data-initial-focus>${won ? 'Continue' : 'Retry wave'} ${icon('arrow')}</button><button class="quiet" data-action="menu">Main menu</button></div></section>`;
+    this.ui.innerHTML = this.hud(s.checkpoint) + `<section class="modal encounter-modal result-card ${won ? 'won' : 'lost'}" role="dialog" aria-modal="true" aria-labelledby="result-title"><p class="eyebrow">WAVE ${String(s.wave).padStart(2,'0')} / ${won ? 'SECURED' : 'BASE LOST'}</p><h2 id="result-title">${won ? s.wave===20?'Campaign secured.':'Line held.' : 'Outpost overrun.'}</h2><div class="result-grid"><span>Eliminated<strong>${s.kills} / ${s.total}</strong></span><span>Supplies earned<strong>+${s.earnedMoney}</strong></span><span>Base condition<strong>${Math.round(s.health / 8)}%</strong></span></div>${won?(s.wave===20?`<p>All 20 waves secured. Evacuation complete.</p>`:''):'<p>Your checkpoint is intact. Regroup and try again.</p>'}${won?this.awardSummary(s):''}<div class="stack-actions"><button class="primary" data-action="${won ? 'outpost' : 'retry'}" data-initial-focus>${won ? 'Continue' : 'Retry wave'} ${icon('arrow')}</button><button class="quiet" data-action="menu">Main menu</button></div></section>`;
     this.updateHud();
   }
   briefingText(wave) {
@@ -318,8 +343,13 @@ export class Scenes {
     return earned.length?`<div class="earned-medals" role="group" aria-label="New honors">${earned.map(a=>medalArt(this.assets.art,a)).join('')}</div>`:'';
   }
   help() {
-    const tips=[['weapon','Aim & fire','Click enemies. Hold for the machine gun. R reloads. Empty magazines reload automatically; release and press again afterward.'],['shield','Build the line','Click an emplacement to build, repair or replace its defense.'],['plane','Deploy support','Select a support icon, then click the battlefield. Pay on placement. Escape cancels.'],['cross','Keep the base standing','Repair the base for 3 supplies at any time. Each repair restores 80 HP and requires 5 supplies in reserve.'],['pause','Take command','P pauses and resumes. F expands the game; Escape returns. Upgrades stay available during battle. The speaker toggles all sounds.'],['supply','Save your campaign','Preparation purchases save immediately. Victory saves the next wave. Retry or reloading restores the whole wave checkpoint.']];
-    this.ui.innerHTML=`<section class="modal guide-panel" role="dialog" aria-modal="true" aria-labelledby="guide-title"><div class="shop-heading"><div><p class="eyebrow">FIELD MANUAL</p><h2 id="guide-title">Your outpost. Your orders.</h2></div><button data-action="back-panel" data-initial-focus>Back</button></div><div class="guide-grid">${tips.map(([glyph,title,copy])=>`<article>${icon(glyph)}<div><h3>${title}</h3><p>${copy}</p></div></article>`).join('')}</div></section>`;
+    const tips=[
+      ['Cannon','Aim & fire','Click to fire. Hold for the machine gun. R reloads; empty magazines reload automatically. Click your weapon below to switch or upgrade.'],
+      ['Defense','Build & repair','Click a position to build, repair or replace a defense. Use + beside base health to repair the base.'],
+      ['Avia','Deploy support','Select support, then click the battlefield to deploy. Supplies are charged on placement. Esc cancels.'],
+      ['Commander','Take command','P pauses or resumes. F toggles fullscreen. Use the speaker to mute or unmute all sounds.']
+    ];
+    this.ui.innerHTML=`<section class="modal guide-panel" role="dialog" aria-modal="true" aria-labelledby="guide-title"><div class="shop-heading"><div><p class="eyebrow">FIELD MANUAL</p><h2 id="guide-title">Your outpost. Your orders.</h2></div><button data-action="back-panel" data-initial-focus>Back</button></div><div class="guide-grid">${tips.map(([asset,title,copy])=>`<article>${equipmentArt(this.assets.art,asset)}<div><h3>${title}</h3><p>${copy}</p></div></article>`).join('')}</div></section>`;
   }
   medals() {
     const c=this.combat?.snapshot()||this.store.campaign,owned=new Set(c?.achievements||[]);

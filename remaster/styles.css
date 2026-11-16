@@ -117,7 +117,7 @@
 #ui button.support-price:hover:not(:disabled){border-color:#9b9b7a88;background:#ffffff08}
 #ui button.support-price:disabled{opacity:.4;background:transparent;border-color:transparent}
 .emplacements{position:absolute;inset:0;pointer-events:none;z-index:2}
-#ui button.emplacement-target{position:absolute;left:calc(66 * var(--u));top:calc((222 + var(--slot) * 48) * var(--u));width:calc(78 * var(--u));height:calc(43 * var(--u));min-height:0;padding:0;background:transparent;border:1px solid transparent;border-radius:50%;pointer-events:auto}
+#ui button.emplacement-target{position:absolute;left:calc(61 * var(--u));top:calc((224 + var(--slot) * 48) * var(--u));width:calc(82 * var(--u));height:calc(41.1855 * var(--u));min-height:0;padding:0;background:transparent;border:1px solid transparent;border-radius:50%;pointer-events:auto}
 #ui button.emplacement-target:hover,#ui button.emplacement-target[aria-pressed=true]{border-color:#f2bc5bbb;background:#d9ab3d15;box-shadow:0 0 calc(10 * var(--u)) #e6b54b22}
 .live-upgrade{position:absolute;pointer-events:auto;z-index:5;background:linear-gradient(140deg,#293334fa,#162222fc);border:1px solid #778473aa;border-top:calc(2 * var(--u)) solid var(--accent);border-radius:calc(6 * var(--u));box-shadow:0 calc(8 * var(--u)) calc(25 * var(--u)) #0006;padding:calc(10 * var(--u));color:var(--text)}
 .live-upgrade header{display:flex;align-items:center;justify-content:space-between;gap:calc(12 * var(--u));margin-bottom:calc(9 * var(--u));font-size:calc(14 * var(--u))}
@@ -140,7 +140,7 @@
 #ui .live-upgrade button:hover:not(:disabled){border-color:#c8bc8a;background:#4b554744}
 #ui button.chopper-target{position:absolute;width:calc(118 * var(--u));height:calc(49 * var(--u));min-height:0;padding:0;background:transparent;border:1px solid transparent;border-radius:calc(16 * var(--u));z-index:2;pointer-events:auto}
 #ui button.chopper-target:hover{background:#d9ab3d09;border-color:#f2bc5b88}
-#ui button.emplacement-target{left:calc(var(--field-x, 0px) + 66 * var(--u));top:calc(var(--field-y, 0px) + (222 + var(--slot) * 48) * var(--u))}
+#ui button.emplacement-target{left:calc(var(--field-x, 0px) + 61 * var(--u));top:calc(var(--field-y, 0px) + (224 + var(--slot) * 48) * var(--u))}
 .emplacement-panel{left:calc(var(--field-x, 0px) + 151 * var(--u));top:calc(var(--field-y, 0px) + var(--panel-y) * var(--u))}
 .weapon-tray{left:calc(var(--field-x, 0px) + 245 * var(--u))}
 #ui[data-scene=preparation].upgrading .briefing{display:none}
@@ -183,3 +183,109 @@
 #ui .live-upgrade .upgrade-cost{display:inline-flex;align-items:center;justify-content:center;gap:calc(4 * var(--u));white-space:nowrap;vertical-align:middle}
 #ui .live-upgrade .upgrade-cost>.equipment-art{display:block;flex:0 0 calc(22 * var(--u));width:calc(22 * var(--u));height:calc(16 * var(--u));margin:0;filter:drop-shadow(0 1px 1px #0006)}
 #ui .live-upgrade .upgrade-cost>.equipment-art svg{display:block;width:100%!important;height:100%!important}
+/* One static, three-part campaign briefing; no timed slides. */
+#ui .menu-card h1{font-size:calc(43 * var(--u));line-height:1.05;letter-spacing:calc(-1 * var(--u))}
+#ui .hud-brand strong{font-size:calc(13 * var(--u))}
+.story-screen{position:absolute;inset:0;overflow:hidden;pointer-events:auto;background:#152221;color:#fff3db}
+.story-art{position:absolute;inset:0;background:url('assets/art/campaign-triptych-v2.png') center/cover no-repeat}
+.story-shade{position:absolute;inset:0;background:linear-gradient(0deg,#0b1514fa 0%,#0b1514ba 16%,#0b15142b 38%,transparent 70%,#0b151455 100%)}
+#ui .story-brand{position:absolute;top:calc(20 * var(--u));left:calc(25 * var(--u));margin:0;font-size:calc(15 * var(--u));letter-spacing:calc(1.2 * var(--u));font-weight:800;text-shadow:0 2px 5px #000}
+.story-beats{position:absolute;left:0;right:0;bottom:calc(104 * var(--u));display:grid;grid-template-columns:repeat(3,1fr);text-align:center;gap:calc(12 * var(--u));padding:0 calc(18 * var(--u))}
+.story-beats strong{font-size:calc(13 * var(--u));letter-spacing:calc(1.6 * var(--u));color:#edbd65;text-shadow:0 2px 4px #000}
+#ui .story-beats p{margin:calc(7 * var(--u)) 0 0;font:calc(13 * var(--u))/1.4 'Segoe UI',sans-serif;color:#f1e9d7;text-shadow:0 2px 3px #000}
+.story-action{position:absolute;left:50%;bottom:calc(28 * var(--u));transform:translateX(-50%)}
+#ui .story-action .primary{display:flex;align-items:center;justify-content:space-between;gap:calc(42 * var(--u));min-width:calc(230 * var(--u));font-size:calc(15 * var(--u));min-height:calc(45 * var(--u))}
+/* Commander guidance stays clear of the defense and weapon panels. */
+.tutorial-card{position:absolute;right:calc(20 * var(--u));top:calc(100 * var(--u));width:calc(330 * var(--u));display:flex;align-items:flex-start;gap:calc(11 * var(--u));padding:calc(15 * var(--u));border:1px solid #d7ad5366;border-top:calc(2 * var(--u)) solid #efb744;background:linear-gradient(130deg,#293735f7,#152322f5);border-radius:calc(6 * var(--u));box-shadow:0 calc(7 * var(--u)) calc(22 * var(--u)) #0005;pointer-events:auto;z-index:12}
+.tutorial-commander{width:calc(75 * var(--u));height:calc(83 * var(--u));flex:0 0 calc(75 * var(--u));background:url('assets/art/outpost-equipment.png') left bottom/200% 200% no-repeat;filter:drop-shadow(0 2px 3px #0006)}
+.tutorial-copy{flex:1;min-width:0}.tutorial-copy>small{font-size:calc(7 * var(--u));letter-spacing:calc(1.3 * var(--u));font-weight:800;color:#efbd5c}
+#ui .tutorial-copy h3{font-size:calc(19 * var(--u));line-height:1.1;margin:calc(7 * var(--u)) 0;color:#f9f2df}
+#ui .tutorial-copy p{font:calc(12 * var(--u))/1.45 'Segoe UI',sans-serif;color:#e0e1d9;margin:0 0 calc(9 * var(--u))}
+#ui .tutorial-copy button{min-height:calc(27 * var(--u));font-size:calc(11 * var(--u));padding:calc(5 * var(--u)) calc(9 * var(--u))}
+#ui .tutorial-copy .tutorial-skip{display:block;background:transparent;border:0;padding-left:0;font-size:calc(9 * var(--u));color:#aebbb4}
+#ui[data-tutorial="position"] [data-action="emplacement"][data-slot="0"],#ui[data-tutorial="build"] [data-action="live-defense"][data-name="Maxim"],#ui[data-tutorial="mine"] [data-action="arm"][data-name="Mine"],#ui[data-tutorial="weapons"] .weapon-tray-toggle{outline:calc(2 * var(--u)) solid #ffd373;box-shadow:0 0 calc(15 * var(--u)) #f6b43c66;animation:tutorial-pulse 1.3s ease-in-out infinite}
+.tutorial-ground{position:absolute;pointer-events:none;left:calc(var(--field-x,0px) + 260 * var(--u));top:calc(var(--field-y,0px) + 270 * var(--u));width:calc(615 * var(--u));height:calc(180 * var(--u));border:calc(2 * var(--u)) dashed #ffdc87;border-radius:calc(12 * var(--u));background:#e6b53c10;animation:tutorial-pulse 1.3s ease-in-out infinite}
+@keyframes tutorial-pulse{50%{box-shadow:0 0 calc(22 * var(--u)) #f6b43ca6}}
+.reduced-motion #ui[data-tutorial] button,.reduced-motion .tutorial-ground{animation:none!important}
+#ui[data-tutorial="ready"] .tutorial-card{top:calc(65 * var(--u))}
+/* Directional guidance tracks actual control bounds, including fullscreen offsets. */
+.tutorial-arrow{position:absolute;width:calc(48 * var(--u));height:calc(48 * var(--u));z-index:14;pointer-events:none;transform-origin:center;filter:drop-shadow(0 2px 3px #0007)}
+.tutorial-arrow svg{display:block;width:100%;height:100%;animation:tutorial-arrow-nudge .95s ease-in-out infinite}
+.tutorial-arrow .arrow-shadow{stroke:#17251f;stroke-width:10}
+.tutorial-arrow .arrow-gold{stroke:#ffda79;stroke-width:5}
+@keyframes tutorial-arrow-nudge{50%{transform:translateY(calc(5 * var(--u)))}}
+.reduced-motion .tutorial-arrow svg{animation:none}
+#ui .tutorial-arrow svg{width:100%!important;height:100%!important}
+.medal-reveals{width:calc(280 * var(--u))}
+.reveal-copy p{margin:0;color:#d3d9cf;font:calc(11 * var(--u))/1.35 'Segoe UI',Arial,sans-serif}
+/* Four short field-manual cards with the same painted assets as gameplay. */
+#ui .guide-panel{width:calc(760 * var(--u))}
+#ui .guide-grid article{align-items:center;gap:calc(13 * var(--u));padding:calc(13 * var(--u));min-height:calc(110 * var(--u))}
+#ui .guide-grid article>.equipment-art{display:flex;align-items:center;justify-content:center;flex:0 0 calc(62 * var(--u));width:calc(62 * var(--u));height:calc(70 * var(--u));margin:0;filter:drop-shadow(0 2px 3px #0007)}
+#ui .guide-grid article>.equipment-art svg{display:block;width:100%!important;height:100%!important}
+#ui .guide-grid p{font-size:calc(12 * var(--u));line-height:1.45}
+/* Reveal each part of the shared artwork and its caption in reading order. */
+.story-art{background:none}
+.story-art>span{position:absolute;inset:0;background:url('assets/art/campaign-triptych-v2.png') center/cover no-repeat;animation:story-image-reveal .85s ease-out both;animation-delay:calc(.1s + var(--beat) * .85s)}
+.story-art>span:nth-child(1){clip-path:inset(0 66.6666% 0 0)}
+.story-art>span:nth-child(2){clip-path:inset(0 33.3333% 0 33.3333%)}
+.story-art>span:nth-child(3){clip-path:inset(0 0 0 66.6666%)}
+.story-beats{bottom:calc(103 * var(--u));align-items:start;gap:calc(22 * var(--u));padding:0 calc(24 * var(--u))}
+.story-beats>div{animation:story-caption-reveal .65s ease-out both;animation-delay:calc(.3s + var(--beat) * .85s)}
+#ui .story-beats p{font-size:calc(12 * var(--u));line-height:1.45;max-width:calc(275 * var(--u));margin:calc(8 * var(--u)) auto 0}
+.story-shade{background:linear-gradient(0deg,#0b1514ff 0%,#0b1514ec 17%,#0b15149c 31%,#0b15141a 55%,transparent 75%,#0b151455 100%)}
+@keyframes story-image-reveal{from{opacity:0;filter:brightness(.6)}to{opacity:1;filter:brightness(1)}}
+@keyframes story-caption-reveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.reduced-motion .story-art>span,.reduced-motion .story-beats>div{animation:none}
+.story-art>span{background-position:center top;background-size:100% auto}
+.story-screen{background:#0b1514}
+/* Keep copy directly beneath the artwork when the viewport is taller. */
+.story-beats{top:min(calc(568 * var(--u)),calc(100% - 180 * var(--u)));bottom:auto}
+.story-action{top:min(calc(670 * var(--u)),calc(100% - 73 * var(--u)));bottom:auto}
+.result-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+/* Small early-loading assets: a 640px JPEG and four existing soldier poses. */
+#loading{--loading-progress:0;background:linear-gradient(90deg,#0a1715dc,#0b1712a6),linear-gradient(0deg,#0b1713ed,transparent 75%),url('assets/preloader/forest-loading.jpg') center/cover no-repeat;z-index:40;color:#f4f0e5;overflow:hidden}
+.loading-content{position:relative;width:calc(410 * var(--u));max-width:86%;text-align:left}
+#loading h1{margin:0;font:800 calc(38 * var(--u))/1.03 Bahnschrift,'Arial Narrow',sans-serif;letter-spacing:calc(.5 * var(--u));text-shadow:0 2px 8px #0007}
+#loading h1 span{display:block;font-size:calc(51 * var(--u));color:#f1b744}
+.loading-progress{position:relative;margin-top:calc(96 * var(--u))}
+.loading-track{height:calc(7 * var(--u));overflow:hidden;border:1px solid #94a18b55;background:#091310b3;border-radius:calc(4 * var(--u));box-shadow:0 1px 5px #0004}
+.loading-track>span{display:block;width:calc(var(--loading-progress) * 1%);height:100%;background:linear-gradient(90deg,#ac7b2c,#f5c365);box-shadow:0 0 calc(10 * var(--u)) #e6ac4755;transition:width .2s ease-out}
+.loading-runner{position:absolute;top:calc(-55 * var(--u));bottom:auto;left:clamp(0px,calc(var(--loading-progress) * 1% - 28 * var(--u)),calc(100% - 56 * var(--u)));width:calc(56 * var(--u));height:calc(56 * var(--u));pointer-events:none;transition:left .2s ease-out}
+.loading-runner>span{display:block;width:100%;height:100%;background:url('assets/preloader/soldier-run.png') 0 0/calc(224 * var(--u)) calc(56 * var(--u)) no-repeat;animation:loading-run .55s steps(4) infinite;filter:drop-shadow(0 2px 2px #0008)}
+.loading-caption{display:flex;align-items:center;justify-content:space-between;margin-top:calc(9 * var(--u));color:#c7cdbd;font-size:calc(10 * var(--u));letter-spacing:calc(1.4 * var(--u));font-weight:700}
+.loading-caption b{font-size:calc(16 * var(--u));letter-spacing:0;color:#f3bf5d;font-variant-numeric:tabular-nums}
+#loading p{margin:calc(14 * var(--u)) 0 0;font:calc(11 * var(--u))/1.4 'Segoe UI',sans-serif;color:#abb8ab}
+#loading #retry{margin-top:calc(16 * var(--u));padding:calc(8 * var(--u)) calc(20 * var(--u));border:1px solid #f2bc59;background:#e9b34b;border-radius:4px;color:#17221c;font-size:calc(13 * var(--u));font-weight:700}
+@keyframes loading-run{to{background-position:calc(-224 * var(--u)) 0}}
+#loading.load-failed .loading-runner>span,.reduced-motion .loading-runner>span{animation:none}
+.reduced-motion .loading-track>span,.reduced-motion .loading-runner{transition:none}
+@media(prefers-reduced-motion:reduce){.loading-runner>span{animation:none}.loading-track>span,.loading-runner{transition:none}}
+/* One shared transparent logo, loaded early and reused on both entry screens. */
+.game-logo{display:block;width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 3px 5px #0006)}
+#ui .menu-card #menu-title{width:calc(290 * var(--u));max-width:100%;margin:0 0 calc(46 * var(--u));line-height:0}
+#loading h1{width:100%;line-height:0}
+#loading .loading-progress{margin-top:calc(78 * var(--u))}
+/* Quiet home-screen version opens the player-facing release history. */
+.menu-meta{position:absolute;left:calc(32 * var(--u));bottom:calc(13 * var(--u));display:flex;align-items:center;gap:calc(13 * var(--u));pointer-events:auto;color:#aab5a6;font-size:calc(9 * var(--u));text-shadow:0 1px 3px #0008}
+#ui .menu-meta button{padding:calc(5 * var(--u)) 0;min-height:calc(25 * var(--u));border:0;background:transparent;border-radius:0;font-size:calc(10 * var(--u));color:#e7bf6b;box-shadow:none}
+#ui .menu-meta button:hover{background:transparent;color:#ffe3a0;text-decoration:underline;text-underline-offset:calc(3 * var(--u))}
+.release-panel{width:calc(590 * var(--u));max-width:92%;max-height:calc(415 * var(--u));padding:calc(24 * var(--u));overflow:auto;pointer-events:auto;overscroll-behavior:contain}
+.release-history{margin-top:calc(20 * var(--u))}
+.release-entry+.release-entry{border-top:1px solid #71817044;padding-top:calc(16 * var(--u));margin-top:calc(20 * var(--u))}
+.release-heading{display:flex;align-items:center;gap:calc(11 * var(--u))}
+.release-heading>span{font-size:calc(12 * var(--u));font-weight:800;color:#f0bc59;background:#e9b34b11;border:1px solid #e9b34b44;padding:calc(5 * var(--u)) calc(9 * var(--u));border-radius:calc(4 * var(--u))}
+#ui .release-heading h3{font-size:calc(18 * var(--u));margin:0;color:#f4edde}
+.release-entry ul{margin:calc(15 * var(--u)) 0 0;padding-left:calc(19 * var(--u));color:#c7d0c6;font:calc(12 * var(--u))/1.5 'Segoe UI',sans-serif}
+.release-entry li{padding-left:calc(3 * var(--u));margin:calc(7 * var(--u)) 0}
+.release-entry li::marker{color:#eab754}
+/* Compact release notes anchored immediately above the home-screen version. */
+.release-popover{position:absolute;left:0;bottom:calc(100% + 9 * var(--u));width:calc(275 * var(--u));max-width:80vw;padding:calc(13 * var(--u));border:1px solid #b59c5b88;border-top:calc(2 * var(--u)) solid #edb64c;border-radius:calc(5 * var(--u));background:#1c2b29f5;box-shadow:0 calc(5 * var(--u)) calc(20 * var(--u)) #0006;pointer-events:auto;text-shadow:none;z-index:10}
+.release-popover::after{content:'';position:absolute;left:calc(9 * var(--u));bottom:calc(-5 * var(--u));width:calc(8 * var(--u));height:calc(8 * var(--u));background:#1c2b29;border-right:1px solid #b59c5b88;border-bottom:1px solid #b59c5b88;transform:rotate(45deg)}
+.release-popover header{display:flex;align-items:center;justify-content:space-between;gap:calc(10 * var(--u))}
+.release-popover header strong{color:#f4eedc;font-size:calc(13 * var(--u))}
+.release-popover header strong span{color:#e9b758;font-size:calc(10 * var(--u));margin-left:calc(6 * var(--u))}
+#ui .menu-meta .release-popover button{font-size:calc(20 * var(--u));min-height:calc(22 * var(--u));padding:0 calc(3 * var(--u));line-height:1;color:#bfc9bb;text-decoration:none}
+.release-popover ul{padding-left:calc(14 * var(--u));margin:calc(8 * var(--u)) 0 0;color:#c8d1c5;font:calc(11 * var(--u))/1.4 'Segoe UI',sans-serif}
+.release-popover li{margin:calc(6 * var(--u)) 0}
+.release-popover li::marker{color:#e9b758}

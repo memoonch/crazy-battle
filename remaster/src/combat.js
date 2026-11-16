@@ -244,7 +244,7 @@ export class Combat {
   }
   supportPrice(name) {
     const item=this.balance.omps.find(i=>i.name===name);
-    return item?(this.supplies[name]>0?0:item.cost):Infinity;
+    return item?((name==='Mine'&&this.wave===1&&this.tutorialMineAvailable)||this.supplies[name]>0?0:item.cost):Infinity;
   }
   arm(name) {
     if(this.armed===name){this.armed=null;return true;}
@@ -256,7 +256,7 @@ export class Combat {
     if(this.status!=='running'||!p||!Number.isFinite(p.x)||!Number.isFinite(p.y)||p.x<145||p.x>960||p.y<170||p.y>465||!Number.isFinite(cost)||this.money<cost)return false;
     this.armed=null;
     // Previously purchased support remains prepaid; all new deployments charge here.
-    if(this.supplies[name]>0)this.supplies[name]--;else {this.money-=cost;this.spent+=cost;}
+    if(name==='Mine'&&this.wave===1&&this.tutorialMineAvailable)this.tutorialMineAvailable=false;else if(this.supplies[name]>0)this.supplies[name]--;else {this.money-=cost;this.spent+=cost;}
     if(name==='Atom') {for(const enemy of [...this.enemies])this.damageEnemy(enemy,100);this.effects.push({...point,ttl:600,duration:600,kind:'Atom',hit:true,blast:true});}
     else if(name==='Mine')this.mines.push({...point});
     else this.airstrikes.push({x:-200,y:point.y,targetX:point.x});
@@ -264,12 +264,14 @@ export class Combat {
   }
   replacementPrice(slot,name) {
     const item=this.balance.inventory.find(i=>i.name===name),old=this.defenses[slot];
+    if(this.wave===1&&this.tutorialDefenseAvailable&&slot===0&&name==='Maxim'&&!old)return 0;
     return item?item.cost-(old?.health>0?old.costSale:0):Infinity;
   }
   replaceDefense(slot,name) {
     const item=this.balance.inventory.find(i=>i.name===name),old=this.defenses[slot],cost=this.replacementPrice(slot,name);
     if(!this.canShop||!Number.isInteger(slot)||slot<0||slot>4||!item||(old?.health>0&&old.name===name)||this.money<cost)return false;
-    this.money-=cost;this.spent+=item.cost;
+    const tutorialFree=this.wave===1&&this.tutorialDefenseAvailable&&slot===0&&name==='Maxim'&&!old;
+    this.money-=cost;this.spent+=tutorialFree?0:item.cost;if(tutorialFree)this.tutorialDefenseAvailable=false;
     this.defenses[slot]={...item,maxHealth:item.health,counter:item.rate,flash:0};
     for(const shot of this.projectiles)if(old&&shot.baseTarget===old)shot.baseTarget=this.defenses[slot];
     return true;

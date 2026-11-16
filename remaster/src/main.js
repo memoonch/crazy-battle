@@ -5,6 +5,7 @@ import { AudioManager } from './audio.js';
 import { PointerInput } from './input.js';
 import { Renderer } from './renderer.js';
 import { Scenes } from './scenes.js';
+import { Preloader } from './preloader.js';
 
 const element = document.querySelector('#viewport'), canvas = document.querySelector('#world');
 const viewport = new Viewport(element, canvas);
@@ -16,6 +17,7 @@ const audio = new AudioManager(store.settings);
 let scenes = null, assets = null, loadController = null, frame = 0, previousTime = null, elapsed = 0, toastTimer;
 const input = new PointerInput(canvas, viewport, () => scenes?.name === 'combat');
 const renderer = new Renderer(canvas, viewport);
+const preloader = new Preloader(document.querySelector('#loading'));
 function notify(message) {
   const toast = document.querySelector('#toast');
   toast.textContent = message; toast.classList.add('visible');
@@ -65,21 +67,21 @@ window.addEventListener('blur', () => scenes?.pause('Paused while you were away'
 
 async function start() {
   loadController?.abort(); loadController = new AbortController();
-  const loading = document.querySelector('#loading'), message = document.querySelector('#loading-message');
-  loading.hidden = false; document.querySelector('#retry').hidden = true; message.textContent = 'Preparing the outpost…';
+  const controller=loadController;
+  preloader.reset();element.classList.toggle('reduced-motion',store.settings.reducedMotion);
   try {
-    assets = await loadAssets(loadController.signal, (done, total) => { message.textContent = `Bringing the outpost to life · ${done} / ${total}`; });
+    assets = await loadAssets(controller.signal, (done, total) => {if(loadController===controller)preloader.setProgress(done,total);});
+    if(loadController!==controller)return;
     for (const [key, value] of Object.entries(assets.tokens.colors)) {
       element.style.setProperty('--' + key.replace(/[A-Z]/g, letter => '-' + letter.toLowerCase()), value);
     }
     renderer.setAssets(assets);
     scenes = new Scenes(document.querySelector('#ui'), store, audio, input, assets, notify);
-    loading.hidden = true;
+    preloader.finish();
     if (!frame) frame = requestAnimationFrame(draw);
   } catch (error) {
-    if (error.name === 'AbortError') return;
-    message.textContent = 'The outpost could not load. Check the local server and try again.';
-    document.querySelector('#retry').hidden = false;
+    if (error.name === 'AbortError'||loadController!==controller) return;
+    preloader.fail();
     console.error('Asset loading failed:', error);
   }
 }

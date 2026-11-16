@@ -1,0 +1,9 @@
+# Helicopter: Last Stand — game icon
+
+Asset: `remaster/assets/art/game-icon-v1.png`, 1254 × 1254 PNG. Used by the browser favicon and Apple touch icon links in `remaster/index.html`.
+
+Created using the built-in image_gen tool. `helicopter-body.png` supplied the aircraft design and painted style reference. The project uses the workspace copy; the original generated file is preserved.
+
+## Final prompt
+
+Create a premium square 1:1 VIDEO GAME APP ICON for 'Helicopter: Last Stand'. No text, no typography, no letters, no watermark. NEW composition; provided image is a reference for the exact olive-green military utility helicopter design and painted 2D game style, not an edit target. Hero is one large recognizable olive military helicopter banking toward the viewer in dynamic three-quarter view, nose facing lower right, landing skids and underslung gun visible, blue-gray cockpit glass, rotor sweeping diagonally overhead, silhouette filling about 75% of the square. Retain the reference's older utility-helicopter character, rounded cockpit, side cabin, olive panels; not a futuristic attack helicopter. Behind it: simple smoky dark pine valley, small fortified outpost low in background, restrained amber explosion lighting and a few embers. Strong separation of helicopter and background, readable at 32px, bold simple shape hierarchy, no tiny clutter, dramatic warm rim light against charcoal and deep forest green. Hand-painted stylized strategy-game asset quality with solid brushwork and weathered metal, matching an illustrated military defense game, not photoreal, not glossy plastic, not cute cartoon, no AI-looking ornamental filigree. Full bleed edge-to-edge square image, no frame, no badge border, no rounded corners baked in. Keep rotor, nose and tail within safe 8% padding. Square 1024x1024 composition.

@@ -3,11 +3,13 @@
 export const EQUIPMENT_FRAMES = Object.freeze({
   Cannon:['weapons-equipment',0], MashineGun:['weapons-equipment',1],
   Bazooka:['weapons-equipment',2], Rocket:['weapons-equipment',3],
-  Supplies:['outpost-fortifications',3], Mine:['support-equipment',0], Avia:['support-equipment',1], Atom:['support-equipment',2]
+  Defense:['outpost-equipment',1], Commander:['outpost-equipment',2], Supplies:['outpost-fortifications',3], Mine:['support-equipment',0], Avia:['support-equipment',1], Atom:['support-equipment',2]
 });
+let equipmentClipId=0;
 export function equipmentArt(art,name) {
   const [key,index]=EQUIPMENT_FRAMES[name],atlas=art[key],b=atlas.frames[index];
-  return `<span class="equipment-art" aria-hidden="true"><svg viewBox="${b.x} ${b.y} ${b.width} ${b.height}" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="/remaster/assets/art/${atlas.file}" width="${atlas.imageWidth}" height="${atlas.imageHeight}"/></svg></span>`;
+  const clip='equipment-crop-'+(++equipmentClipId);
+  return `<span class="equipment-art" aria-hidden="true"><svg viewBox="${b.x} ${b.y} ${b.width} ${b.height}" preserveAspectRatio="xMidYMid meet" focusable="false"><defs><clipPath id="${clip}"><rect x="${b.x}" y="${b.y}" width="${b.width}" height="${b.height}"/></clipPath></defs><image clip-path="url(#${clip})" href="/remaster/assets/art/${atlas.file}" width="${atlas.imageWidth}" height="${atlas.imageHeight}"/></svg></span>`;
 }
 
 export function ammoArt(art,name) {

@@ -31,7 +31,7 @@ export class MedalReveals {
     this.shown=id;this.element.replaceChildren();
     if(!id)return;
     const award=ACHIEVEMENTS.find(a=>a.id===id);
-    this.element.innerHTML=`<div class="medal-reveal"><div class="reveal-medal"><span class="medal-halo" aria-hidden="true"></span>${medalArt(this.art,award)}<span class="medal-glint" aria-hidden="true"></span></div><div class="reveal-copy"><small>HONOR EARNED</small><strong>${award.name}</strong></div></div>`;
+    this.element.innerHTML=`<div class="medal-reveal"><div class="reveal-medal"><span class="medal-halo" aria-hidden="true"></span>${medalArt(this.art,award)}<span class="medal-glint" aria-hidden="true"></span></div><div class="reveal-copy"><small>HONOR EARNED</small><strong>${award.name}</strong><p>${award.description}</p></div></div>`;
     this.onShow?.(id);
   }
 }

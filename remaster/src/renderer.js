@@ -58,7 +58,7 @@ export class Renderer {
     if(!['preparation','combat'].includes(scene)){
       const shade=c.createLinearGradient(left,0,left+width,0);shade.addColorStop(0,scene==='defenses'?'rgba(9,19,19,.30)':'rgba(9,19,19,.94)');shade.addColorStop(.47,'rgba(9,19,19,.73)');shade.addColorStop(1,'rgba(9,19,19,.15)');c.fillStyle=shade;c.fillRect(left,top,width,height);
     }
-    if(scene==='defenses'&&Number.isInteger(selectedSlot)){c.save();c.strokeStyle='#f3b544';c.lineWidth=1.8;c.beginPath();c.ellipse(103,246+selectedSlot*48,42,22,0,0,Math.PI*2);c.stroke();c.restore();}
+    if(scene==='defenses'&&Number.isInteger(selectedSlot)){c.save();c.strokeStyle='#f3b544';c.lineWidth=1.8;c.beginPath();c.ellipse(102,244.59275+selectedSlot*48,41,20.59275,0,0,Math.PI*2);c.stroke();c.restore();}
   }
   base(c,combat) {
     const kit=this.assets.art['outpost-fortifications'],equipment=this.assets.art['outpost-equipment'];
