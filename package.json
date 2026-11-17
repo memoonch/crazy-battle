@@ -4,6 +4,11 @@
   "type": "module",
   "scripts": {
     "start": "node server.cjs",
-    "test": "node --test --test-isolation=none remaster/tests/*.test.js"
+    "test": "node --test --test-isolation=none remaster/tests/*.test.js",
+    "build": "node scripts/build-web.cjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "sharp": "^0.35.5"
   }
 }

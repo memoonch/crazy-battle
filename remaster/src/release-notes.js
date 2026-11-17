@@ -5,9 +5,9 @@ export const RELEASES=Object.freeze([
     title:'The last stand begins',
     changes:[
       'Story, animated commander guidance and free repair training.',
-      'Live defenses, helicopter weapons and support.',
-      'Improved battles, supply drops and 12 medals.',
-      'New logo, preloader and responsive button effects.'
+      'Live upgrades, support and wider mine detection.',
+      'Supply drops, 12 medals and victory/defeat sounds.',
+      'New logo, loading screen and smarter main menu.'
     ]
   }
 ]);

@@ -312,11 +312,16 @@
 
 #ui .story-action .primary>span{position:absolute;right:calc(16 * var(--u));top:50%;transform:translateY(-50%)}
 /* Independent scale preserves existing button positioning transforms. */
-:is(#ui button,#loading button,.page-header button):not(.emplacement-target):not(.chopper-target){scale:1;transition:scale .16s ease-out,background-color .1s,border-color .1s,color .1s}
+:is(#ui button,#ui .menu-more-games,#loading button,.page-header button):not(.emplacement-target):not(.chopper-target){scale:1;transition:scale .16s ease-out,background-color .1s,border-color .1s,color .1s}
 #ui button.weapon-tray-toggle{transform-origin:0 50%}
 @media(hover:hover) and (pointer:fine){
-  :is(#ui button,#loading button,.page-header button):not(:disabled):not(.emplacement-target):not(.chopper-target):hover{scale:1.035}
-  :is(#ui button,#loading button,.page-header button):not(:disabled):not(.emplacement-target):not(.chopper-target):active{scale:1.015}
+  :is(#ui button,#ui .menu-more-games,#loading button,.page-header button):not(:disabled):not(.emplacement-target):not(.chopper-target):hover{scale:1.035}
+  :is(#ui button,#ui .menu-more-games,#loading button,.page-header button):not(:disabled):not(.emplacement-target):not(.chopper-target):active{scale:1.015}
 }
-.reduced-motion #ui button,.reduced-motion #loading button,body:has(#viewport.reduced-motion) .page-header button{scale:1!important;transition:none!important}
-@media(prefers-reduced-motion:reduce){:is(#ui button,#loading button,.page-header button){scale:1!important;transition:none!important}}
+.reduced-motion #ui button,.reduced-motion #ui .menu-more-games,.reduced-motion #loading button,body:has(#viewport.reduced-motion) .page-header button{scale:1!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){:is(#ui button,#ui .menu-more-games,#loading button,.page-header button){scale:1!important;transition:none!important}}
+
+#ui .menu-actions .menu-more-games{display:flex;align-items:center;justify-content:space-between;min-height:calc(42 * var(--u));padding:calc(10 * var(--u)) calc(16 * var(--u));border:calc(1 * var(--u)) solid var(--stroke);border-radius:calc(5 * var(--u));background:var(--surface-raised);color:var(--text);font:inherit;font-size:calc(16 * var(--u));text-decoration:none;pointer-events:auto;cursor:pointer}
+#ui .menu-actions .menu-more-games:hover{background:#414e53;border-color:#85908e}
+
+#ui .audio-credits{display:block;width:max-content;color:var(--text-muted);font-size:calc(11 * var(--u));pointer-events:auto;margin-top:calc(5 * var(--u))}

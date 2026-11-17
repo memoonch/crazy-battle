@@ -1,3 +1,8 @@
 tools/
 remaster/tests/browser-fixture.html
 remaster/tests/browser-fixture.js
+
+node_modules/
+web-build/
+helicopter-last-stand-v1.0-web.zip
+.pnpm-store/

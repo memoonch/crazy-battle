@@ -82,3 +82,16 @@ test('preparation transactions restore economy, equipment and defenses atomicall
  assert.equal(validCampaign({...newCampaign(),defenses:[{name:'Tank',health:1},null,null,null,null]}),false);
  const retry=game(s.snapshot());retry.start();retry.money=0;retry.supplies.Mine=0;const reset=game(retry.checkpoint);assert.deepEqual(reset.snapshot(),s.snapshot());
 });
+
+
+test('mines detect infantry and vehicle ground contact beyond the old trigger box',()=>{
+ for(const [name,dx,dy]of [['SoldatAK',18,0],['Tank',40,0],['Tank',0,28]]){
+  const s=game();const type=s.enemyTypes[name];assert.ok(type);
+  const e={...type,id:1,x:400+dx,y:250+dy,health:200,healthMax:200};
+  s.enemies=[e];s.mines=[{x:400,y:250}];s.updateSupport();
+  assert.equal(s.mines.length,0,name);assert.equal(e.health,100);
+ }
+ const s=game();const e={...s.enemyTypes.Tank,id:1,x:450,y:285,health:200};
+ s.enemies=[e];s.mines=[{x:400,y:250}];s.updateSupport();
+ assert.equal(s.mines.length,1);assert.equal(e.health,200);
+});

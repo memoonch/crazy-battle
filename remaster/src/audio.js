@@ -1,4 +1,4 @@
-// Original exported MP3s supply all music/effects except the new rotor loop.
+// Original audio, a new rotor loop, and licensed orchestral wave-result cues.
 export class AudioManager {
   constructor(settings) {
     this.settings={...settings};this.context=null;this.scene='menu';this.voices=0;
@@ -20,7 +20,7 @@ export class AudioManager {
     const root=new URL('../assets/audio/',import.meta.url);
     try{
       const response=await fetch(new URL('manifest.json',root));if(!response.ok)throw Error('Audio manifest unavailable');
-      const manifest=await response.json();
+      const manifest={...await response.json(),waveVictory:'wave-victory.ogg',waveDefeat:'wave-defeat.ogg'};
       await Promise.all(Object.entries(manifest).map(async([key,file])=>{
         try{const response=await fetch(new URL(file,root));if(!response.ok)throw Error(String(response.status));
           this.buffers.set(key,await this.context.decodeAudioData(await response.arrayBuffer()));
@@ -50,6 +50,7 @@ export class AudioManager {
     this.rotorLevel.gain.setTargetAtTime(scene==='combat'?1:scene==='preparation'?.35:0,this.context.currentTime,.15);
     const track=['menu','confirm','loading'].includes(scene)?'menuMusic':['combat','preparation'].includes(scene)?'fonMusic':this.trackKey||'menuMusic';
     this.playMusic(track);
+    this.track?.gain.gain.setTargetAtTime(['victory','defeat'].includes(scene)?.16:.55,this.context.currentTime,.15);
   }
   playMusic(key) {
     if(this.trackKey===key&&this.track)return;
@@ -60,8 +61,8 @@ export class AudioManager {
     if(this.track){const old=this.track;old.gain.gain.cancelScheduledValues(now);old.gain.gain.setValueAtTime(old.gain.gain.value,now);old.gain.gain.linearRampToValueAtTime(0,now+.2);old.source.stop(now+.21);}
     source.onended=()=>{source.disconnect();gain.disconnect();};this.track={source,gain};this.trackKey=key;
   }
-  sample(keys,volume=.35) {
-    if(!this.context||this.context.state!=='running'||this.voices>=24)return;
+  sample(keys,volume=.35,priority=false) {
+    if(!this.context||this.context.state!=='running'||(!priority&&this.voices>=24))return;
     keys=Array.isArray(keys)?keys:[keys];const id=keys.join(','),index=this.variants.get(id)||0;
     const buffer=this.buffers.get(keys[index%keys.length]);if(!buffer)return;this.variants.set(id,index+1);
     const source=this.context.createBufferSource(),gain=this.context.createGain();this.voices++;
@@ -83,6 +84,7 @@ export class AudioManager {
     if(type==='base-hit'||type==='defense-hit')return this.sample(['sndImpMet1','sndImpMet2'],.28);
     if(type==='reload-start')return this.sample('sndVistrelPreload',.24);
     if(type==='reload-complete')return this.sample('sndImpMet3',.16);
-    if(['achievement','victory','defeat'].includes(type))return this.sample('sndGong',type==='achievement'?.18:.32);
+    if(type==='victory'||type==='defeat')return this.sample(type==='victory'?'waveVictory':'waveDefeat',.6,true);
+    if(type==='achievement')return this.sample('sndGong',.18);
   }
 }

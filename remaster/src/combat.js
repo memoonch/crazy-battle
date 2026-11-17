@@ -280,7 +280,13 @@ export class Combat {
   }
   updateSupport() {
     for(const mine of [...this.mines]) {
-      const target=this.enemies.find(e=>Math.abs(e.x-mine.x)<(e.name.startsWith('Soldat')?15:32)&&Math.abs(e.y-mine.y)<18);
+      // Ground contact footprint, measured in design pixels so the trigger
+      // stays consistent with the wide battlefield and painted vehicle edges.
+      const target=this.enemies.find(e=>{
+        const infantry=e.name.startsWith('Soldat');
+        const dx=(e.x-mine.x)*(815/540),dy=(e.y-mine.y)*(48/55);
+        return (dx/(infantry?30:65))**2+(dy/(infantry?22:28))**2<=1;
+      });
       if(target){this.damageEnemy(target,100);this.effects.push({...mine,ttl:250,duration:250,kind:'Mine',hit:true,blast:true});this.mines.splice(this.mines.indexOf(mine),1);this.events.push({type:'explosion'});}
     }
     for(const plane of [...this.airstrikes]) {
