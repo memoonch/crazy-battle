@@ -1,8 +1,9 @@
 export function shopHint(canShop,status='running') {return canShop?'Open this shop.':status==='running'?'Pause to open the shop.':'Shops are available before a wave or while paused.';}
-export function repairHint({health,money,canShop}) {
+export function repairHint({health,money,canShop,free=false}) {
   if(health<=0)return 'The base has been lost. Retry the wave to restore your checkpoint.';
   if(health>=800)return 'Base health is full. No repair is needed.';
   if(!canShop)return 'Pause to repair the base.';
+  if(free)return 'Repair base: restore up to 80 HP. Free tutorial repair.';
   if(money<5)return 'Repair unavailable: need at least 5 supplies available. Each repair costs 3 supplies and restores 80 HP.';
   return 'Repair base: restore up to 80 HP for 3 supplies. Requires at least 5 supplies available.';
 }

@@ -1,13 +1,13 @@
-// Newest release first. Menu version and release history share this source.
+// Initial build: keep v1.0 until launch; update these four player-facing highlights.
 export const RELEASES=Object.freeze([
   {
     version:'1.0',
     title:'The last stand begins',
     changes:[
-      'Campaign story and free guided tutorial.',
-      'Live defenses, weapons and support.',
-      'Improved battles and 12 illustrated medals.',
-      'New logo and animated loading screen.'
+      'Story, animated commander guidance and free repair training.',
+      'Live defenses, helicopter weapons and support.',
+      'Improved battles, supply drops and 12 medals.',
+      'New logo, preloader and responsive button effects.'
     ]
   }
 ]);

@@ -17,6 +17,7 @@ export function validCampaign(c) {
     && Array.isArray(c.achievements) && c.achievements.length <= ACHIEVEMENTS.length && c.achievements.every(a => typeof a === 'string')
     && (c.defenses === undefined || (Array.isArray(c.defenses) && c.defenses.length === 5 && c.defenses.every(d => d === null || ({Maxim:35,Mortar:45,CannonSmall:65,CannonNormal:120,CannonBig:150}[d.name] && integer(d.health,1,{Maxim:35,Mortar:45,CannonSmall:65,CannonNormal:120,CannonBig:150}[d.name])))))
     && (c.introStage===undefined||['story','tutorial','done'].includes(c.introStage))
+    && (c.repairTutorialSeen===undefined||typeof c.repairTutorialSeen==='boolean')
     && c.checkpoint === 'preparation';
 }
 export function validSettings(s) {

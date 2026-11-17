@@ -194,7 +194,7 @@
 .story-beats strong{font-size:calc(13 * var(--u));letter-spacing:calc(1.6 * var(--u));color:#edbd65;text-shadow:0 2px 4px #000}
 #ui .story-beats p{margin:calc(7 * var(--u)) 0 0;font:calc(13 * var(--u))/1.4 'Segoe UI',sans-serif;color:#f1e9d7;text-shadow:0 2px 3px #000}
 .story-action{position:absolute;left:50%;bottom:calc(28 * var(--u));transform:translateX(-50%)}
-#ui .story-action .primary{display:flex;align-items:center;justify-content:space-between;gap:calc(42 * var(--u));min-width:calc(230 * var(--u));font-size:calc(15 * var(--u));min-height:calc(45 * var(--u))}
+#ui .story-action .primary{position:relative;display:flex;align-items:center;justify-content:center;gap:0;padding-left:calc(36 * var(--u));padding-right:calc(36 * var(--u));min-width:calc(230 * var(--u));font-size:calc(15 * var(--u));min-height:calc(45 * var(--u))}
 /* Commander guidance stays clear of the defense and weapon panels. */
 .tutorial-card{position:absolute;right:calc(20 * var(--u));top:calc(100 * var(--u));width:calc(330 * var(--u));display:flex;align-items:flex-start;gap:calc(11 * var(--u));padding:calc(15 * var(--u));border:1px solid #d7ad5366;border-top:calc(2 * var(--u)) solid #efb744;background:linear-gradient(130deg,#293735f7,#152322f5);border-radius:calc(6 * var(--u));box-shadow:0 calc(7 * var(--u)) calc(22 * var(--u)) #0005;pointer-events:auto;z-index:12}
 .tutorial-commander{width:calc(75 * var(--u));height:calc(83 * var(--u));flex:0 0 calc(75 * var(--u));background:url('assets/art/outpost-equipment.png') left bottom/200% 200% no-repeat;filter:drop-shadow(0 2px 3px #0006)}
@@ -289,3 +289,34 @@
 .release-popover ul{padding-left:calc(14 * var(--u));margin:calc(8 * var(--u)) 0 0;color:#c8d1c5;font:calc(11 * var(--u))/1.4 'Segoe UI',sans-serif}
 .release-popover li{margin:calc(6 * var(--u)) 0}
 .release-popover li::marker{color:#e9b758}
+/* Commander cues introduce each instruction, then settle while the player acts. */
+.tutorial-card{animation:commander-card-in .42s cubic-bezier(.2,.8,.25,1) both,commander-card-glow 1.5s ease-in-out .35s 2}
+.tutorial-commander{animation:commander-attention 1.5s ease-in-out .25s 2;transform-origin:center bottom}
+.tutorial-copy>small{display:inline-block;animation:commander-copy-in .35s ease-out .12s both}
+#ui .tutorial-copy h3{animation:commander-copy-in .35s ease-out .18s both}
+#ui .tutorial-copy p{animation:commander-copy-in .4s ease-out .25s both}
+@keyframes commander-card-in{from{opacity:0;transform:translateX(calc(18 * var(--u)))}to{opacity:1;transform:translateX(0)}}
+@keyframes commander-card-glow{0%,100%{border-color:#d7ad5366;box-shadow:0 calc(7 * var(--u)) calc(22 * var(--u)) #0005}50%{border-color:#f8ce74dd;box-shadow:0 0 calc(19 * var(--u)) #edb64b44,0 calc(7 * var(--u)) calc(22 * var(--u)) #0005}}
+@keyframes commander-attention{0%,100%{transform:translateY(0);filter:drop-shadow(0 2px 3px #0006)}50%{transform:translateY(calc(-2 * var(--u)));filter:drop-shadow(0 0 calc(7 * var(--u)) #edb64b88) brightness(1.1)}}
+@keyframes commander-copy-in{from{opacity:0;transform:translateY(calc(4 * var(--u)))}to{opacity:1;transform:translateY(0)}}
+.reduced-motion .tutorial-card,.reduced-motion .tutorial-commander,.reduced-motion .tutorial-copy>*{animation:none!important}
+@media(prefers-reduced-motion:reduce){.tutorial-card,.tutorial-commander,.tutorial-copy>*{animation:none!important}}
+/* Guidance follows its task; DOM bounds keep panels and targets clear. */
+#ui .tutorial-card,#ui[data-tutorial="ready"] .tutorial-card{right:auto;left:calc(200 * var(--u));top:calc(95 * var(--u));width:calc(320 * var(--u))}
+#ui[data-tutorial="ready"] .tutorial-card{width:calc(360 * var(--u));padding:calc(8 * var(--u));gap:calc(10 * var(--u))}
+#ui[data-tutorial="ready"] .tutorial-commander{width:calc(64 * var(--u));height:calc(72 * var(--u));flex-basis:calc(64 * var(--u))}
+#ui[data-tutorial="ready"] .tutorial-copy h3{font-size:calc(18 * var(--u));margin:calc(4 * var(--u)) 0}
+#ui[data-tutorial="ready"] .tutorial-copy p{font-size:calc(11 * var(--u));line-height:1.4;margin-bottom:calc(7 * var(--u))}
+#ui[data-tutorial="ready"] .tutorial-copy .tutorial-skip{min-height:calc(18 * var(--u));padding-top:calc(2 * var(--u));padding-bottom:calc(2 * var(--u))}
+#ui[data-tutorial="repair"] [data-action="repair-base"]{outline:calc(2 * var(--u)) solid #ffd373;box-shadow:0 0 calc(15 * var(--u)) #f6b43c66;animation:tutorial-pulse 1.3s ease-in-out infinite}
+
+#ui .story-action .primary>span{position:absolute;right:calc(16 * var(--u));top:50%;transform:translateY(-50%)}
+/* Independent scale preserves existing button positioning transforms. */
+:is(#ui button,#loading button,.page-header button):not(.emplacement-target):not(.chopper-target){scale:1;transition:scale .16s ease-out,background-color .1s,border-color .1s,color .1s}
+#ui button.weapon-tray-toggle{transform-origin:0 50%}
+@media(hover:hover) and (pointer:fine){
+  :is(#ui button,#loading button,.page-header button):not(:disabled):not(.emplacement-target):not(.chopper-target):hover{scale:1.035}
+  :is(#ui button,#loading button,.page-header button):not(:disabled):not(.emplacement-target):not(.chopper-target):active{scale:1.015}
+}
+.reduced-motion #ui button,.reduced-motion #loading button,body:has(#viewport.reduced-motion) .page-header button{scale:1!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){:is(#ui button,#loading button,.page-header button){scale:1!important;transition:none!important}}

@@ -18,3 +18,12 @@ Create one single landscape 16:9 video-game campaign briefing illustration, divi
 
 Tests cover the static single-button screen, tutorial progression, free credits and save compatibility. Browser verification covers all three scenes together and the direct transition into training.
 
+
+
+## Commander cue polish — v1.0 development
+
+Each instruction enters with a short card slide and fade, followed by two gentle border/portrait pulses and a staggered text reveal. Cues settle after about three seconds so the player can act without a continuously moving panel. Reduced-motion preferences display all content immediately. Existing target arrows remain independent.
+
+## Adaptive task placement — v1.0 development
+
+Commander cards use the current target bounds and choose a nearby clear position. Placement excludes the HUD, progress indicator, active upgrade panel, defense positions, helicopter interaction area, mine-placement rectangle and target arrow. The final weapon explanation is compact enough to fit above the tray at 960 × 540. Layout updates during training to follow fullscreen and viewport changes. Geometry tests cover every lesson, and browser checks confirmed no protected UI intersections for mine placement and the final weapon explanation.

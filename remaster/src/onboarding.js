@@ -1,4 +1,5 @@
 import {designToSim} from './combat.js';
+import {tutorialCardPosition} from './tutorial-layout.js';
 
 export const STORY_PANELS=[
   {title:'EVACUATE',caption:'Families are leaving their homes. The last evacuation trucks need this mountain road to reach safety.'},
@@ -11,7 +12,8 @@ const LESSONS={
   mine:['Lay a trap.','Select the mine below. Your first mine is free.'],
   place:['Choose your ground.','Click the highlighted ground to place your mine.'],
   weapons:['Know your gunship.','Open the weapons tray below.'],
-  ready:['Your arsenal is here.','You can buy and switch weapons here during battle.']
+  ready:['Your arsenal is here.','You can buy and switch weapons here during battle.'],
+  repair:['Keep the base standing.','Click + to repair your base. This first repair is free.']
 };
 export class Onboarding {
   constructor(scenes){this.scenes=scenes;this.step=null;}
@@ -30,6 +32,7 @@ export class Onboarding {
       ||this.step==='build'&&action==='live-defense'&&button.dataset.name==='Maxim'
       ||this.step==='mine'&&action==='arm'&&button.dataset.name==='Mine'
       ||this.step==='weapons'&&action==='weapon-tray'
+      ||this.step==='repair'&&action==='repair-base'
       ||this.step==='ready'&&action==='tutorial-finish';
   }
   sync(){
@@ -51,28 +54,49 @@ export class Onboarding {
     this.scenes.input.clear();event.preventDefault();event.stopPropagation();return true;
   }
   finish(){
+    if(this.step==='repair'){
+      const s=this.scenes;this.step=null;s.combat.tutorialRepairAvailable=false;s.combat.checkpoint.repairTutorialSeen=true;
+      s.campaign=structuredClone(s.combat.checkpoint);this.save();s.input.clear();s.clock.reset();s.render(false);return;
+    }
     const s=this.scenes;this.step=null;s.combat.tutorialDefenseAvailable=false;s.combat.tutorialMineAvailable=false;s.combat.armed=null;s.livePanel=null;s.panelSignature=null;
     s.campaign=s.combat.snapshot();s.campaign.introStage='done';s.combat.checkpoint=structuredClone(s.campaign);this.save();s.input.clear();s.clock.reset();s.render(false);
   }
   update(seconds){
     const s=this.scenes;
     if(s.name==='story')return true;
-    if(this.step&&s.name==='combat'){this.positionArrow();s.input.clear();s.clock.reset();return true;}
+    this.maybeRepairLesson();
+    if(this.step&&s.name==='combat'){this.positionArrow();this.positionCard();this.positionArrow();s.input.clear();s.clock.reset();return true;}
     return false;
+  }
+  maybeRepairLesson(){
+    const s=this.scenes,c=s.combat;
+    if(this.step||s.name!=='combat'||c?.status!=='running'||c.health<=0||c.health>720||c.checkpoint.introStage!=='done'||c.checkpoint.repairTutorialSeen)return false;
+    this.step='repair';c.tutorialRepairAvailable=true;c.armed=null;s.livePanel=null;s.panelSignature=null;s.input.clear();s.render(false);return true;
   }
   decorate(){
     const s=this.scenes;s.ui.dataset.tutorial=this.step&&s.name==='combat'?this.step:'';
     if(!this.step||s.name!=='combat')return;
     const [title,copy]=LESSONS[this.step];
     s.ui.insertAdjacentHTML('beforeend',`${this.step==='place'?'<div class="tutorial-ground" aria-hidden="true"></div>':''}<aside class="tutorial-card" aria-labelledby="tutorial-title"><div class="tutorial-commander" aria-hidden="true"></div><div class="tutorial-copy"><small>COMMANDER · TRAINING</small><h3 id="tutorial-title">${title}</h3><p>${copy}</p>${this.step==='ready'?'<button class="primary" data-action="tutorial-finish" data-initial-focus>Hold the line →</button>':''}<button class="quiet tutorial-skip" data-action="tutorial-skip">Skip tutorial</button></div></aside>`);
-    const focus={position:'[data-action="emplacement"][data-slot="0"]',build:'[data-action="live-defense"][data-name="Maxim"]',mine:'[data-action="arm"][data-name="Mine"]',weapons:'.weapon-tray-toggle',ready:'[data-action="tutorial-finish"]'}[this.step];
+    const focus={repair:'[data-action="repair-base"]',position:'[data-action="emplacement"][data-slot="0"]',build:'[data-action="live-defense"][data-name="Maxim"]',mine:'[data-action="arm"][data-name="Mine"]',weapons:'.weapon-tray-toggle',ready:'[data-action="tutorial-finish"]'}[this.step];
     if(focus)s.ui.querySelector(focus)?.focus({preventScroll:true});
     s.ui.insertAdjacentHTML('beforeend','<div class="tutorial-arrow" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><path class="arrow-shadow" d="M32 8v43M17 36l15 15 15-15"/><path class="arrow-gold" d="M32 8v43M17 36l15 15 15-15"/></svg></div>');
-    this.positionArrow();
+    this.positionCard();this.positionArrow();
+  }
+  positionCard(){
+    const ui=this.scenes.ui,card=ui.querySelector('.tutorial-card');if(!card)return;
+    const selectors={repair:'[data-action="repair-base"]',position:'[data-action="emplacement"][data-slot="0"]',build:'[data-action="live-defense"][data-name="Maxim"]',mine:'[data-action="arm"][data-name="Mine"]',place:'.tutorial-ground',weapons:'.weapon-tray-toggle',ready:'.weapon-tray'};
+    const target=ui.querySelector(selectors[this.step]);if(!target)return;
+    const parent=ui.getBoundingClientRect(),u=parseFloat(getComputedStyle(ui).getPropertyValue('--u'))||1;
+    const rect=(node,pad=0)=>{const r=node.getBoundingClientRect();return {left:(r.left-parent.left)/u-pad,top:(r.top-parent.top)/u-pad,right:(r.right-parent.left)/u+pad,bottom:(r.bottom-parent.top)/u+pad};};
+    const obstacles=[...ui.querySelectorAll('.top-hud,.bottom-hud,.wave-status,.live-upgrade,.emplacement-target,.chopper-target,.tutorial-ground')].map(node=>rect(node,node.classList.contains('chopper-target')?22:8));
+    if(this.step!=='ready'){const arrow=ui.querySelector('.tutorial-arrow');if(arrow)obstacles.push(rect(arrow,4));}
+    const point=tutorialCardPosition(rect(target),{width:card.offsetWidth/u,height:card.offsetHeight/u},{left:18,top:48,right:parent.width/u-18,bottom:parent.height/u-18},obstacles,['position','build'].includes(this.step)?'right':'above',this.step==='place'||this.step==='ready'?14:64);
+    card.style.left=`${point.left*u}px`;card.style.top=`${point.top*u}px`;
   }
   positionArrow(){
     const ui=this.scenes.ui,arrow=ui.querySelector('.tutorial-arrow');if(!arrow)return;
-    const selector={position:'[data-action="emplacement"][data-slot="0"]',build:'[data-action="live-defense"][data-name="Maxim"]',mine:'[data-action="arm"][data-name="Mine"]',place:'.tutorial-ground',weapons:'.weapon-tray-toggle',ready:'[data-action="tutorial-finish"]'}[this.step];
+    const selector={repair:'[data-action="repair-base"]',position:'[data-action="emplacement"][data-slot="0"]',build:'[data-action="live-defense"][data-name="Maxim"]',mine:'[data-action="arm"][data-name="Mine"]',place:'.tutorial-ground',weapons:'.weapon-tray-toggle',ready:'[data-action="tutorial-finish"]'}[this.step];
     const target=ui.querySelector(selector);if(!target)return;
     const r=target.getBoundingClientRect(),parent=ui.getBoundingClientRect(),u=parseFloat(getComputedStyle(ui).getPropertyValue('--u'))||1;
     let x=r.left+r.width/2,y=r.top-32*u,angle=0;

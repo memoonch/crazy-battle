@@ -43,3 +43,26 @@ test('tutorial can be skipped cleanly and does not block the pause menu after fo
   s.name='pause';assert.equal(o.allowed('resume',{dataset:{}}),true);s.name='combat';o.finish();
   assert.equal(s.combat.tutorialDefenseAvailable,false);assert.equal(s.combat.tutorialMineAvailable,false);assert.equal(s.store.campaign.introStage,'done');
 });
+test('first 90-percent health threshold prompts a free repair once, including with zero supplies',()=>{
+  const s=setup(),o=s.onboarding;o.begin();o.finishStory();o.finish();const c=s.combat;
+  c.health=721;assert.equal(o.maybeRepairLesson(),false);
+  c.health=720;c.money=0;assert.equal(o.maybeRepairLesson(),true);assert.equal(o.step,'repair');
+  assert.equal(o.allowed('repair-base',{dataset:{}}),true);assert.equal(o.allowed('weapon-tray',{dataset:{}}),false);
+  const time=c.elapsedMs;assert.equal(o.update(1),true);assert.equal(c.elapsedMs,time);
+  assert.equal(c.repairBase(),true);assert.equal(c.health,800);assert.equal(c.money,0);assert.equal(c.spent,0);
+  o.finish();assert.equal(s.store.campaign.repairTutorialSeen,true);assert.equal(c.tutorialRepairAvailable,false);
+  c.health=710;assert.equal(o.maybeRepairLesson(),false);assert.equal(c.repairBase(),false);
+  const restored=new Combat(balance,s.store.campaign,42);restored.start();restored.health=700;s.combat=restored;assert.equal(o.maybeRepairLesson(),false);
+});
+test('repair lesson catches health below 90%, can be skipped, and never saves mid-wave income',()=>{
+  const s=setup(),o=s.onboarding;o.begin();o.finishStory();o.finish();const c=s.combat;
+  c.health=680;c.money=19;assert.equal(o.maybeRepairLesson(),true);o.finish();
+  assert.equal(c.health,680);assert.equal(c.money,19);assert.equal(c.tutorialRepairAvailable,false);
+  assert.equal(s.store.campaign.health,800);assert.equal(s.store.campaign.money,0);assert.equal(s.store.campaign.repairTutorialSeen,true);
+  assert.equal(o.maybeRepairLesson(),false);
+});
+test('repair hint does not interrupt initial training, defeated bases or legacy campaigns',()=>{
+  const s=setup(),o=s.onboarding;s.prepare();s.name='combat';s.combat.start();s.combat.health=700;assert.equal(o.maybeRepairLesson(),false);
+  s.combat.checkpoint.introStage='done';s.combat.health=0;assert.equal(o.maybeRepairLesson(),false);
+  s.combat.health=700;o.step='position';assert.equal(o.maybeRepairLesson(),false);
+});

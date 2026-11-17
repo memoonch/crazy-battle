@@ -191,8 +191,10 @@ export class Combat {
     this.money-=item.cost;this.spent+=item.cost;this.supplies[name]++;return true;
   }
   repairBase() {
-    if(!this.canShop || this.health>=800 || this.money<=4)return false;
-    this.money-=3;this.spent+=3;this.health=Math.min(800,this.health+80);return true;
+    if(!this.canShop || this.health>=800 || (!this.tutorialRepairAvailable&&this.money<=4))return false;
+    if(this.tutorialRepairAvailable)this.tutorialRepairAvailable=false;
+    else {this.money-=3;this.spent+=3;}
+    this.health=Math.min(800,this.health+80);return true;
   }
   placeDefense(slot,name) {
     const item=this.balance.inventory.find(d=>d.name===name);

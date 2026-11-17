@@ -119,7 +119,7 @@ export class Scenes {
       const changed=kind==='weapon'?c.buyWeapon(name):kind==='equip'?c.equip(name):kind==='support'?c.buySupport(name):c.placeDefense(this.selectedSlot,name);
       if(changed)this.persistPreparation();this.render();
     }
-    else if (action === 'repair-base') {if(this.combat.repairBase())this.persistPreparation();this.render(false);}
+    else if (action === 'repair-base') {const repaired=this.combat.repairBase();if(repaired&&this.onboarding.step==='repair'){this.onboarding.finish();return;}if(repaired)this.persistPreparation();this.render(false);}
     else if (action === 'arm') {this.livePanel=null;this.panelSignature=null;this.combat.arm(button.dataset.name);this.onboarding.sync();this.render(false);}
     else if (action === 'back-pause') this.go(this.combat.status==='ready'?'preparation':'pause');
     else if (action === 'select-slot') { this.selectedSlot = Number(button.dataset.slot); this.render(); }
@@ -166,6 +166,7 @@ export class Scenes {
     this.clock.advance(seconds, () => {
       this.combat.tick({ aim: designToSim(this.input.state), shots: this.input.drainShots().map(designToSim), held: this.input.state.pressed });
       for (const event of this.combat.drainEvents()) {if(event.type!=='achievement')this.audio.combatEvent(event.type,event);if(event.type==='kill')this.supplyPickups.drop(event,this.store.settings.reducedMotion);if(event.type==='reload-start'||event.type==='support-placed')this.input.release();if(event.type==='achievement')this.medalReveals.enqueue(event.id);}
+      if(this.onboarding.maybeRepairLesson())return false;
       if (this.combat.status === 'victory') {
         this.campaign = this.combat.victoryCheckpoint();
         this.store.saveCheckpoint(this.campaign);if(this.store.status!=='Saved on this browser')this.notify(this.store.status); this.go('victory'); return false;
@@ -253,9 +254,9 @@ export class Scenes {
     const name = { Cannon: 'Cannon', MashineGun: 'Machine gun', Bazooka: 'Bazooka', Rocket: 'Rocket' }[c.activeWeapon];
     const magazine = this.assets.balance.weapons.find(w => w.name === c.activeWeapon).magazine;
     const inEncounter = this.combat?.status!=='ready' && ['combat', 'pause', 'defenses'].includes(this.name), pauseAction = this.name === 'combat' ? 'pause' : inEncounter ? 'resume' : 'menu';
-    const canPrepare=this.combat?.canShop;const interactive=['combat','preparation'].includes(this.name);
+    const canPrepare=this.combat?.canShop;const canRepair=canPrepare&&c.health>0&&c.health<800&&(c.money>4||this.combat?.tutorialRepairAvailable);const interactive=['combat','preparation'].includes(this.name);
     return `<div class="top-hud"><div class="hud-brand">${icon('shield')}<strong>HELICOPTER: LAST STAND</strong></div><div class="hud-stats"><span><small>WAVE</small><b>${String(wave).padStart(2, '0')} <em>/ 20</em></b></span><span class="money" title="Supplies">${equipmentArt(this.assets.art,'Supplies')}<b data-live="money">${c.money}</b></span></div>${this.muteControl()}<button class="icon-button" data-action="${pauseAction}" aria-label="${inEncounter ? this.name === 'pause' ? 'Resume' : 'Pause' : 'Main menu'}">${icon('pause')}</button></div>
-    <div class="bottom-hud"><div class="base-health"><div class="commander-portrait" aria-hidden="true"></div><div><div class="health-caption"><strong>BASE</strong><b data-live="health">${Math.round(c.health / 8)}%</b></div><div class="health-bar" role="meter" aria-label="Base health" aria-valuemin="0" aria-valuemax="800" aria-valuenow="${c.health}"><span data-live="health-bar" style="width:${c.health / 8}%"></span></div></div>${hintedControl(`<button class="icon-button" data-action="repair-base" ${canPrepare&&c.health>0&&c.health<800&&c.money>4?'':'disabled'} aria-label="Repair base">${icon('cross')}</button>`,repairHint({health:c.health,money:c.money,canShop:canPrepare}),'repair-hint',!(canPrepare&&c.health>0&&c.health<800&&c.money>4))}</div><button class="weapon-hud weapon-tray-toggle" data-action="weapon-tray" aria-label="Chopper weapons" ${interactive?'':'disabled'}>${equipmentArt(this.assets.art,c.activeWeapon)}<div><strong>${name.toUpperCase()}</strong><span>${ammoArt(this.assets.art,c.activeWeapon)}<b data-live="ammo">${magazine}</b> <em>/ ${magazine}</em></span><small data-live="reload" class="reload-label">READY</small></div></button>${this.combat?supportControls(this.assets.art,this.combat,this.name==='combat'):''}<div class="hud-fill"></div></div>`;
+    <div class="bottom-hud"><div class="base-health"><div class="commander-portrait" aria-hidden="true"></div><div><div class="health-caption"><strong>BASE</strong><b data-live="health">${Math.round(c.health / 8)}%</b></div><div class="health-bar" role="meter" aria-label="Base health" aria-valuemin="0" aria-valuemax="800" aria-valuenow="${c.health}"><span data-live="health-bar" style="width:${c.health / 8}%"></span></div></div>${hintedControl(`<button class="icon-button" data-action="repair-base" ${canRepair?'':'disabled'} aria-label="Repair base">${icon('cross')}</button>`,repairHint({health:c.health,money:c.money,canShop:canPrepare,free:this.combat?.tutorialRepairAvailable}),'repair-hint',!(canRepair))}</div><button class="weapon-hud weapon-tray-toggle" data-action="weapon-tray" aria-label="Chopper weapons" ${interactive?'':'disabled'}>${equipmentArt(this.assets.art,c.activeWeapon)}<div><strong>${name.toUpperCase()}</strong><span>${ammoArt(this.assets.art,c.activeWeapon)}<b data-live="ammo">${magazine}</b> <em>/ ${magazine}</em></span><small data-live="reload" class="reload-label">READY</small></div></button>${this.combat?supportControls(this.assets.art,this.combat,this.name==='combat'):''}<div class="hud-fill"></div></div>`;
   }
   refreshLivePanel(){
     if(!this.combat||!['combat','preparation'].includes(this.name))return;
@@ -305,8 +306,8 @@ export class Scenes {
     const chopper=this.ui.querySelector('.chopper-target');if(chopper){const p=this.name==='combat'?helicopterPose(s,this.store.settings.reducedMotion):{x:265,y:153};chopper.style.left=`calc(var(--field-x, 0px) + ${p.x-60} * var(--u))`;chopper.style.top=`calc(var(--field-y, 0px) + ${p.y-16} * var(--u))`;}
     this.refreshLivePanel();
     const repair=this.ui.querySelector('[data-action="repair-base"]');
-    repair.disabled=!s.canShop||s.health<=0||s.health>=800||s.money<5;
-    this.updateHint(repair,repairHint({health:s.health,money:s.money,canShop:s.canShop}));
+    repair.disabled=!s.canShop||s.health<=0||s.health>=800||(!s.tutorialRepairAvailable&&s.money<5);
+    this.updateHint(repair,repairHint({health:s.health,money:s.money,canShop:s.canShop,free:s.tutorialRepairAvailable}));
     const tip=this.ui.querySelector('.combat-tip');
     if(tip){tip.textContent=s.armed?'Click battlefield to deploy '+s.armed:'Click to fire · Hold machine gun · P to pause';tip.classList.toggle('faded',s.elapsedMs>6000&&!s.armed);}
     document.querySelector('#combat-info').textContent = `${s.kills}/${s.total} kills · ${s.enemies.length} active · ${s.queue.length} queued · ${(s.elapsedMs / 1000).toFixed(2)}s`;
